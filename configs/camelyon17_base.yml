@@ -1,0 +1,7 @@
+global_model_path: "/path/to/global/model/weights"
+local_model_root: "/root/path/to/local/models"
+n_rounds: 1
+n_clients: 1
+model_class: ModelClass
+trainer_class: TrainerClass
+dataset: "camelyon17"
