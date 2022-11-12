@@ -1,13 +1,12 @@
 from ..models.get_arch import get_arch
 from ..aggregation.aggregations import get_aggregation
 
-
-def retrieve_server(args):
-    pass
+import shutil
+import torch
 
 
 class Server:
-    def __init__(self, cfg, clients):
+    def __init__(self, cfg):
         """
         args describing:
         - aggregation Class
@@ -17,12 +16,13 @@ class Server:
         - root path to local models
         """
 
+        self.clients = []
         self.aggregation = get_aggregation(cfg['agg_method'])()
-        self.model = get_arch(cfg['arch'], False)
+        self.arch = cfg['arch']
+        self.model = get_arch(self.arch)
         self.path = cfg['global_model_path']
-        self.clients = clients
-
-        self.aggregation.get_info()
+        self.model_path = cfg['global_model_path']
+        self._init_model()
 
     def aggregate(self):
         '''
@@ -35,6 +35,21 @@ class Server:
         triggers one training round with the clients
         '''
         pass
+
+    def _init_model(self):
+        try:
+            if self.arch == 'densenet':
+                source = '/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/init_models/densenet121.pt'
+                shutil.copy(source, self.model_path)
+
+                self.model.load_state_dict(torch.load(self.model_path))
+                print("Densenet121 was successfully initialized with pretrained weights")
+
+        except:
+            print('Unable to init model with pretrained weights')
+
+    def init_clients(self, clients):
+        self.clients = clients
 
     def _add_client(self):
         '''

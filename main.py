@@ -1,5 +1,6 @@
 from utils.read_config import read_config
 from core.federation.server import Server
+from core.federation.clients import retrieve_clients, clean_clients
 
 if __name__ == '__main__':
     '''
@@ -25,4 +26,9 @@ if __name__ == '__main__':
     #server model managed over specific path
     '''
     cfg = read_config('configs/camelyon17_base.yml')
-    server = Server(cfg, [])
+    server = Server(cfg)
+    clients = retrieve_clients(cfg)
+
+    server.init_clients(clients)
+
+    clean_clients(clients)

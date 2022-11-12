@@ -1,8 +1,8 @@
 experiment:
-  global_model_path: "/path/to/global/model/weights"
-  local_model_root: "/root/path/to/local/models"
+  global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
+  local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
   n_rounds: 1
-  n_clients: 1
+  n_clients: 3
   arch: 'densenet'
   agg_method: 'FedAvg'
   trainer_class: TrainerClass
