@@ -1,10 +1,17 @@
 experiment:
-  global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
-  local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
   n_rounds: 1
   n_clients: 3
-  data_root: '/Users/mirkokonstantin/tud/master-thesis/project/data'
-  arch: 'densenet'
-  agg_method: 'FedAvg'
+  attacks: None
+Client:
+  global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
+  local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
+  data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
+  arch: "densenet"
   trainer_class: TrainerClass
   dataset: "camelyon17"
+Server:
+  global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
+  local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
+  data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
+  dataset: "camelyon17"
+  agg_method: "FedAvg"

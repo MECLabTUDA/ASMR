@@ -22,6 +22,7 @@ def clean_clients(clients):
     except:
         print("Failed to clean up all clients, manually cleanup might be needed")
 
+
 class Client:
     def __init__(self, cfg, client_id):
         """
@@ -35,11 +36,10 @@ class Client:
         self.id = client_id
         self.local_model_path = cfg['local_model_root'] + '/' + str(self.id)
         self.global_model_path = cfg['global_model_path']
+        #self.trainer = get_trainer(cfg['trainer'])
 
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
-
-        self._load_model()
 
     def train(self):
         '''
@@ -66,3 +66,6 @@ class Client:
         except:
             print("Failed to load model for client: " + str(self.id))
             # logging: loading model failed for client...
+
+    def update_model(self):
+        self._load_model()

@@ -6,7 +6,7 @@ import torch
 
 
 class Server:
-    def __init__(self, cfg):
+    def __init__(self, cfg, clients):
         """
         args describing:
         - aggregation Class
@@ -16,13 +16,14 @@ class Server:
         - root path to local models
         """
 
-        self.clients = []
+        self.clients = clients
         self.aggregation = get_aggregation(cfg['agg_method'])()
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
         self.path = cfg['global_model_path']
         self.model_path = cfg['global_model_path']
         self._init_model()
+
 
     def aggregate(self):
         '''
@@ -34,7 +35,10 @@ class Server:
         '''
         triggers one training round with the clients
         '''
-        pass
+        for client in self.clients:
+            client.update_model()
+            client.train()
+        self.aggregate()
 
     def _init_model(self):
         try:
@@ -50,6 +54,7 @@ class Server:
 
     def init_clients(self, clients):
         self.clients = clients
+
 
     def _add_client(self):
         '''

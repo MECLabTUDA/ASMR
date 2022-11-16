@@ -13,5 +13,7 @@ It also provides several aggregation methods like FedAvg, FedAvgM, ...
 ## TODO
 - logging
 - training methods
-- data loaders for the clients
+- data loaders for the clients (almost done)
 - implementing Attacks
+
+- next Step: training method + FedAvg
