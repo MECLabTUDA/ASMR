@@ -3,6 +3,7 @@ experiment:
   local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
   n_rounds: 1
   n_clients: 3
+  data_root: '/Users/mirkokonstantin/tud/master-thesis/project/data'
   arch: 'densenet'
   agg_method: 'FedAvg'
   trainer_class: TrainerClass

@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import torch
 from PIL import Image
-
+from torchvision import transforms
 
 def get_datasets(n_clients, root_dir):
     '''
@@ -36,12 +36,17 @@ class FedCamelyon17Dataset:
 
         self._data_dir = root_dir
 
+        if kwargs['test_split']:
+            self.annotation = 'Test'
+        else:
+            self.annotation = 'Client'
+
         self._metadata_df = pd.read_csv(
             os.path.join(self._data_dir, 'metadata.csv'),
             index_col=0,
             dtype={'patient': 'str'})
 
-        if kwargs['test_split'] == True:
+        if kwargs['test_split']:
             self.assign_splits()
         else:
             self._n_clients = kwargs['n_clients']
@@ -57,17 +62,11 @@ class FedCamelyon17Dataset:
         print('client_id: ' + str(self.client_id))
         print(self.__len__())
 
-
-    def get_x(self, test=True):
-
-        if test:
-            annotation = 'Test'
-        else:
-            annotation = 'Client'
+    def get_x(self):
         '''
         get the images from the dataframe
         '''
-        x_metadata = self._metadata_df[self._metadata_df['split'] == annotation]
+        x_metadata = self._metadata_df[self._metadata_df['split'] == self.annotation]
         x_array = [
             f'patches/patient_{patient}_node_{node}/patch_patient_{patient}_node_{node}_x_{x}_y_{y}.png'
             for patient, node, x, y in
@@ -78,7 +77,8 @@ class FedCamelyon17Dataset:
         '''
         read labels from the metadata dataframe
         '''
-        y_array = torch.LongTensor(self._metadata_df[self._metadata_df['split'] == 'Client']['tumor'].values)
+
+        y_array = torch.LongTensor(self._metadata_df[self._metadata_df['split'] == self.annotation]['tumor'].values)
         return y_array
 
     def get_split(self):
@@ -132,6 +132,8 @@ class FedCamelyon17Dataset:
         # Any transformations are handled by the WILDSSubset
         # since different subsets (e.g., train vs test) might have different transforms
         x = self.get_input(idx)
+        trans = transforms.ToTensor()
+        x = trans(x)
         y = self._y_array[idx]
         # metadata = self.metadata_array[idx]
         return x, y  # , metadata

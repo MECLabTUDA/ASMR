@@ -1,17 +1,16 @@
 from utils.read_config import read_config
 from core.federation.server import Server
 from core.federation.clients import retrieve_clients, clean_clients
-
+from utils.data_loaders import get_test_loader
 from datasets.camelyon17 import get_datasets
+
+from datasets.camelyon17 import FedCamelyon17Dataset
 if __name__ == '__main__':
     '''
     Main method
     '''
+    tst_loader = get_test_loader('/Users/mirkokonstantin/tud/master-thesis/project/data', 1)
 
-    d = get_datasets(6, '/Users/mirkokonstantin/tud/master-thesis/project/data')
+    img, label = next(iter(tst_loader))
 
-    for i in range(6):
-        d[i].print_information()
-
-
-
+    print(label)
