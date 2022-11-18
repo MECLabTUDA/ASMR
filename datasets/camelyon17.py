@@ -51,7 +51,7 @@ class FedCamelyon17Dataset:
         else:
             self._n_clients = kwargs['n_clients']
             self.client_id = kwargs['client_id']
-            self.assign_splits(False)
+            self.assign_splits()
 
         # get the split of the data
         self._x_array = self.get_x()
@@ -101,19 +101,17 @@ class FedCamelyon17Dataset:
 
         return patients_of_client
 
-    def assign_splits(self, test=True):
+    def assign_splits(self):
         '''
         labels the metadata, which patients to be selected
         '''
-        if test:
+        if self.annotation == 'Test':
             split = self._metadata_df[self._metadata_df['center'] == 4]['slide'].unique()
-            annotation = 'Test'
         else:
             split = self.get_split()
-            annotation = 'Client'
 
         client_mask = (self._metadata_df['slide'].isin(split))
-        self._metadata_df.loc[client_mask, 'split'] = annotation
+        self._metadata_df.loc[client_mask, 'split'] = self.annotation
 
     def get_input(self, idx):
         """
