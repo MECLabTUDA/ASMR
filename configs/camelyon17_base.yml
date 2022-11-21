@@ -3,7 +3,7 @@ experiment:
   n_clients: 3
   attacks: None
   arch: 'densenet'
-Client:
+client:
   n_clients: 1
   global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
   local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
@@ -11,7 +11,7 @@ Client:
   arch: "densenet"
   trainer_class: TrainerClass
   dataset: "camelyon17"
-Server:
+server:
   global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
   local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
   data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"

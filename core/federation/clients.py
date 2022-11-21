@@ -3,13 +3,18 @@ import os
 import shutil
 
 from ..models.get_arch import get_arch
-
+from utils.data_loaders import get_train_loader
+from utils.get_trainer import get_trainer
 
 def retrieve_clients(cfg):
     n_clients = cfg['n_clients']
+    root_dir = cfg['root_dir']
+    batch_size = cfg['batch_size']
     clients = []
+
     for i in range(n_clients):
-        client = Client(cfg, i)
+        ldr = get_train_loader(root_dir, batch_size, n_clients, i)
+        client = Client(cfg, i, ldr)
         clients.append(client)
     return clients
 
@@ -24,7 +29,7 @@ def clean_clients(clients):
 
 
 class Client:
-    def __init__(self, cfg, client_id):
+    def __init__(self, cfg, client_id, ldr):
         """
         Constructor:
         - creates path
@@ -36,7 +41,10 @@ class Client:
         self.id = client_id
         self.local_model_path = cfg['local_model_root'] + '/' + str(self.id)
         self.global_model_path = cfg['global_model_path']
-        #self.trainer = get_trainer(cfg['trainer'])
+        self.ldr = ldr
+        self.trainer = get_trainer(cfg['trainer'], self.model, self.ldr, cfg['hp_cfg'], self.local_model_path)
+
+    #(trainer, model, ldr, hp_cfg, local_model_path)
 
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
@@ -45,7 +53,7 @@ class Client:
         '''
         Trains Clients model for one Episode
         '''
-        pass
+        self.trainer.train()
 
     def clean(self):
         try:

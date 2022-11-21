@@ -9,8 +9,4 @@ if __name__ == '__main__':
     '''
     Main method
     '''
-    tst_loader = get_test_loader('/Users/mirkokonstantin/tud/master-thesis/project/data', 1)
-
-    img, label = next(iter(tst_loader))
-
-    print(label)
+    

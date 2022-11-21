@@ -26,4 +26,13 @@ def get_train_loaders(root_dir, batch_size, clients, **loader_kwargs):
                                         )
     return loaders
 
-# train_loader = get_train_loader("standard", train_data, batch_size=16)
+
+def get_train_loader(root_dir, batch_size, n_clients, client_id, **loader_kwargs):
+    kwargs = {'n_clients': n_clients, 'test_split': False, 'client_id': client_id}
+    ldr = DataLoader(FedCamelyon17Dataset(root_dir, kwargs),
+                     shuffle=False,
+                     sampler=None,
+                     batch_size=batch_size,
+                     **loader_kwargs
+                     )
+    return ldr
