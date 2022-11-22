@@ -1,8 +1,9 @@
-from ..models.get_arch import get_arch
-from ..aggregation.aggregations import get_aggregation
-
 import shutil
 import torch
+import logging
+
+from ..models.get_arch import get_arch
+from ..aggregation.aggregations import get_aggregation
 
 
 class Server:
@@ -17,19 +18,21 @@ class Server:
         """
 
         self.clients = clients
-        self.aggregation = get_aggregation(cfg['agg_method'])()
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
-        self.path = cfg['global_model_path']
-        self.model_path = cfg['global_model_path']
+        self.global_model_path = cfg['global_model_path']
+        self.aggregation = get_aggregation(cfg['agg_method'])(self.clients, self.global_model_path)
         self._init_model()
-
 
     def aggregate(self):
         '''
         aggregate the local models to a global model
         '''
-        pass
+        try:
+            self.aggregation.aggregate()
+            logging.debug("aggregated weights to new global model")
+        except:
+            logging.error("failed to aggregate the local model weights")
 
     def run_round(self):
         '''
@@ -47,23 +50,10 @@ class Server:
                 shutil.copy(source, self.model_path)
 
                 self.model.load_state_dict(torch.load(self.model_path))
-                print("Densenet121 was successfully initialized with pretrained weights")
+                logging.debug("Densenet121 was successfully initialized with pretrained weights")
 
         except:
-            print('Unable to init model with pretrained weights')
-
-    def init_clients(self, clients):
-        self.clients = clients
-
-
-    def _add_client(self):
-        '''
-        adds a client
-        '''
-        pass
-
-    def print_information(self):
-        pass
+            logging.error('Unable to init model with pretrained weights')
 
     def evaluate(self):
         '''

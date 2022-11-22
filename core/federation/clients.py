@@ -1,31 +1,30 @@
 import torch
 import os
 import shutil
+import logging
 
 from ..models.get_arch import get_arch
 from utils.data_loaders import get_train_loader
-from utils.get_trainer import get_trainer
+from core.trainers.get_trainer import get_trainer
+
 
 def retrieve_clients(cfg):
     n_clients = cfg['n_clients']
-    root_dir = cfg['root_dir']
+    root_dir = cfg['data_root']
     batch_size = cfg['batch_size']
     clients = []
 
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i)
         client = Client(cfg, i, ldr)
+        logging.debug('created client: ' + str(i))
         clients.append(client)
     return clients
 
 
 def clean_clients(clients):
-    try:
-        for client in clients:
-            client.clean()
-        print("Successfully cleaned up all clients")
-    except:
-        print("Failed to clean up all clients, manually cleanup might be needed")
+    for client in clients:
+        client.clean()
 
 
 class Client:
@@ -37,14 +36,11 @@ class Client:
         -
         """
         self.model = get_arch(cfg['arch'])
-        self.trainer = None
         self.id = client_id
         self.local_model_path = cfg['local_model_root'] + '/' + str(self.id)
         self.global_model_path = cfg['global_model_path']
         self.ldr = ldr
-        self.trainer = get_trainer(cfg['trainer'], self.model, self.ldr, cfg['hp_cfg'], self.local_model_path)
-
-    #(trainer, model, ldr, hp_cfg, local_model_path)
+        self.trainer = get_trainer(cfg['trainer'])(self.model, self.id, self.ldr, self.local_model_path)
 
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
@@ -58,10 +54,9 @@ class Client:
     def clean(self):
         try:
             shutil.rmtree(self.local_model_path)
-            # logging: successfully cleaned up client store
+            logging.debug('successfully cleaned client: ' + str(self.id))
         except:
-            print("could not clean up client: " + str(self.id))
-            # logging:
+            logging.error('Unable to clean up client: ' + str(self.id))
 
     def _save_model(self):
         self.model.save(self.local_model_path + '/local_model_' + str(self.id) + '.pt')
@@ -69,11 +64,9 @@ class Client:
     def _load_model(self):
         try:
             self.model.load_state_dict(torch.load(self.global_model_path))
-            print("Loading global model successfully for Client: " + str(self.id))
-            # logging : loading global model was successful
+            logging.debug("Loading global model successfully for client: " + str(self.id))
         except:
-            print("Failed to load model for client: " + str(self.id))
-            # logging: loading model failed for client...
+            logging.error("Failed to load model for client: " + str(self.id))
 
     def update_model(self):
         self._load_model()

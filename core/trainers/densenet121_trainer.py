@@ -6,7 +6,7 @@ from torch.autograd import Variable
 
 
 class DenseNet121Trainer:
-    def __init__(self, model, client_id, ldr, hp_cfg, local_model_path):
+    def __init__(self, model, client_id, ldr, local_model_path):
         '''
         model: model to be trained
         ldr: dataloader
@@ -17,10 +17,10 @@ class DenseNet121Trainer:
         self.local_model_path = local_model_path
 
         self.ldr = ldr
-        self.batch_size = hp_cfg['batch_size']
-        self.lr = hp_cfg['lr']
-        self.momentum = hp_cfg['momentum']
-        self.weight_decay = hp_cfg['weight_decay']
+        self.batch_size = 8
+        self.lr = 0.005
+        self.momentum = 0.9
+        self.weight_decay = 5e-4
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
