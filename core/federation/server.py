@@ -47,9 +47,9 @@ class Server:
         try:
             if self.arch == 'densenet':
                 source = '/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/init_models/densenet121.pt'
-                shutil.copy(source, self.model_path)
+                shutil.copy(source, self.global_model_path)
 
-                self.model.load_state_dict(torch.load(self.model_path))
+                self.model.load_state_dict(torch.load(self.global_model_path))
                 logging.debug("Densenet121 was successfully initialized with pretrained weights")
 
         except:

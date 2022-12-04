@@ -28,6 +28,6 @@ if __name__ == '__main__':
     #Set up Server and Clients
     logging.debug('Creating Clients')
     clients = retrieve_clients(client_cfg)
-   # logging.debug('creating server')
-   # server = Server(server_cfg, clients)
+    logging.debug('creating server')
+    server = Server(server_cfg, clients)
 

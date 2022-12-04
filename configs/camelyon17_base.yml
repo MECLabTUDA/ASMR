@@ -18,3 +18,4 @@ server:
   data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
   dataset: "camelyon17"
   agg_method: "FedAvg"
+  arch: "densenet"
