@@ -18,4 +18,8 @@ server:
   data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
   dataset: "camelyon17"
   agg_method: "FedAvg"
+  agg_params:
+    global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
+    #momentum: 0.9
   arch: "densenet"
+

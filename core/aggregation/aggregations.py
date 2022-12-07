@@ -1,5 +1,7 @@
-from core.aggregation.FedAvg import FedAvg
+import logging
 
+from core.aggregation.fedAvg import FedAvg
+from core.aggregation.fedAvgM import FedAvgM
 
 def get_aggregation(method):
     """
@@ -7,4 +9,7 @@ def get_aggregation(method):
     """
     if method == 'FedAvg':
         return FedAvg
-    pass
+    if method == 'FedAvgM':
+        return FedAvgM
+    else:
+        logging.error("Unknown aggregation method")

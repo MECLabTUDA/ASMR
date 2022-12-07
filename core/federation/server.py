@@ -21,7 +21,9 @@ class Server:
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
         self.global_model_path = cfg['global_model_path']
-        self.aggregation = get_aggregation(cfg['agg_method'])(self.clients, self.global_model_path)
+        self.agg_params = cfg['agg_params']
+        self.agg_params['clients'] = self.clients
+        self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
         self._init_model()
 
     def aggregate(self):
