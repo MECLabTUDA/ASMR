@@ -4,6 +4,7 @@ import logging
 
 from ..models.get_arch import get_arch
 from ..aggregation.aggregations import get_aggregation
+from utils.data_loaders import get_test_loader
 
 
 class Server:
@@ -24,6 +25,7 @@ class Server:
         self.agg_params = cfg['agg_params']
         self.agg_params['clients'] = self.clients
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
+        self.root_dir = cfg['root_dir']
         self._init_model()
 
     def aggregate(self):
@@ -61,4 +63,18 @@ class Server:
         '''
         evaluates the global model on test data
         '''
-        pass
+        self.model.load_state_dict(torch.load(self.global_model_path))
+        test_ldr = get_test_loader(self.root_dir)
+        correct = 0
+        batch_total = 0
+
+        for (imgs, labels) in test_ldr:
+            imgs, labels = imgs.cuda(), labels.cuda()
+            output = self.model(imgs)
+            pred = output.argmax(dim=1, keepdims=True)
+            correct += pred.eq(labels.view_as(pred)).sum().item()
+            batch_total += imgs.size(0)
+
+        acc = 100. * correct / batch_total
+        logging.info("test accuracy: " + str(acc))
+        return acc

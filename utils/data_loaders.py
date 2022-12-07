@@ -3,7 +3,7 @@ from datasets.camelyon17 import FedCamelyon17Dataset
 from datasets.camelyon17 import get_datasets
 
 
-def get_test_loader(root_dir, batch_size, **loader_kwargs):
+def get_test_loader(root_dir, batch_size=4, **loader_kwargs):
     return DataLoader(FedCamelyon17Dataset(root_dir),
                       shuffle=False,
                       sampler=None,
