@@ -6,7 +6,7 @@ from torch.autograd import Variable
 
 
 class DenseNet121Trainer:
-    def __init__(self, model, client_id, ldr, local_model_path):
+    def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs):
         '''
         model: model to be trained
         ldr: dataloader
@@ -15,7 +15,7 @@ class DenseNet121Trainer:
         self.id = client_id
         self.model = model
         self.local_model_path = local_model_path
-
+        self.n_local_epochs = n_local_epochs
         self.ldr = ldr
         self.batch_size = 8
         self.lr = 0.005
@@ -29,26 +29,27 @@ class DenseNet121Trainer:
         train_loss = 0
         total = 0
         correct = 0
-        for batch_index, (inputs, targets) in enumerate(self.ldr):
+        for _ in range(self.n_local_epochs):
+            for batch_index, (inputs, targets) in enumerate(self.ldr):
 
-            inputs.cuda()
-            targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
+                inputs.cuda()
+                targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
-            self.optimizer.zero_grad()
+                self.optimizer.zero_grad()
 
-            inputs, targets = Variable(inputs), Variable(targets)
-            outputs = self.model(inputs)
-            outputs = torch.squeeze(outputs)
-            loss = self.criterion(outputs, targets)
-            loss.backward()
-            self.optimizer.step()
+                inputs, targets = Variable(inputs), Variable(targets)
+                outputs = self.model(inputs)
+                outputs = torch.squeeze(outputs)
+                loss = self.criterion(outputs, targets)
+                loss.backward()
+                self.optimizer.step()
 
-            train_loss += loss.data  # [0]
-            total += targets.size(0)
+                train_loss += loss.data  # [0]
+                total += targets.size(0)
 
-            outputs = outputs.argmax(dim=1)
+                outputs = outputs.argmax(dim=1)
 
-            correct += outputs.data.eq(targets.data).cpu().sum()
+                correct += outputs.data.eq(targets.data).cpu().sum()
 
         print("Finished training for Client: " + str(self.id))
         self.save_local_model()

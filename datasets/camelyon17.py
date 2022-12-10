@@ -6,6 +6,7 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
+
 def get_datasets(n_clients, root_dir):
     '''
     get a set of datasets

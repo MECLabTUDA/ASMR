@@ -1,25 +1,18 @@
-experiment:
-  n_rounds: 1
-  n_clients: 3
-  attacks: None
-  arch: 'densenet'
-client:
-  n_clients: 3
-  global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
-  local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
-  data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
-  arch: "densenet"
-  trainer: 'densenet121_basic'
-  dataset: "camelyon17"
-  batch_size: 8
-server:
-  global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
-  local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
-  data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
-  dataset: "camelyon17"
-  agg_method: "FedAvg"
-  agg_params:
-    global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
-    #momentum: 0.9
-  arch: "densenet"
 
+dataset: "camelyon17"
+data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
+
+n_clients: 3
+n_rounds: 1
+n_local_epochs: 1
+
+momentum: 0.9
+agg_method: "FedAvgM"
+
+batch_size: 8
+
+arch: "densenet"
+trainer: 'densenet121_basic'
+
+local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
+global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"

@@ -22,10 +22,9 @@ class Server:
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
         self.global_model_path = cfg['global_model_path']
-        self.agg_params = cfg['agg_params']
-        self.agg_params['clients'] = self.clients
+        self.agg_params = self.get_agg_params(cfg)
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
-        self.root_dir = cfg['root_dir']
+        self.root_dir = cfg['data_root']
         self._init_model()
 
     def aggregate(self):
@@ -78,3 +77,9 @@ class Server:
         acc = 100. * correct / batch_total
         logging.info("test accuracy: " + str(acc))
         return acc
+
+    def get_agg_params(self, cfg):
+        agg_params = {'clients': self.clients, 'global_model_path': self.global_model_path}
+        if cfg['agg_method'] == 'FedAvgM':
+            agg_params['momentum'] = cfg['momentum']
+        return agg_params

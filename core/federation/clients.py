@@ -39,8 +39,10 @@ class Client:
         self.id = client_id
         self.local_model_path = cfg['local_model_root'] + '/' + str(self.id)
         self.global_model_path = cfg['global_model_path']
+        self.n_local_epochs = cfg['n_local_epochs']
         self.ldr = ldr
-        self.trainer = get_trainer(cfg['trainer'])(self.model, self.id, self.ldr, self.local_model_path)
+        self.trainer = get_trainer(cfg['trainer'])(self.model, self.id, self.ldr,
+                                                   self.local_model_path, self.n_local_epochs)
 
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
