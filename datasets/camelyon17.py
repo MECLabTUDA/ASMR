@@ -28,7 +28,7 @@ def get_datasets(n_clients, root_dir):
 
 class FedCamelyon17Dataset:
 
-    def __init__(self, root_dir='data', kwargs={'test_split': True}):
+    def __init__(self, root_dir='data', kwargs={'split': 'test'}):
         '''
         root_dir: path to the image folder
         split_scheme : dict with splitting information
@@ -37,19 +37,21 @@ class FedCamelyon17Dataset:
 
         self._data_dir = root_dir
 
-        if kwargs['test_split']:
-            self.annotation = 'Test'
-        else:
-            self.annotation = 'Client'
-
         self._metadata_df = pd.read_csv(
             os.path.join(self._data_dir, 'metadata.csv'),
             index_col=0,
             dtype={'patient': 'str'})
 
-        if kwargs['test_split']:
+        if kwargs['split'] == 'test':
+            self.annotation = 'Test'
+            self.assign_splits()
+
+        elif kwargs['split'] == 'attack':
+            self.annotation = 'Attack'
+            self.center = kwargs['center']
             self.assign_splits()
         else:
+            self.annotation = 'Client'
             self._n_clients = kwargs['n_clients']
             self.client_id = kwargs['client_id']
             self.assign_splits()
@@ -97,7 +99,7 @@ class FedCamelyon17Dataset:
         if self.client_id == 0:
             patients_of_client = list(range(0, patients_per_client))
         else:
-            patient_start_id = (hospital) * 10 + order_of_client_in_hospital * patients_per_client
+            patient_start_id = hospital * 10 + order_of_client_in_hospital * patients_per_client
             patients_of_client = list(range(patient_start_id, patient_start_id + patients_per_client))
 
         return patients_of_client
@@ -108,6 +110,8 @@ class FedCamelyon17Dataset:
         '''
         if self.annotation == 'Test':
             split = self._metadata_df[self._metadata_df['center'] == 4]['slide'].unique()
+        elif self.annotation == 'Attack':
+            split = self._metadata_df[self._metadata_df['center'] == self.center]['slide'].unique()
         else:
             split = self.get_split()
 
