@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
+from tqdm import tqdm
 from torch.autograd import Variable
 
 
@@ -32,13 +33,15 @@ class DenseNet121Trainer:
 
         self.model.train()
         self.model.cuda()
+        
+        print('********Training of Client: ' + str(self.id) + '*********')
+        for _ in tqdm(range(self.n_local_epochs)):
+            for batch_index, (inputs, targets) in enumerate(tqdm(self.ldr),0):
 
-        for _ in range(self.n_local_epochs):
-            for batch_index, (inputs, targets) in enumerate(self.ldr):
-
-                inputs.cuda()
-                targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
-
+                #inputs.cuda()
+                #targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
+                
+                inputs, targets = inputs.cuda(), targets.cuda()
                 self.optimizer.zero_grad()
 
                 inputs, targets = Variable(inputs), Variable(targets)
@@ -59,7 +62,7 @@ class DenseNet121Trainer:
         self.save_local_model()
 
     def save_local_model(self):
-        torch.save(self.model.state_dict(), self.local_model_path + '/' + str(self.id)
+        torch.save(self.model.state_dict(), self.local_model_path 
                    + '/local_model_' + str(self.id) + '.pt')
 
         print("saved local model of Client: " + str(self.id))

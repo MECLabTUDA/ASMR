@@ -15,7 +15,7 @@ class FedAvgM(FedAvg):
         global_weights = torch.load(self.global_model_path)
 
         for key in avg_weights:
-            avg_weights[key] = (avg_weights * (1-self.momentum)) + (global_weights * self.momentum)
+            avg_weights[key] = (avg_weights[key] * (1-self.momentum)) + (global_weights[key] * self.momentum)
 
         torch.save(avg_weights, self.global_model_path)
 

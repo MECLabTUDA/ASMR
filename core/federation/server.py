@@ -34,8 +34,10 @@ class Server:
         try:
             self.aggregation.aggregate()
             logging.debug("aggregated weights to new global model")
+            print('aggregation successfull')
         except:
             logging.error("failed to aggregate the local model weights")
+            print('Error during aggregation')
 
     def run_round(self):
         '''
@@ -49,7 +51,7 @@ class Server:
     def _init_model(self):
         try:
             if self.arch == 'densenet':
-                source = '/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/init_models/densenet121.pt'
+                source = '/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/init_models/densenet121.pt'
                 shutil.copy(source, self.global_model_path)
 
                 self.model.load_state_dict(torch.load(self.global_model_path))

@@ -4,7 +4,7 @@ from experiment import experiment
 import logging
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "2,5"
+os.environ['CUDA_VISIBLE_DEVICES'] = "4"
 
 
 

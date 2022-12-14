@@ -17,14 +17,14 @@ class FedAvg:
         agg_state_dict = self._create_zero_state_dict(self.clients[0].model.state_dict())
 
         for client in self.clients:
-            for item in client.model.state_dict():
+            for item in client.model.state_dict().items():
                 agg_state_dict[item[0]] += (item[1].clone() / n_local_models)
         return agg_state_dict
 
     def _create_zero_state_dict(self, state_dict):
         zero_state_dict = OrderedDict()
-        for item in state_dict.item():
-            zero_state_dict[item[0]] = torch.zeros_like(item[1])
+        for key, value in state_dict.items():
+            zero_state_dict[key] = torch.zeros_like(value).float()
         return zero_state_dict
 
     def _save_agg_model(self, agg_state_dict):

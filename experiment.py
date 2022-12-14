@@ -16,8 +16,11 @@ def experiment(cfg, n_rounds):
 
     ##Training of the clients
 
-    for _ in range(n_rounds):
-        server.run_round()
+    #for _ in range(n_rounds):
+    #    server.run_round()
+
+    server.aggregate()
+
     ##Launching SIA Attack
     #List of state dicts
     #Create net arch

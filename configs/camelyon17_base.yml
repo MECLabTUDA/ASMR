@@ -1,6 +1,6 @@
 
 dataset: "camelyon17"
-data_root: "/Users/mirkokonstantin/tud/master-thesis/project/data"
+data_root: "/local/scratch/camelyon17/camelyon17_v1.0"
 
 n_clients: 3
 n_rounds: 1
@@ -14,5 +14,5 @@ batch_size: 8
 arch: "densenet"
 trainer: 'densenet121_basic'
 
-local_model_root: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/clients"
-global_model_path: "/Users/mirkokonstantin/tud/master-thesis/project/fedpath/store/global/global_model.pt"
+local_model_root: "/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/clients"
+global_model_path: "/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/global/global_model.pt"
