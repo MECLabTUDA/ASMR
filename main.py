@@ -1,9 +1,12 @@
-from utils.read_config import read_config
-from core.federation.server import Server
-from core.federation.clients import retrieve_clients, clean_clients
+
 from experiment import experiment
 
 import logging
+import os
+
+os.environ['CUDA_VISIBLE_DEVICES'] = "2,5"
+
+
 
 if __name__ == '__main__':
     '''
@@ -15,4 +18,4 @@ if __name__ == '__main__':
     logging.info('experiment is starting')
 
     # Get the configs
-    experiment('camelyon17_base.yml', 1)
+    experiment('camelyon17_base.yml', n_rounds=1)

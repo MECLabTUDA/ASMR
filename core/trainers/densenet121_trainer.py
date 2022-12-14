@@ -29,6 +29,10 @@ class DenseNet121Trainer:
         train_loss = 0
         total = 0
         correct = 0
+
+        self.model.train()
+        self.model.cuda()
+
         for _ in range(self.n_local_epochs):
             for batch_index, (inputs, targets) in enumerate(self.ldr):
 
