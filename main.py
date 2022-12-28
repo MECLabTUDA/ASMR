@@ -18,4 +18,4 @@ if __name__ == '__main__':
     logging.info('experiment is starting')
 
     # Get the configs
-    experiment('camelyon17_base.yml', n_rounds=1)
+    experiment('camelyon17_base.yml')

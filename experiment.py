@@ -3,12 +3,12 @@ from core.federation.server import Server
 from core.federation.clients import retrieve_clients, clean_clients
 
 
-def experiment(cfg, n_rounds):
+def experiment(cfg):
 
     # Get the configs
 
-    client_cfg, server_cfg = get_configs('configs/' + cfg)
-
+    client_cfg, server_cfg, experiment_cfg = get_configs('configs/' + cfg)
+    n_rounds = experiment_cfg['n_rounds']
 
     #Set up Server and Clients
     clients = retrieve_clients(client_cfg)
@@ -19,7 +19,12 @@ def experiment(cfg, n_rounds):
     #for _ in range(n_rounds):
     #    server.run_round()
 
-    server.aggregate()
+    #server.aggregate()
+
+    print(n_rounds)
+
+    for client in clients:
+        print(len(client.ldr.dataset))
 
     ##Launching SIA Attack
     #List of state dicts

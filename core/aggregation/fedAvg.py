@@ -6,6 +6,9 @@ class FedAvg:
     def __init__(self, clients, global_model_path):
         self.clients = clients
         self.global_model_path = global_model_path
+        self.total_samples = 0
+        for client in clients:
+            self.total_samples += len(client.ldr.dataset)
 
     def get_info(self):
         print("this is a FedAvg")
@@ -18,7 +21,7 @@ class FedAvg:
 
         for client in self.clients:
             for item in client.model.state_dict().items():
-                agg_state_dict[item[0]] += (item[1].clone() / n_local_models)
+                agg_state_dict[item[0]] += (item[1].clone() * (len(client.ldr.dataset) / self.total_samples))
         return agg_state_dict
 
     def _create_zero_state_dict(self, state_dict):
