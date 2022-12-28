@@ -15,7 +15,6 @@ class FedAvg:
 
     def _average_weights(self):
 
-        #TODO: anpassen der gewichtung durch n_client_samples / n_samples
         n_local_models = len(self.clients)
         agg_state_dict = self._create_zero_state_dict(self.clients[0].model.state_dict())
 
