@@ -1,10 +1,10 @@
 
 from experiment import experiment
-
+from train_clients import train_clients
 import logging
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "4"
+os.environ['CUDA_VISIBLE_DEVICES'] = "2"
 
 
 
@@ -18,4 +18,5 @@ if __name__ == '__main__':
     logging.info('experiment is starting')
 
     # Get the configs
-    experiment('camelyon17_base.yml')
+    #experiment('camelyon17_base.yml')
+    train_clients('camelyon17_base.yml')
