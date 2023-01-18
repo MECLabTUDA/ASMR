@@ -47,11 +47,11 @@ class Client:
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
 
-    def train(self):
+    def train(self, n_round):
         '''
         Trains Clients model for one Episode
         '''
-        self.trainer.train()
+        self.trainer.train(n_round)
 
     def clean(self):
         try:

@@ -26,7 +26,7 @@ class DenseNet121Trainer:
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
 
-    def train(self):
+    def train(self, n_round):
         train_loss = 0
         total = 0
         correct = 0
@@ -59,10 +59,10 @@ class DenseNet121Trainer:
                 correct += outputs.data.eq(targets.data).cpu().sum()
 
         print("Finished training for Client: " + str(self.id))
-        self.save_local_model()
+        self.save_local_model(n_round)
 
-    def save_local_model(self):
+    def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path 
-                   + '/local_model_' + str(self.id) + '.pt')
+                   + '/local_model_' + str(self.id) + 'round_' + str(n_round) + '.pt')
 
         print("saved local model of Client: " + str(self.id))

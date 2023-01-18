@@ -13,8 +13,8 @@ def train_clients(cfg):
 
     ##Training of the clients
 
-    for _ in range(n_rounds):
-        server.run_round()
+    for n_round in range(n_rounds):
+        server.run_round(n_round)
 
     ##Launching SIA Attack
     # List of state dicts
