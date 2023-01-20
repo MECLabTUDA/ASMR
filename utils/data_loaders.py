@@ -8,6 +8,7 @@ def get_test_loader(root_dir, batch_size=4, **loader_kwargs):
                       shuffle=False,
                       sampler=None,
                       batch_size=batch_size,
+                      drop_last=True,
                       **loader_kwargs
                       )
 
@@ -22,6 +23,7 @@ def get_train_loaders(root_dir, batch_size, clients, **loader_kwargs):
                                         shuffle=False,
                                         sampler=None,
                                         batch_size=batch_size,
+                                        drop_last=True,
                                         **loader_kwargs
                                         )
     return loaders
@@ -33,6 +35,7 @@ def get_train_loader(root_dir, batch_size, n_clients, client_id, **loader_kwargs
                      shuffle=False,
                      sampler=None,
                      batch_size=batch_size,
+                     drop_last=True,
                      **loader_kwargs
                      )
     return ldr
@@ -44,5 +47,6 @@ def get_attack_loader(root_dir, batch_size, center, **loader_kwargs):
                      shuffle=False,
                      sampler=None,
                      batch_size=batch_size,
+                     drop_last=True,
                      **loader_kwargs
                      )

@@ -38,7 +38,7 @@ class Server:
         except:
             logging.error("failed to aggregate the local model weights")
             print('Error during aggregation')
-
+    
     def run_round(self, n_round):
         '''
         triggers one training round with the clients

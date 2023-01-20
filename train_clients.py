@@ -16,6 +16,7 @@ def train_clients(cfg):
     for n_round in range(n_rounds):
         server.run_round(n_round)
 
+    #server.aggregate()
     ##Launching SIA Attack
     # List of state dicts
     # Create net arch

@@ -63,6 +63,9 @@ class DenseNet121Trainer:
 
     def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path 
-                   + '/local_model_' + str(self.id) + 'round_' + str(n_round) + '.pt')
+                   + '/local_model_' + str(self.id) + '_round_' + str(n_round) + '.pt')
+
+        torch.save(self.model.state_dict(), self.local_model_path 
+                   + '/local_model_' + str(self.id) + '.pt')
 
         print("saved local model of Client: " + str(self.id))
