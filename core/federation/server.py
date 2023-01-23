@@ -25,6 +25,7 @@ class Server:
         self.agg_params = self.get_agg_params(cfg)
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
         self.root_dir = cfg['data_root']
+        self.init_model_path = cfg['init_model_path']
         self._init_model()
 
     def aggregate(self):
@@ -52,7 +53,7 @@ class Server:
         try:
             if self.arch == 'densenet':
                 source = '/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/init_models/densenet121.pt'
-                shutil.copy(source, self.global_model_path)
+                shutil.copy(self.init_model_path, self.global_model_path)
 
                 self.model.load_state_dict(torch.load(self.global_model_path))
                 logging.debug("Densenet121 was successfully initialized with pretrained weights")
