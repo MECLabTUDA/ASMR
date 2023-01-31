@@ -1,15 +1,21 @@
+name: "train_clients"
 
 dataset: "camelyon17"
 data_root: "/local/scratch/camelyon17/camelyon17_v1.0"
 
 n_clients: 10
+n_mal_clients: 2
+fl_attack: "sfa"
+
 n_rounds: 20
 n_local_epochs: 5
+
 
 momentum: 0.9
 agg_method: "FedAvgM"
 
 batch_size: 8
+
 
 arch: "densenet"
 trainer: 'densenet121_basic'

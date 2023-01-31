@@ -4,6 +4,9 @@ import torch.optim as optim
 import numpy as np
 from tqdm import tqdm
 from torch.autograd import Variable
+from torch.utils.tensorboard import SummaryWriter
+
+from torch.utils.tensorboard import SummaryWriter
 
 
 class DenseNet121Trainer:
@@ -26,6 +29,7 @@ class DenseNet121Trainer:
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
 
+
     def train(self, n_round):
         train_loss = 0
         total = 0
@@ -34,8 +38,10 @@ class DenseNet121Trainer:
         self.model.train()
         self.model.cuda()
         
+        tb = SummaryWriter("runs/round_" + str(n_round))
+
         print('********Training of Client: ' + str(self.id) + '*********')
-        for _ in tqdm(range(self.n_local_epochs)):
+        for epoch in tqdm(range(self.n_local_epochs)):
             for batch_index, (inputs, targets) in enumerate(tqdm(self.ldr),0):
 
                 #inputs.cuda()
@@ -57,9 +63,13 @@ class DenseNet121Trainer:
                 outputs = outputs.argmax(dim=1)
 
                 correct += outputs.data.eq(targets.data).cpu().sum()
-
+        
+            tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, epoch)    
+            tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, epoch)
+        
         print("Finished training for Client: " + str(self.id))
         self.save_local_model(n_round)
+        tb.close()
 
     def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path 
