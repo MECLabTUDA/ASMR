@@ -5,6 +5,7 @@ from core.federation.clients import Client
 from core.federation.clients import retrieve_clients, clean_clients
 import utils.custom_multiprocess as cm
 
+
 # Setup Functions
 def set_random_seed(seed):
     random.seed(seed)
@@ -14,6 +15,8 @@ def set_random_seed(seed):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+
 # q is the client info
 def init_process(q, Client, seed):
     set_random_seed(seed)
@@ -21,6 +24,7 @@ def init_process(q, Client, seed):
     ci = q.get()
     # cfg, i, ldr
     client = Client(ci[0], ci[1], ci[2])
+
 
 # TODO abstract to a dict called recieved_info_from_server
 def run_clients(n_round, global_weight):
@@ -41,14 +45,16 @@ def train_clients(cfg):
 
     server = Server(server_cfg, clients_info)
 
-
     pool = cm.MyPool(processes=client_cfg['n_clients'], initializer=init_process,
                      initargs=(clients_info, Client, experiment_cfg['seed']))
 
     ##Training of the clients
 
+    # global model = the inital weights = init_model = densenet
+    global_weight = server.model.state_dict()
+
     for n_round in range(n_rounds):
-        # TODO pass server output (general weights with n_round to avoid input/output overhead)
+
         client_outputs = pool.map(run_clients, (n_round, global_weight))
 
         global_weight = server.operate(client_outputs)
