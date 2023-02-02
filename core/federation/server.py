@@ -30,6 +30,7 @@ class Server:
         self.global_model_path = cfg['global_model_path']
         self.agg_params = self.get_agg_params(cfg)
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
+
         self.root_dir = cfg['data_root']
         self.init_model_path = cfg['init_model_path']
         self._init_model()

@@ -27,6 +27,7 @@ def retrieve_clients(cfg):
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i)
         client_info.put((cfg, i, ldr))
+
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
     return client_info
