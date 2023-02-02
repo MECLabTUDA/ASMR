@@ -98,4 +98,4 @@ class DenseNet121Trainer:
         torch.save(self.model.state_dict(), self.local_model_path
                    + '/local_model_' + str(self.id) + '.pt')
 
-        logger.info("saved local model of Client: " + str(self.id))
+        # logger.info("saved local model of Client: " + str(self.id))
