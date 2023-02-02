@@ -3,24 +3,24 @@ from collections import OrderedDict
 
 
 class FedAvg:
-    def __init__(self, clients, global_model_path):
-        self.clients = clients
+    def __init__(self, clients_info, global_model_path):
+        self.clients_info = clients_info
         self.global_model_path = global_model_path
         self.total_samples = 0
-        for client in clients:
-            self.total_samples += len(client.ldr.dataset)
+        for client_dict in clients_info:
+            # self.total_samples += len(client.ldr.dataset)
+            self.total_samples += client_dict['num_samples']
 
     def get_info(self):
         print("this is a FedAvg")
 
     def _average_weights(self):
+        n_local_models = len(self.clients_info)
+        agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
 
-        n_local_models = len(self.clients)
-        agg_state_dict = self._create_zero_state_dict(self.clients[0].model.state_dict())
-
-        for client in self.clients:
-            for item in client.model.state_dict().items():
-                agg_state_dict[item[0]] += (item[1].clone() * (len(client.ldr.dataset) / self.total_samples))
+        for client_dict in self.clients_info:
+            for item in client_dict['weights'].items():
+                agg_state_dict[item[0]] += (item[1].clone() * (client_dict['num_samples'] / self.total_samples))
         return agg_state_dict
 
     def _create_zero_state_dict(self, state_dict):
@@ -32,6 +32,8 @@ class FedAvg:
     def _save_agg_model(self, agg_state_dict):
         torch.save(agg_state_dict, self.global_model_path)
 
-    def aggregate(self):
+    def aggregate(self, clients_info):
+        self.clients_info = clients_info
         agg_state_dict = self._average_weights()
         self._save_agg_model(agg_state_dict)
+        return agg_state_dict
