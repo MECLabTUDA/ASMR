@@ -11,10 +11,12 @@ from torch.utils.tensorboard import SummaryWriter
 
 import logging
 import sys
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 logger.setLevel(logging.INFO)
+
 
 class DenseNet121Trainer:
     def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs, device=0):
@@ -79,8 +81,10 @@ class DenseNet121Trainer:
             if len(batch_loss) > 0:
                 epoch_loss.append(sum(batch_loss) / len(batch_loss))
                 logger.info(
-                    '(client {}. Local Training Epoch: {} \t Loss: {:.6f}'.format(self.id, epoch, sum(
-                        epoch_loss) / len(epoch_loss)))
+                    '(client {}, Round: {}, Local Training Epoch: {} \t Loss: {:.6f}'.format(self.id, n_round, epoch,
+                                                                                             sum(
+                                                                                                 epoch_loss) / len(
+                                                                                                 epoch_loss)))
 
         self.tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, n_round)
         self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
