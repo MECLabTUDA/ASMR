@@ -12,7 +12,7 @@ class FedAvgM(FedAvg):
     def aggregate(self, clients_info):
         self.clients_info = clients_info
         avg_weights = self._average_weights()
-        global_weights = torch.load(self.global_model_path, map_location="cuda:0")
+        global_weights = torch.load(self.global_model_path, map_location="cpu")
 
         for key in avg_weights:
             avg_weights[key] = (avg_weights[key] * (1 - self.momentum)) + (global_weights[key] * self.momentum)
