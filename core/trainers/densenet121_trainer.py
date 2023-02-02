@@ -86,7 +86,7 @@ class DenseNet121Trainer:
                                                                                                  epoch_loss) / len(
                                                                                                  epoch_loss)))
 
-        self.tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, n_round)
+        self.tb.add_scalar("Client:" + str(self.id) + "/Loss", sum(epoch_loss) / len(epoch_loss), n_round)
         self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
 
         # print(f"Finished training for Client:{self.id}, loss:{loss}, " + str(self.id))
