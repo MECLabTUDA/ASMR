@@ -89,7 +89,7 @@ class DenseNet121Trainer:
         self.save_local_model(n_round)
         self.tb.close()
 
-        return self.model.state_dict().cpu()
+        return self.model.cpu().state_dict()
 
     def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path
