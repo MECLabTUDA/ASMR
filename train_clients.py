@@ -8,6 +8,7 @@ from torch.multiprocessing import set_start_method, Queue
 import numpy as np
 import random
 import torch
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 # Setup Functions
 def set_random_seed(seed):
