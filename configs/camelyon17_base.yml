@@ -9,7 +9,7 @@ n_mal_clients: 2
 fl_attack: "none"
 
 n_rounds: 20
-n_local_epochs: 5
+n_local_epochs: 1
 
 momentum: 0.9
 agg_method: "FedAvgM"
