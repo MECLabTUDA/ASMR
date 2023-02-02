@@ -9,7 +9,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 class Server:
-    def __init__(self, cfg, clients_info):
+    def __init__(self, cfg):
         """
         args describing:
         - aggregation Class
@@ -19,7 +19,7 @@ class Server:
         - root path to local models
         """
 
-        self.clients_info = clients_info
+        self.clients_info = []
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
         self.global_model_path = cfg['global_model_path']
