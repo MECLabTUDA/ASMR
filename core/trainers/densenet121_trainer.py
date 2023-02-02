@@ -29,6 +29,7 @@ class DenseNet121Trainer:
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
 
+        self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
 
     def train(self, n_round):
         train_loss = 0
@@ -37,16 +38,13 @@ class DenseNet121Trainer:
 
         self.model.train()
         self.model.cuda()
-        
-        tb = SummaryWriter("runs/round_" + str(n_round))
 
         print('********Training of Client: ' + str(self.id) + '*********')
         for epoch in tqdm(range(self.n_local_epochs)):
-            for batch_index, (inputs, targets) in enumerate(tqdm(self.ldr),0):
+            for batch_index, (inputs, targets) in enumerate(tqdm(self.ldr), 0):
+                # inputs.cuda()
+                # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
-                #inputs.cuda()
-                #targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
-                
                 inputs, targets = inputs.cuda(), targets.cuda()
                 self.optimizer.zero_grad()
 
@@ -63,19 +61,19 @@ class DenseNet121Trainer:
                 outputs = outputs.argmax(dim=1)
 
                 correct += outputs.data.eq(targets.data).cpu().sum()
-        
-            tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, epoch)    
-            tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, epoch)
-        
+
+            self.tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, n_round)
+            self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
+
         print("Finished training for Client: " + str(self.id))
         self.save_local_model(n_round)
         tb.close()
 
     def save_local_model(self, n_round):
-        torch.save(self.model.state_dict(), self.local_model_path 
+        torch.save(self.model.state_dict(), self.local_model_path
                    + '/local_model_' + str(self.id) + '_round_' + str(n_round) + '.pt')
 
-        torch.save(self.model.state_dict(), self.local_model_path 
+        torch.save(self.model.state_dict(), self.local_model_path
                    + '/local_model_' + str(self.id) + '.pt')
 
         print("saved local model of Client: " + str(self.id))

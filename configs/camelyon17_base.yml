@@ -6,7 +6,7 @@ init_model_path: "store/init_models/densenet121.pt"
 
 n_clients: 10
 n_mal_clients: 2
-fl_attack: "sfa"
+fl_attack: "none"
 
 n_rounds: 20
 n_local_epochs: 5
@@ -19,5 +19,4 @@ batch_size: 8
 arch: "densenet"
 trainer: 'densenet121_basic'
 
-local_model_root: "/gris/gris-f/homelv/mkonstan/master_thesis/repo/FedPath/store/clients"
-global_model_path: "/gris/gris-f/homelv/mkonstan/master_thesis/repo/FedPath/store/global/global_model.pt"
+root_path : "/gris/gris-f/homelv/mkonstan/master_thesis/repo/FedPath/store/"

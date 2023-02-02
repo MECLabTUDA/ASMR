@@ -27,6 +27,7 @@ class Server:
         self.root_dir = cfg['data_root']
         self.init_model_path = cfg['init_model_path']
         self._init_model()
+        self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
 
     def aggregate(self):
         '''
@@ -39,7 +40,7 @@ class Server:
         except:
             logging.error("failed to aggregate the local model weights")
             print('Error during aggregation')
-    
+
     def run_round(self, n_round):
         '''
         triggers one training round with the clients
@@ -48,6 +49,9 @@ class Server:
             client.update_model()
             client.train(n_round)
         self.aggregate()
+
+        acc = self.evaluate()
+        add_scalar('Server Test Acc.', acc, global_step=n_round)
 
     def _init_model(self):
         try:
