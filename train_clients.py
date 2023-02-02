@@ -4,6 +4,7 @@ from core.federation.clients import Client
 
 from core.federation.clients import retrieve_clients, clean_clients
 import utils.custom_multiprocess as cm
+from torch.multiprocessing import set_start_method, Queue
 
 
 # Setup Functions
@@ -37,6 +38,11 @@ def run_clients(n_round, global_weight):
 
 # Get the configs
 def train_clients(cfg):
+    try:
+        set_start_method('spawn')
+    except RuntimeError:
+        pass
+
     client_cfg, server_cfg, experiment_cfg = get_configs('configs/' + cfg)
     n_rounds = experiment_cfg['n_rounds']
 
