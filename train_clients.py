@@ -49,7 +49,7 @@ def train_clients(cfg):
     # Set up Server and Clients
     clients_info = retrieve_clients(client_cfg)
 
-    server = Server(server_cfg, clients_info)
+    server = Server(server_cfg)
 
     pool = cm.MyPool(processes=client_cfg['n_clients'], initializer=init_process,
                      initargs=(clients_info, Client, experiment_cfg['seed']))
