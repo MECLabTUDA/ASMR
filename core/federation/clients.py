@@ -29,7 +29,7 @@ def clean_clients(clients):
 
 
 class Client:
-    def __init__(self, cfg, client_id, ldr, device):
+    def __init__(self, cfg, client_id, ldr):
         """
         Constructor:
         - creates path
