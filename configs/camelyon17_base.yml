@@ -15,7 +15,7 @@ momentum: 0.9
 agg_method: "FedAvgM"
 
 batch_size: 8
-
+seed: 0
 arch: "densenet"
 trainer: 'densenet121_basic'
 

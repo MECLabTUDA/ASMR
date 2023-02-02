@@ -7,8 +7,9 @@ from ..aggregation.aggregations import get_aggregation
 from utils.data_loaders import get_test_loader
 from torch.utils.tensorboard import SummaryWriter
 
+
 class Server:
-    def __init__(self, cfg, clients):
+    def __init__(self, cfg, clients_info):
         """
         args describing:
         - aggregation Class
@@ -18,7 +19,7 @@ class Server:
         - root path to local models
         """
 
-        self.clients = clients
+        self.clients_info = clients_info
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
         self.global_model_path = cfg['global_model_path']
@@ -34,24 +35,35 @@ class Server:
         aggregate the local models to a global model
         '''
         try:
-            self.aggregation.aggregate()
+            aggregated_weights = self.aggregation.aggregate(self.clients_info)
             logging.debug("aggregated weights to new global model")
             print('aggregation successfull')
         except:
             logging.error("failed to aggregate the local model weights")
             print('Error during aggregation')
 
-    def run_round(self, n_round):
-        '''
-        triggers one training round with the clients
-        '''
-        for client in self.clients:
-            client.update_model()
-            client.train(n_round)
-        self.aggregate()
+        return aggregated_weights
 
-        acc = self.evaluate()
+    # def run_round(self, n_round):
+    # '''
+    # triggers one training round with the clients
+    # '''
+    # for client in self.clients:
+    #     client.update_model()
+    #     client.train(n_round)
+    # self.aggregate()
+    #
+    # acc = self.evaluate()
+    # add_scalar('Server Test Acc.', acc, global_step=n_round)
+    def operate(self, clients_info):
+        self.clients_info = clients_info
+
+        aggregated_weights = self.aggregate()
+
+        acc = self.evaluate(aggregated_weights)
         add_scalar('Server Test Acc.', acc, global_step=n_round)
+
+        return [aggregated_weights for x in range(len(clients_info))]
 
     def _init_model(self):
         try:
@@ -65,11 +77,14 @@ class Server:
         except:
             logging.error('Unable to init model with pretrained weights')
 
-    def evaluate(self):
+    def evaluate(self, aggregated_weights=None):
         '''
         evaluates the global model on test data
         '''
-        self.model.load_state_dict(torch.load(self.global_model_path))
+        if aggregated_weights:
+            self.model.load_state_dict(aggregated_weights)
+        else:
+            self.model.load_state_dict(torch.load(self.global_model_path))
         test_ldr = get_test_loader(self.root_dir)
         correct = 0
         batch_total = 0
@@ -86,7 +101,7 @@ class Server:
         return acc
 
     def get_agg_params(self, cfg):
-        agg_params = {'clients': self.clients, 'global_model_path': self.global_model_path}
+        agg_params = {'clients': self.clients_info, 'global_model_path': self.global_model_path}
         if cfg['agg_method'] == 'FedAvgM':
             agg_params['momentum'] = cfg['momentum']
         return agg_params
