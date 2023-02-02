@@ -68,7 +68,7 @@ class DenseNet121Trainer:
 
         print("Finished training for Client: " + str(self.id))
         self.save_local_model(n_round)
-        tb.close()
+        self.tb.close()
 
     def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path
