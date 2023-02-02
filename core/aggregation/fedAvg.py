@@ -15,7 +15,7 @@ class FedAvg:
         print("this is a FedAvg")
 
     def _average_weights(self):
-        for client_dict in clients_info:
+        for client_dict in self.clients_info:
             # self.total_samples += len(client.ldr.dataset)
             self.total_samples += client_dict['num_samples']
 
