@@ -10,6 +10,7 @@ from torch.multiprocessing import Queue
 
 import logging
 import sys
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
@@ -53,7 +54,7 @@ class Client:
         self.trainer = get_trainer(cfg['trainer'])(self.model, self.id, self.ldr,
                                                    self.local_model_path, self.n_local_epochs,
                                                    self.id % torch.cuda.device_count())
-
+        self.num_samples = len(self.ldr.dataset)
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
 
@@ -66,7 +67,9 @@ class Client:
         self._load_model(recieved_info['global_weight'])
 
         client_weights = self.trainer.train(recieved_info['n_round'])
-        return client_weights
+        return {'client_weights': client_weights,
+                'weights': self.num_samples,
+                'n_round': recieved_info['n_round']}
 
     def clean(self):
         try:

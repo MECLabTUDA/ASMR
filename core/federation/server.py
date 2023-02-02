@@ -39,14 +39,17 @@ class Server:
         '''
         aggregate the local models to a global model
         '''
-        try:
-            aggregated_weights = self.aggregation.aggregate(self.clients_info)
-            logger.debug("aggregated weights to new global model")
-            print('aggregation successfull')
-        except:
-            logger.error("failed to aggregate the local model weights")
-            print('Error during aggregation')
+        # try:
+        #     aggregated_weights = self.aggregation.aggregate(self.clients_info)
+        #     logger.debug("aggregated weights to new global model")
+        #     print('aggregation successfull')
+        # except:
+        #     logger.error("failed to aggregate the local model weights")
+        #     print('Error during aggregation')
 
+        aggregated_weights = self.aggregation.aggregate(self.clients_info)
+        logger.debug("aggregated weights to new global model")
+        print('aggregation successfull')
         return aggregated_weights
 
     # def run_round(self, n_round):
