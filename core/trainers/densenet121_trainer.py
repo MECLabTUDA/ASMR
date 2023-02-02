@@ -42,9 +42,14 @@ class DenseNet121Trainer:
         self.model.to(self.device)
 
         print('********Training of Client: ' + str(self.id) + '*********')
-        for epoch in tqdm(range(self.n_local_epochs)):
-            for batch_index, (inputs, targets) in enumerate(tqdm(self.ldr), 0):
+        epoch_loss = []
+
+        for epoch in range(self.n_local_epochs):
+            batch_loss = []
+
+            for batch_index, (inputs, targets) in enumerate(self.ldr, 0):
                 # inputs.cuda()
+
                 # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
                 inputs, targets = inputs.to(self.device), targets.to(self.device)
@@ -63,11 +68,18 @@ class DenseNet121Trainer:
                 outputs = outputs.argmax(dim=1)
 
                 correct += outputs.data.eq(targets.data).cpu().sum()
+                batch_loss.append(loss.item())
 
-            self.tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, n_round)
-            self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
+            if len(batch_loss) > 0:
+                epoch_loss.append(sum(batch_loss) / len(batch_loss))
+                logging.info(
+                    '(client {}. Local Training Epoch: {} \t Loss: {:.6f}'.format(self.id, epoch, sum(
+                        epoch_loss) / len(epoch_loss)))
 
-        print("Finished training for Client: " + str(self.id))
+        self.tb.add_scalar("Client:" + str(self.id) + "/Loss", loss, n_round)
+        self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
+
+        # print(f"Finished training for Client:{self.id}, loss:{loss}, " + str(self.id))
         self.save_local_model(n_round)
         self.tb.close()
 
