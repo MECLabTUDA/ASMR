@@ -64,7 +64,7 @@ def train_clients(cfg):
     global_weight = server.model.state_dict()
 
     # initally round 0
-    recieved_info = [{'global_weight': global_weight, 'n_round': 0} for x in client_cfg['n_clients']]
+    recieved_info = [{'global_weight': global_weight, 'n_round': 0} for x in range(client_cfg['n_clients'])]
     for n_round in range(n_rounds):
         client_outputs = pool.map(run_clients, recieved_info)
 
