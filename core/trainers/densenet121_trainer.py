@@ -47,7 +47,7 @@ class DenseNet121Trainer:
         self.model.train()
         self.model.to(self.device)
 
-        print('********Training of Client: ' + str(self.id) + '*********')
+        logger.info('********Training of Client: ' + str(self.id) + '*********')
         epoch_loss = []
 
         for epoch in range(self.n_local_epochs):
