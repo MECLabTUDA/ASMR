@@ -10,6 +10,7 @@ import logging
 from torch.utils.tensorboard import SummaryWriter
 
 import logging
+import sys
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 

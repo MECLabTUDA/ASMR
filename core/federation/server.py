@@ -7,6 +7,7 @@ from ..aggregation.aggregations import get_aggregation
 from utils.data_loaders import get_test_loader
 from torch.utils.tensorboard import SummaryWriter
 import logging
+import sys
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
