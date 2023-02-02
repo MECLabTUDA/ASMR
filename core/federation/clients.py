@@ -44,7 +44,7 @@ class Client:
         self.ldr = ldr
         self.trainer = get_trainer(cfg['trainer'])(self.model, self.id, self.ldr,
                                                    self.local_model_path, self.n_local_epochs,
-                                                   i % torch.cuda.device_count())
+                                                   self.id % torch.cuda.device_count())
 
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
