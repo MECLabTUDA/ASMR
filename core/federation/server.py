@@ -6,7 +6,11 @@ from ..models.get_arch import get_arch
 from ..aggregation.aggregations import get_aggregation
 from utils.data_loaders import get_test_loader
 from torch.utils.tensorboard import SummaryWriter
+import logging
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
+logger.setLevel(logging.INFO)
 
 class Server:
     def __init__(self, cfg):
@@ -36,10 +40,10 @@ class Server:
         '''
         try:
             aggregated_weights = self.aggregation.aggregate(self.clients_info)
-            logging.debug("aggregated weights to new global model")
+            logger.debug("aggregated weights to new global model")
             print('aggregation successfull')
         except:
-            logging.error("failed to aggregate the local model weights")
+            logger.error("failed to aggregate the local model weights")
             print('Error during aggregation')
 
         return aggregated_weights
@@ -72,10 +76,10 @@ class Server:
                 shutil.copy(self.init_model_path, self.global_model_path)
 
                 self.model.load_state_dict(torch.load(self.global_model_path))
-                logging.debug("Densenet121 was successfully initialized with pretrained weights")
+                logger.debug("Densenet121 was successfully initialized with pretrained weights")
 
         except:
-            logging.error('Unable to init model with pretrained weights')
+            logger.error('Unable to init model with pretrained weights')
 
     def evaluate(self, aggregated_weights=None):
         '''
@@ -97,7 +101,7 @@ class Server:
             batch_total += imgs.size(0)
 
         acc = 100. * correct / batch_total
-        logging.info("test accuracy: " + str(acc))
+        logger.info("test accuracy: " + str(acc))
         return acc
 
     def get_agg_params(self, cfg):

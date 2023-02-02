@@ -6,9 +6,14 @@ from tqdm import tqdm
 from torch.autograd import Variable
 from torch.utils.tensorboard import SummaryWriter
 import os
-
+import logging
 from torch.utils.tensorboard import SummaryWriter
 
+import logging
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+
+logger.setLevel(logging.INFO)
 
 class DenseNet121Trainer:
     def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs, device=0):
@@ -72,7 +77,7 @@ class DenseNet121Trainer:
 
             if len(batch_loss) > 0:
                 epoch_loss.append(sum(batch_loss) / len(batch_loss))
-                logging.info(
+                logger.info(
                     '(client {}. Local Training Epoch: {} \t Loss: {:.6f}'.format(self.id, epoch, sum(
                         epoch_loss) / len(epoch_loss)))
 
@@ -92,4 +97,4 @@ class DenseNet121Trainer:
         torch.save(self.model.state_dict(), self.local_model_path
                    + '/local_model_' + str(self.id) + '.pt')
 
-        print("saved local model of Client: " + str(self.id))
+        logger.info("saved local model of Client: " + str(self.id))
