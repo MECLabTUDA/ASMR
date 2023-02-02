@@ -99,6 +99,8 @@ class Server:
         correct = 0
         batch_total = 0
 
+        self.model.cuda()
+
         for (imgs, labels) in test_ldr:
             imgs, labels = imgs.cuda(), labels.cuda()
             output = self.model(imgs)
