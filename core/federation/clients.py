@@ -56,7 +56,7 @@ class Client:
         '''
 
         # update the model before training should be abstracted from the server side for multiprocessing?
-        self._load_model(recieved_info['global_weights'])
+        self._load_model(recieved_info['global_weight'])
 
         client_weights = self.trainer.train(recieved_info['n_round'])
         return client_weights
