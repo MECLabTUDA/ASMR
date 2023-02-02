@@ -15,15 +15,12 @@ def retrieve_clients(cfg):
     n_clients = cfg['n_clients']
     root_dir = cfg['data_root']
     batch_size = cfg['batch_size']
-    clients = []
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i)
-        client_info.put((client_dict[i], args))
-
-        client = Client(cfg, i, ldr)
+        client_info.put((cfg, i, ldr))
+        # client = Client(cfg, i, ldr)
         logging.debug('created client: ' + str(i))
-        clients.append(client)
-    return clients
+    return client_info
 
 
 def clean_clients(clients):
