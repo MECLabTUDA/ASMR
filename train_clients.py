@@ -8,7 +8,12 @@ from torch.multiprocessing import set_start_method, Queue
 import numpy as np
 import random
 import torch
+import logging
+import sys
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
+logger.setLevel(logging.INFO)
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
@@ -68,7 +73,9 @@ def train_clients(cfg):
     for n_round in range(n_rounds):
         client_outputs = pool.map(run_clients, recieved_info)
 
+        logger.info(f'*****************Round {n_round} finished**************')
         recieved_info = server.operate(client_outputs, n_round)
+        logger.info(f'*******************************************************')
 
         # self.aggregate()
         #

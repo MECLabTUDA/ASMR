@@ -1,13 +1,20 @@
 import torch
 import os
 import shutil
-import logging
 
 from ..models.get_arch import get_arch
 from utils.data_loaders import get_train_loader
 from core.trainers.get_trainer import get_trainer
 
 from torch.multiprocessing import Queue
+
+import logging
+import sys
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+
+logger.setLevel(logging.INFO)
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 def retrieve_clients(cfg):
@@ -20,7 +27,7 @@ def retrieve_clients(cfg):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i)
         client_info.put((cfg, i, ldr))
         # client = Client(cfg, i, ldr)
-        logging.debug('created client: ' + str(i))
+        logger.debug('created client: ' + str(i))
     return client_info
 
 
@@ -64,9 +71,9 @@ class Client:
     def clean(self):
         try:
             shutil.rmtree(self.local_model_path)
-            logging.debug('successfully cleaned client: ' + str(self.id))
+            logger.debug('successfully cleaned client: ' + str(self.id))
         except:
-            logging.error('Unable to clean up client: ' + str(self.id))
+            logger.error('Unable to clean up client: ' + str(self.id))
 
     def _save_model(self):
         self.model.save(self.local_model_path + '/local_model_' + str(self.id) + '.pt')
@@ -78,9 +85,9 @@ class Client:
                 self.model.load_state_dict(model_weights)
             else:
                 self.model.load_state_dict(torch.load(self.global_model_path))
-            logging.debug("Loading global model successfully for client: " + str(self.id))
+            logger.debug("Loading global model successfully for client: " + str(self.id))
         except:
-            logging.error("Failed to load model for client: " + str(self.id))
+            logger.error("Failed to load model for client: " + str(self.id))
 
     def update_model(self):
         self._load_model()

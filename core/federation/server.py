@@ -66,7 +66,8 @@ class Server:
         aggregated_weights = self.aggregate()
 
         acc = self.evaluate(aggregated_weights)
-        add_scalar('Server Test Acc.', acc, global_step=n_round)
+
+        self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
 
         return [{'global_weight': aggregated_weights, 'n_round': n_round} for x in range(len(clients_info))]
 
@@ -102,7 +103,7 @@ class Server:
             batch_total += imgs.size(0)
 
         acc = 100. * correct / batch_total
-        logger.info("test accuracy: " + str(acc))
+        logger.info("Server Test accuracy: " + str(acc))
         return acc
 
     def get_agg_params(self, cfg):
