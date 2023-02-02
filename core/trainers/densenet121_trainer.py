@@ -11,13 +11,14 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 class DenseNet121Trainer:
-    def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs):
+    def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs, device=0):
         '''
         model: model to be trained
         ldr: dataloader
         hp_cfg: configuration of hyperparameters
         '''
         self.id = client_id
+        self.device = device
         self.model = model
         self.local_model_path = local_model_path
         self.n_local_epochs = n_local_epochs
@@ -38,7 +39,7 @@ class DenseNet121Trainer:
         correct = 0
 
         self.model.train()
-        self.model.cuda()
+        self.model.to(self.device)
 
         print('********Training of Client: ' + str(self.id) + '*********')
         for epoch in tqdm(range(self.n_local_epochs)):
@@ -46,7 +47,7 @@ class DenseNet121Trainer:
                 # inputs.cuda()
                 # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
-                inputs, targets = inputs.cuda(), targets.cuda()
+                inputs, targets = inputs.to(self.device), targets.to(self.device)
                 self.optimizer.zero_grad()
 
                 inputs, targets = Variable(inputs), Variable(targets)
@@ -69,6 +70,8 @@ class DenseNet121Trainer:
         print("Finished training for Client: " + str(self.id))
         self.save_local_model(n_round)
         self.tb.close()
+
+        return self.model.state_dict().cpu()
 
     def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path
