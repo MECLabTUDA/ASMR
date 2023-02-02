@@ -7,6 +7,7 @@ from ..models.get_arch import get_arch
 from utils.data_loaders import get_train_loader
 from core.trainers.get_trainer import get_trainer
 
+from torch.multiprocessing import  Queue
 
 def retrieve_clients(cfg):
     client_info = Queue()
