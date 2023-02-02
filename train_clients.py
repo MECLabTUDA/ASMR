@@ -64,7 +64,7 @@ def train_clients(cfg):
 
     for n_round in range(n_rounds):
 
-        client_outputs = pool.map(run_clients, (n_round, global_weight))
+        client_outputs = pool.map(run_clients, n_round,global_weight)
 
         global_weight = server.operate(client_outputs)
 
