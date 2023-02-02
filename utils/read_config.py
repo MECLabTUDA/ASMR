@@ -45,7 +45,7 @@ def get_experiment_config(cfg):
 def get_configs(path):
     cfg = read_config(path)
     cfg['exp_path'] = os.path.join(cfg['root_path'],
-                                   f'D_{cfg["data_set"]}_'
+                                   f'D_{cfg["dataset"]}_'
                                    f'C_{cfg["n_clients"]}_'
                                    f'E_{cfg["n_local_epochs"]}_'
                                    f'R_{cfg["n_rounds"]}_'
