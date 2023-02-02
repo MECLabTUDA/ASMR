@@ -55,7 +55,7 @@ class Server:
     #
     # acc = self.evaluate()
     # add_scalar('Server Test Acc.', acc, global_step=n_round)
-    def operate(self, clients_info):
+    def operate(self, clients_info,n_round):
         self.clients_info = clients_info
 
         aggregated_weights = self.aggregate()
@@ -63,7 +63,7 @@ class Server:
         acc = self.evaluate(aggregated_weights)
         add_scalar('Server Test Acc.', acc, global_step=n_round)
 
-        return [aggregated_weights for x in range(len(clients_info))]
+        return [{'global_weight': aggregated_weights, 'n_round': n_round} for x in len(clients_info)]
 
     def _init_model(self):
         try:

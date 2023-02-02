@@ -8,7 +8,9 @@ from torch.multiprocessing import set_start_method, Queue
 import numpy as np
 import random
 import torch
+
 torch.multiprocessing.set_sharing_strategy('file_system')
+
 
 # Setup Functions
 def set_random_seed(seed):
@@ -30,10 +32,9 @@ def init_process(q, Client, seed):
     client = Client(ci[0], ci[1], ci[2])
 
 
-# TODO abstract to a dict called recieved_info_from_server
-def run_clients(n_round, global_weight):
+def run_clients(recieved_info):
     try:
-        return client.train(n_round, global_weight)
+        return client.train(recieved_info)
     except KeyboardInterrupt:
         logger.info('exiting')
         return None
@@ -62,11 +63,12 @@ def train_clients(cfg):
     # global model = the inital weights = init_model = densenet
     global_weight = server.model.state_dict()
 
+    # initally round 0
+    recieved_info = [{'global_weight': global_weight, 'n_round': 0} for x in client_cfg['n_clients']]
     for n_round in range(n_rounds):
+        client_outputs = pool.map(run_clients, recieved_info)
 
-        client_outputs = pool.map(run_clients, n_round,global_weight)
-
-        global_weight = server.operate(client_outputs)
+        recieved_info = server.operate(client_outputs, n_round)
 
         # self.aggregate()
         #

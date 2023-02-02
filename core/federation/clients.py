@@ -7,7 +7,8 @@ from ..models.get_arch import get_arch
 from utils.data_loaders import get_train_loader
 from core.trainers.get_trainer import get_trainer
 
-from torch.multiprocessing import  Queue
+from torch.multiprocessing import Queue
+
 
 def retrieve_clients(cfg):
     client_info = Queue()
@@ -49,15 +50,15 @@ class Client:
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
 
-    def train(self, n_round, global_weights=None):
+    def train(self, recieved_info):
         '''
         Trains Clients model for one Episode
         '''
 
         # update the model before training should be abstracted from the server side for multiprocessing?
-        self._load_model(global_weights)
+        self._load_model(recieved_info['global_weights'])
 
-        client_weights = self.trainer.train(n_round)
+        client_weights = self.trainer.train(recieved_info['n_round'])
         return client_weights
 
     def clean(self):
