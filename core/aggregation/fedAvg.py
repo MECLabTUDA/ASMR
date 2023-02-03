@@ -16,7 +16,7 @@ class FedAvg:
     def _average_weights(self):
         n_local_models = len(self.clients_info)
         # agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
-
+        # client_info.sort(key=lambda tup: tup['client_index'])
         client_sd = [c['weights'] for c in self.clients_info]
         cw = [c['num_samples'] / self.total_samples for c in self.clients_info]
         ssd = copy.deepcopy(self.clients_info[0]['weights'])

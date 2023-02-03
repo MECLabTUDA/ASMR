@@ -95,8 +95,8 @@ class DenseNet121Trainer:
         # print(f"Finished training for Client:{self.id}, loss:{loss}, " + str(self.id))
         self.save_local_model(n_round)
         # self.tb.close()
-
-        return self.model.cpu().state_dict()
+        weights = self.model.cpu().state_dict()
+        return weights
 
     def save_local_model(self, n_round):
         torch.save(self.model.state_dict(), self.local_model_path

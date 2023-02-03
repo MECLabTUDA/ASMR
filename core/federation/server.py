@@ -37,6 +37,7 @@ class Server:
         self._init_model()
         self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
         self.device = torch.cuda.device_count() - 1
+        self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
 
     def aggregate(self):
         '''
@@ -74,8 +75,8 @@ class Server:
         acc = self.evaluate(aggregated_weights)
 
         self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
-
-        return [{'global_weight': aggregated_weights, 'n_round': n_round} for x in range(len(clients_info))]
+        #TODO deepcopy?
+        return [{'global_weight': copy.deepcopy(aggregated_weights), 'n_round': n_round} for x in range(len(clients_info))]
 
     def _init_model(self):
         try:
@@ -98,14 +99,13 @@ class Server:
         else:
             self.model.load_state_dict(torch.load(self.global_model_path))
 
-        test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
         correct = 0
         batch_total = 0
 
         self.model.to(self.device)
         self.model.eval()
         with torch.no_grad():
-            for (imgs, labels) in test_ldr:
+            for (imgs, labels) in self.test_ldr:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
                 output = self.model(imgs)
                 output = torch.squeeze(output)
