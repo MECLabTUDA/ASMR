@@ -8,10 +8,12 @@ from utils.data_loaders import get_test_loader
 from torch.utils.tensorboard import SummaryWriter
 import logging
 import sys
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 logger.setLevel(logging.INFO)
+
 
 class Server:
     def __init__(self, cfg):
@@ -30,7 +32,7 @@ class Server:
         self.global_model_path = cfg['global_model_path']
         self.agg_params = self.get_agg_params(cfg)
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
-
+        self.test_batch_size = cfg['batch_size']
         self.root_dir = cfg['data_root']
         self.init_model_path = cfg['init_model_path']
         self._init_model()
@@ -64,7 +66,7 @@ class Server:
     #
     # acc = self.evaluate()
     # add_scalar('Server Test Acc.', acc, global_step=n_round)
-    def operate(self, clients_info,n_round):
+    def operate(self, clients_info, n_round):
         self.clients_info = clients_info
 
         aggregated_weights = self.aggregate()
@@ -95,7 +97,7 @@ class Server:
             self.model.load_state_dict(aggregated_weights)
         else:
             self.model.load_state_dict(torch.load(self.global_model_path))
-        test_ldr = get_test_loader(self.root_dir)
+        test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size)
         correct = 0
         batch_total = 0
 

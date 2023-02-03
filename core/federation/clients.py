@@ -5,9 +5,7 @@ import shutil
 from ..models.get_arch import get_arch
 from utils.data_loaders import get_train_loader
 from core.trainers.get_trainer import get_trainer
-
 from torch.multiprocessing import Queue
-
 import logging
 import sys
 
@@ -15,6 +13,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 logger.setLevel(logging.INFO)
+
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
@@ -68,6 +67,8 @@ class Client:
         self._load_model(recieved_info['global_weight'])
 
         client_weight = self.trainer.train(recieved_info['n_round'])
+
+        #TODO add gausian noise here (before sending to server?
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
                 'n_round': recieved_info['n_round']}
