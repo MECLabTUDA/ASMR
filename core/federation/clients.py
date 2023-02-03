@@ -54,6 +54,7 @@ class Client:
         self.trainer = get_trainer(cfg['trainer'])(self.model, self.id, self.ldr,
                                                    self.local_model_path, self.n_local_epochs,
                                                    self.id % torch.cuda.device_count())
+        self.dp_scale = cfg['dp_scale']
         self.fl_attack = cfg['fl_attack']
         self.num_samples = len(self.ldr.dataset)
         if not os.path.exists(self.local_model_path):
@@ -68,7 +69,8 @@ class Client:
         self._load_model(recieved_info['global_weight'])
 
         client_weight = self.trainer.train(recieved_info['n_round'])
-        # if self.fl_attack==''
+        if self.fl_attack == 'DP':
+            client_weight = add_gaussian_noise(client_weight, self.dp_scale)
         # TODO add gausian noise here (before sending to server?
         return {'weights': client_weight,
                 'num_samples': self.num_samples,

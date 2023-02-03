@@ -1,11 +1,11 @@
 import shutil
 import torch
-import logging
 import os
 from ..models.get_arch import get_arch
 from ..aggregation.aggregations import get_aggregation
 from utils.data_loaders import get_test_loader
 from torch.utils.tensorboard import SummaryWriter
+
 import logging
 import sys
 
@@ -85,7 +85,6 @@ class Server:
 
                 self.model.load_state_dict(torch.load(self.global_model_path))
                 logger.debug("Densenet121 was successfully initialized with pretrained weights")
-
         except:
             logger.error('Unable to init model with pretrained weights')
 
