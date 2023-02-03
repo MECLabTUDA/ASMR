@@ -39,7 +39,7 @@ def retrieve_clients(cfg):
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
 
-    return client_init,
+    return client_init,clients_info
 
 
 def clean_clients(clients):
