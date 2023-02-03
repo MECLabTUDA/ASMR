@@ -92,10 +92,25 @@ class Server:
         '''
         evaluates the global model on test data
         '''
+        sd = self.model.state_dict()
+        m = 0
+        for key in self.model.state_dict():
+            m += sd[key].float.mean()
+        logger.info(f'aggregated weights means {m}')
+
+
         if aggregated_weights:
             self.model.load_state_dict(aggregated_weights)
+            logger.info('server loaded aggregated weights online')
         else:
             self.model.load_state_dict(torch.load(self.global_model_path))
+            logger.info('server loaded aggregated weights offline')
+
+        sd = self.model.state_dict()
+        m = 0
+        for key in self.model.state_dict():
+            m += sd[key].float.mean()
+        logger.info(f'aggregated weights means {m}')
 
         test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
         correct = 0
@@ -103,19 +118,19 @@ class Server:
 
         self.model.to(self.device)
         self.model.eval()
-        with torch.no_grad():
-            for (imgs, labels) in test_ldr:
-                imgs, labels = imgs.to(self.device), labels.to(self.device)
-                output = self.model(imgs)
-                output = torch.squeeze(output)
-                pred = output.argmax(dim=1)
-                # correct += pred.eq(labels.view_as(pred)).sum().item()
-                correct += pred.data.eq(labels.data).cpu().sum()
-
-                batch_total += labels.size(0)
-
-        acc = 100. * correct / batch_total
-        logger.info("Server Test accuracy: " + str(acc))
+        # with torch.no_grad():
+        #     for (imgs, labels) in test_ldr:
+        #         imgs, labels = imgs.to(self.device), labels.to(self.device)
+        #         output = self.model(imgs)
+        #         output = torch.squeeze(output)
+        #         pred = output.argmax(dim=1)
+        #         # correct += pred.eq(labels.view_as(pred)).sum().item()
+        #         correct += pred.data.eq(labels.data).cpu().sum()
+        #
+        #         batch_total += labels.size(0)
+        #
+        # acc = 100. * correct / batch_total
+        # logger.info("Server Test accuracy: " + str(acc))
         return acc
 
     def get_agg_params(self, cfg):
