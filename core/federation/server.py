@@ -25,7 +25,6 @@ class Server:
         - path to global model
         - root path to local models
         """
-
         self.clients_info = []
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
@@ -37,6 +36,7 @@ class Server:
         self.init_model_path = cfg['init_model_path']
         self._init_model()
         self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
+        self.device = torch.cuda.device_count() - 1
 
     def aggregate(self):
         '''
@@ -101,10 +101,10 @@ class Server:
         correct = 0
         batch_total = 0
 
-        self.model.cuda()
+        self.model.to(self.device)
 
         for (imgs, labels) in test_ldr:
-            imgs, labels = imgs.cuda(), labels.cuda()
+            imgs, labels = imgs.to(self.device), labels.to(self.device)
             output = self.model(imgs)
             pred = output.argmax(dim=1, keepdims=True)
             correct += pred.eq(labels.view_as(pred)).sum().item()
