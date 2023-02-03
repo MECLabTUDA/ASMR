@@ -15,13 +15,20 @@ class FedAvg:
 
     def _average_weights(self):
         n_local_models = len(self.clients_info)
-        agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
+        # agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
 
-        for client_dict in self.clients_info:
-            for item in client_dict['weights'].items():
-                agg_state_dict[item[0]] += (item[1].clone() * (client_dict['num_samples'] / self.total_samples))
+        client_sd = [c['weights'] for c in self.client_info]
+        cw = [c['num_samples'] / self.total_samples for c in self.client_info]
+        ssd = copy.deepcopy(self.clients_info[0]['weights'])
+        for key in ssd:
+            ssd[key] = sum([sd[key] * cw[i] for i, sd in enumerate(client_sd)])
 
-        return agg_state_dict
+        return ssd
+
+        # for client_dict in self.clients_info:
+        #     for item in client_dict['weights'].items():
+        #         agg_state_dict[item[0]] += (item[1].clone() * (client_dict['num_samples'] / self.total_samples))
+        # return agg_state_dict
 
     def _create_zero_state_dict(self, state_dict):
         zero_state_dict = OrderedDict()
