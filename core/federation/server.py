@@ -108,7 +108,7 @@ class Server:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
                 output = self.model(imgs)
                 output = torch.squeeze(output)
-                pred = output.argmax(dim=1, keepdims=True)
+                pred = output.argmax(dim=1)
                 # correct += pred.eq(labels.view_as(pred)).sum().item()
                 correct += pred.data.eq(labels.data).cpu().sum()
 

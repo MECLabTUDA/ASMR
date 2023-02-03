@@ -74,7 +74,7 @@ def train_clients(cfg):
         client_outputs = pool.map(run_clients, recieved_info)
 
         logger.info(f'*****************Round {n_round} finished**************')
-        logger.info(f'client outputs length {len(client_outputs)}')
+
         recieved_info = server.operate(client_outputs, n_round)
 
         logger.info(f'*******************************************************')
