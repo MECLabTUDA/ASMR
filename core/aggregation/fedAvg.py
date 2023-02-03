@@ -21,7 +21,7 @@ class FedAvg:
 
         n_local_models = len(self.clients_info)
         agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
-        agg_state_dict
+
         for client_dict in self.clients_info:
             for item in client_dict['weights'].items():
                 agg_state_dict[item[0]] += (item[1].clone() * (client_dict['num_samples'] / self.total_samples))

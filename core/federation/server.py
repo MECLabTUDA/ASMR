@@ -95,7 +95,7 @@ class Server:
         sd = self.model.state_dict()
         m = 0
         for key in self.model.state_dict():
-            m += sd[key].float.mean()
+            m += sd[key].float().mean()
         logger.info(f'aggregated weights means {m}')
 
 
@@ -109,7 +109,7 @@ class Server:
         sd = self.model.state_dict()
         m = 0
         for key in self.model.state_dict():
-            m += sd[key].float.mean()
+            m += sd[key].float().mean()
         logger.info(f'aggregated weights means {m}')
 
         test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
