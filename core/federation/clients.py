@@ -69,9 +69,10 @@ class Client:
         self._load_model(recieved_info['global_weight'])
 
         client_weight = self.trainer.train(recieved_info['n_round'])
+        # TODO add gausian noise here (before sending to server?
+
         if self.fl_attack == 'DP':
             client_weight = add_gaussian_noise(client_weight, self.dp_scale)
-        # TODO add gausian noise here (before sending to server?
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
                 'n_round': recieved_info['n_round']}
