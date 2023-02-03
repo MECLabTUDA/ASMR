@@ -52,7 +52,8 @@ def get_configs(path):
                                    f'E_{cfg["n_local_epochs"]}_'
                                    f'R_{cfg["n_rounds"]}_'
                                    f'Atk_{cfg["fl_attack"]}_'
-                                   f'N_{cfg["arch"]}')
+                                   f'N_{cfg["arch"]}_'
+                                   f'_{cfg["agg_method"]}')
     if cfg['fl_attack'] == 'dp':
         cfg['exp_path'] += f'_mu_{cfg["dp_scale"]}'
 
