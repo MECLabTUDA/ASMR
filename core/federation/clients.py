@@ -77,6 +77,7 @@ class Client:
 
         if self.fl_attack == 'DP':
             client_weight = add_gaussian_noise(client_weight, self.dp_scale)
+
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
                 'n_round': recieved_info['n_round']}
