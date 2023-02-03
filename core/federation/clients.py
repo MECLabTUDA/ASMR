@@ -29,7 +29,7 @@ def retrieve_clients(cfg):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
         client_info.put((cfg, i, ldr))
 
-        logger.info(f'Client: {i} has {len(ldr.dataset)} samples ' + str(i))
+        logger.info(f'Client: {i} has {len(ldr.dataset)} samples ')
 
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))

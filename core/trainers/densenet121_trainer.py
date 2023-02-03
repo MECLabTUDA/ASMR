@@ -87,7 +87,7 @@ class DenseNet121Trainer:
                         self.id, n_round, epoch,
                         sum(
                             epoch_loss) / len(
-                            epoch_loss), correct,100. * correct / batch_total))
+                            epoch_loss), correct, 100. * correct / total))
 
         self.tb.add_scalar("Client:" + str(self.id) + "/Loss", sum(epoch_loss) / len(epoch_loss), n_round)
         self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
