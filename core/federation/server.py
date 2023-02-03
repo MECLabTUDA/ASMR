@@ -101,13 +101,14 @@ class Server:
         batch_total = 0
 
         self.model.to(self.device)
-
-        for (imgs, labels) in test_ldr:
-            imgs, labels = imgs.to(self.device), labels.to(self.device)
-            output = self.model(imgs)
-            pred = output.argmax(dim=1, keepdims=True)
-            correct += pred.eq(labels.view_as(pred)).sum().item()
-            batch_total += imgs.size(0)
+        self.model.eval()
+        with torch.no_grad():
+            for (imgs, labels) in test_ldr:
+                imgs, labels = imgs.to(self.device), labels.to(self.device)
+                output = self.model(imgs)
+                pred = output.argmax(dim=1, keepdims=True)
+                correct += pred.eq(labels.view_as(pred)).sum().item()
+                batch_total += imgs.size(0)
 
         acc = 100. * correct / batch_total
         logger.info("Server Test accuracy: " + str(acc))

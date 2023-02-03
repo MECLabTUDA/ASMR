@@ -61,12 +61,15 @@ class DenseNet121Trainer:
                 # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
                 inputs, targets = inputs.to(self.device), targets.to(self.device)
+
                 self.optimizer.zero_grad()
 
                 inputs, targets = Variable(inputs), Variable(targets)
                 outputs = self.model(inputs)
                 outputs = torch.squeeze(outputs)
                 loss = self.criterion(outputs, targets)
+
+
                 loss.backward()
                 self.optimizer.step()
 
