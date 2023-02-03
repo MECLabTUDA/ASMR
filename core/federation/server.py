@@ -112,7 +112,7 @@ class Server:
                 # correct += pred.eq(labels.view_as(pred)).sum().item()
                 correct += pred.data.eq(labels.data).cpu().sum()
 
-                batch_total += targets.size(0)
+                batch_total += labels.size(0)
 
         acc = 100. * correct / batch_total
         logger.info("Server Test accuracy: " + str(acc))
