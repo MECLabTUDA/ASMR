@@ -1,6 +1,6 @@
 import torch
 from collections import OrderedDict
-
+import copy
 
 class FedAvg:
     def __init__(self, clients_info, global_model_path):
