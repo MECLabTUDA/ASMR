@@ -10,6 +10,7 @@ import random
 import torch
 import logging
 import sys
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
@@ -56,12 +57,12 @@ def train_clients(cfg):
     n_rounds = experiment_cfg['n_rounds']
 
     # Set up Server and Clients
-    clients_info = retrieve_clients(client_cfg)
+    clients_init, clients_info = retrieve_clients(client_cfg)
 
-    server = Server(server_cfg)
+    server = Server(server_cfg,clients_info)
 
     pool = cm.MyPool(processes=client_cfg['n_clients'], initializer=init_process,
-                     initargs=(clients_info, Client, experiment_cfg['seed']))
+                     initargs=(clients_init, Client, experiment_cfg['seed']))
 
     ##Training of the clients
 

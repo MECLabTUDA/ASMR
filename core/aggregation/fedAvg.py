@@ -6,21 +6,14 @@ class FedAvg:
     def __init__(self, clients_info, global_model_path):
         self.clients_info = clients_info
         self.global_model_path = global_model_path
-        # self.total_samples = 0
-        # for client_dict in clients_info:
-        #     # self.total_samples += len(client.ldr.dataset)
-        #     self.total_samples += client_dict['num_samples']
-
-    def get_info(self):
-        print("this is a FedAvg")
-
-    def _average_weights(self):
-
         self.total_samples = 0
         for client_dict in self.clients_info:
             # self.total_samples += len(client.ldr.dataset)
             self.total_samples += client_dict['num_samples']
+    def get_info(self):
+        print("this is a FedAvg")
 
+    def _average_weights(self):
         n_local_models = len(self.clients_info)
         agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
 

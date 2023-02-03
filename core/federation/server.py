@@ -16,7 +16,7 @@ logger.setLevel(logging.INFO)
 
 
 class Server:
-    def __init__(self, cfg):
+    def __init__(self, cfg, clients_info):
         """
         args describing:
         - aggregation Class
@@ -25,7 +25,7 @@ class Server:
         - path to global model
         - root path to local models
         """
-        self.clients_info = []
+        self.clients_info = clients_info
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
         self.global_model_path = cfg['global_model_path']
@@ -97,7 +97,6 @@ class Server:
             self.model.load_state_dict(aggregated_weights)
         else:
             self.model.load_state_dict(torch.load(self.global_model_path))
-
 
         test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
         correct = 0

@@ -18,22 +18,28 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 def retrieve_clients(cfg):
-    client_info = Queue()
+    client_init = Queue()
 
     n_clients = cfg['n_clients']
     root_dir = cfg['data_root']
     batch_size = cfg['batch_size']
     num_workers = cfg['num_workers']
-
+    clients_info = []
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
-        client_info.put((cfg, i, ldr))
+        client_init.put((cfg, i, ldr))
 
         logger.info(f'Client: {i} has {len(ldr.dataset)} samples ')
 
+        #clients info for first round
+        clients_info.append({'weights': None,
+                             'num_samples': len(ldr.dataset),
+                             'n_round': 0})
+
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
-    return client_info
+
+    return client_init,
 
 
 def clean_clients(clients):
