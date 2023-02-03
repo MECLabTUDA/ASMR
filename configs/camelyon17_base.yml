@@ -19,5 +19,6 @@ batch_size: 128
 seed: 0
 arch: "densenet"
 trainer: 'densenet121_basic'
+num_workers: 8
 
 root_path : "/gris/gris-f/homestud/melbatel/FedPath/store/"

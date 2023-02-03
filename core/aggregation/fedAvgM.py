@@ -12,6 +12,7 @@ class FedAvgM(FedAvg):
     def aggregate(self, clients_info):
         self.clients_info = clients_info
         avg_weights = self._average_weights()
+
         if clients_info[0]['n_round'] == 0:
             global_weights = avg_weights
         else:

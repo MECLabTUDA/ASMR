@@ -9,7 +9,7 @@ def read_config(path):
 def get_client_config(cfg):
     client_cfg = {}
     keys = ['arch', 'local_model_root', 'global_model_path', 'trainer', 'n_clients',
-            'data_root', 'batch_size', 'n_local_epochs', 'exp_path', 'fl_attack', 'dp_scale']
+            'data_root', 'batch_size', 'n_local_epochs', 'exp_path', 'fl_attack', 'dp_scale','num_workers']
 
     for key in keys:
         client_cfg[key] = cfg[key]

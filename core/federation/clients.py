@@ -23,8 +23,10 @@ def retrieve_clients(cfg):
     n_clients = cfg['n_clients']
     root_dir = cfg['data_root']
     batch_size = cfg['batch_size']
+    num_workers = cfg['num_workers']
+
     for i in range(n_clients):
-        ldr = get_train_loader(root_dir, batch_size, n_clients, i)
+        ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
         client_info.put((cfg, i, ldr))
 
         # client = Client(cfg, i, ldr)
