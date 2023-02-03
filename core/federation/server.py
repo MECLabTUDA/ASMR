@@ -116,7 +116,7 @@ class Server:
         return acc
 
     def get_agg_params(self, cfg):
-        agg_params = {'clients': self.clients_info, 'global_model_path': self.global_model_path}
+        agg_params = {'clients_info': self.clients_info, 'global_model_path': self.global_model_path}
         if cfg['agg_method'] == 'FedAvgM':
             agg_params['momentum'] = cfg['momentum']
         return agg_params

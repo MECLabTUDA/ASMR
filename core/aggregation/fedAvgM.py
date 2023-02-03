@@ -4,9 +4,8 @@ from core.aggregation.fedAvg import FedAvg
 
 
 class FedAvgM(FedAvg):
-
-    def __init__(self, clients, global_model_path, momentum):
-        super().__init__(clients, global_model_path)
+    def __init__(self, clients_info, global_model_path, momentum):
+        super().__init__(clients_info, global_model_path)
         self.momentum = momentum
 
     def aggregate(self, clients_info):
