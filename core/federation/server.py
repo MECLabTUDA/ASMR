@@ -96,6 +96,7 @@ class Server:
             self.model.load_state_dict(aggregated_weights)
         else:
             self.model.load_state_dict(torch.load(self.global_model_path))
+
         test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
         correct = 0
         batch_total = 0

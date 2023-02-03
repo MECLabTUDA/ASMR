@@ -7,7 +7,6 @@ FedPath is a framework for simulating Federated Learning (FL) scenarios in digit
 It also provides several aggregation methods like FedAvg, FedAvgM, ...
 
 
-
 ## Overview
 
 ## TODO
