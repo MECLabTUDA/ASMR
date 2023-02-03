@@ -11,6 +11,8 @@ if __name__ == '__main__':
     '''
     Main method
     '''
+    parser = argparse.ArgumentParser()
+
     parser.add_argument('--exp_path', type=str, default=None, metavar='N',
                         help='path to experiment ./configs/**.yml')
     parser.add_argument('--gpu', type=str, default='0', help='GPU to use')
