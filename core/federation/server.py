@@ -52,7 +52,7 @@ class Server:
 
         aggregated_weights = self.aggregation.aggregate(self.clients_info)
         logger.debug("aggregated weights to new global model")
-        print('aggregation successfull')
+        # print('aggregation successfull')
         return aggregated_weights
 
     # def run_round(self, n_round):
