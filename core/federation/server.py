@@ -92,6 +92,7 @@ class Server:
         '''
         evaluates the global model on test data
         '''
+        acc=0
         sd = self.model.state_dict()
         m = 0
         for key in self.model.state_dict():
