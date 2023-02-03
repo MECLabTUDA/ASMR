@@ -4,7 +4,7 @@ from train_clients import train_clients
 import logging
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "0,1,2,3,4"
+os.environ['CUDA_VISIBLE_DEVICES'] = "0,3,4,5,6,7"
 
 if __name__ == '__main__':
     '''

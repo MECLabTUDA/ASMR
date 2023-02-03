@@ -9,7 +9,7 @@ def read_config(path):
 def get_client_config(cfg):
     client_cfg = {}
     keys = ['arch', 'local_model_root', 'global_model_path', 'trainer', 'n_clients',
-            'data_root', 'batch_size', 'n_local_epochs', 'exp_path']
+            'data_root', 'batch_size', 'n_local_epochs', 'exp_path', 'fl_attack']
 
     for key in keys:
         client_cfg[key] = cfg[key]
@@ -19,7 +19,8 @@ def get_client_config(cfg):
 
 def get_server_config(cfg):
     server_cfg = {}
-    keys = ['arch', 'global_model_path', 'data_root','batch_size', 'agg_method', 'init_model_path', 'exp_path','n_clients']
+    keys = ['arch', 'global_model_path', 'data_root', 'batch_size', 'agg_method', 'init_model_path', 'exp_path',
+            'n_clients']
 
     if cfg['agg_method'] == 'FedAvgM':
         keys.append('momentum')
