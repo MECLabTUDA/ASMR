@@ -17,8 +17,8 @@ class FedAvg:
         n_local_models = len(self.clients_info)
         # agg_state_dict = self._create_zero_state_dict(self.clients_info[0]['weights'])
 
-        client_sd = [c['weights'] for c in self.client_info]
-        cw = [c['num_samples'] / self.total_samples for c in self.client_info]
+        client_sd = [c['weights'] for c in self.clients_info]
+        cw = [c['num_samples'] / self.total_samples for c in self.clients_info]
         ssd = copy.deepcopy(self.clients_info[0]['weights'])
         for key in ssd:
             ssd[key] = sum([sd[key] * cw[i] for i, sd in enumerate(client_sd)])
