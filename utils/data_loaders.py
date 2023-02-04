@@ -20,7 +20,7 @@ def get_train_loaders(root_dir, batch_size, clients, **loader_kwargs):
         client_id = client.id
         kwargs['client_id'] = client_id
         loaders[client.id] = DataLoader(FedCamelyon17Dataset(root_dir, kwargs),
-                                        shuffle=False,
+                                        shuffle=True,
                                         sampler=None,
                                         batch_size=batch_size,
                                         drop_last=True,

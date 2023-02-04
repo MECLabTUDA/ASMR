@@ -53,37 +53,36 @@ def train_clients(cfg):
     except RuntimeError:
         pass
 
+    #get configs for clients/servers
     client_cfg, server_cfg, experiment_cfg = get_configs('configs/' + cfg)
     n_rounds = experiment_cfg['n_rounds']
 
     # Set up Server and Clients
     clients_init, clients_info = retrieve_clients(client_cfg)
 
+    #initalize server
     server = Server(server_cfg, clients_info)
 
     pool = cm.MyPool(processes=client_cfg['n_clients'], initializer=init_process,
                      initargs=(clients_init, Client, experiment_cfg['seed']))
-
-    ##Training of the clients
 
     # global model = the inital weights = init_model = densenet
     global_weight = server.model.state_dict()
 
     # initally round 0
     recieved_info = [{'global_weight': global_weight, 'n_round': 0} for x in range(client_cfg['n_clients'])]
+
     for n_round in range(n_rounds):
+
+        ##Training of the clients with recieved weights/info from the server
         client_outputs = pool.map(run_clients, recieved_info)
 
         logger.info(f'*****************Round {n_round} finished**************')
 
+        #server---aggregate---evaluate---send back weights
         recieved_info = server.operate(client_outputs, n_round)
 
         logger.info(f'*******************************************************')
-
-        # self.aggregate()
-        #
-        # acc = self.evaluate()
-        # add_scalar('Server Test Acc.', acc, global_step=n_round)
 
     # server.aggregate()
     ##Launching SIA Attack

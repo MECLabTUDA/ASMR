@@ -44,30 +44,10 @@ class Server:
         '''
         aggregate the local models to a global model
         '''
-        # try:
-        #     aggregated_weights = self.aggregation.aggregate(self.clients_info)
-        #     logger.debug("aggregated weights to new global model")
-        #     print('aggregation successfull')
-        # except:
-        #     logger.error("failed to aggregate the local model weights")
-        #     print('Error during aggregation')
-
         aggregated_weights = self.aggregation.aggregate(self.clients_info)
-        logger.debug("aggregated weights to new global model")
-        # print('aggregation successfull')
+        logger.info("aggregated weights to new global model")
         return aggregated_weights
 
-    # def run_round(self, n_round):
-    # '''
-    # triggers one training round with the clients
-    # '''
-    # for client in self.clients:
-    #     client.update_model()
-    #     client.train(n_round)
-    # self.aggregate()
-    #
-    # acc = self.evaluate()
-    # add_scalar('Server Test Acc.', acc, global_step=n_round)
     def operate(self, clients_info, n_round):
         self.clients_info = clients_info
 
@@ -118,12 +98,8 @@ class Server:
                 test_correct = pred.eq(labels).sum()
 
                 correct += test_correct.item()
-                # output = torch.squeeze(output)
-                # pred = output.argmax(dim=1)
-
-                # correct += pred.eq(labels.view_as(pred)).sum().item()
-                # correct += pred.data.eq(labels.data).cpu().sum()
                 batch_total += labels.size(0)
+
         logger.info(f'output nan? {torch.isnan(output).any()}, img_nan?:{torch.isnan(imgs).any()}"')
         acc = 100. * correct / batch_total
         logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct")
