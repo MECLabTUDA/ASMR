@@ -34,14 +34,14 @@ global_weight_2 = server.model.state_dict()
 # server.evaluate(global_weight)
 zero_state_dict = OrderedDict()
 for key, value in global_weight.items():
-    zero_state_dict[key] = torch.randn_like(value).float()
+    zero_state_dict[key] = torch.randn_like(value.float()).float()
 
 logger.info('First evaluation Zeros')
 server.evaluate(zero_state_dict)
 
 ones_state_dict = OrderedDict()
 for key, value in global_weight.items():
-    ones_state_dict[key] = torch.randn_like(value).float()
+    ones_state_dict[key] = torch.randn_like(value.float()).float()
 
 logger.info('Second evaluation Ones')
 server.evaluate(ones_state_dict)
