@@ -118,16 +118,13 @@ class Server:
                 test_correct = pred.eq(labels).sum()
 
                 correct += test_correct.item()
-
                 # output = torch.squeeze(output)
                 # pred = output.argmax(dim=1)
 
                 # correct += pred.eq(labels.view_as(pred)).sum().item()
                 # correct += pred.data.eq(labels.data).cpu().sum()
-
                 batch_total += labels.size(0)
-                logger.info(f'output nan? {torch.isnan(output).any()}, img_nan?:{torch.isnan(imgs).any()}"')
-
+        logger.info(f'output nan? {torch.isnan(output).any()}, img_nan?:{torch.isnan(imgs).any()}"')
         acc = 100. * correct / batch_total
         logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct")
         return acc
