@@ -20,9 +20,9 @@ class FedAvg:
         client_sd = [c['weights'] for c in self.clients_info]
         cw = [c['num_samples'] / self.total_samples for c in self.clients_info]
         ssd = copy.deepcopy(self.clients_info[0]['weights'])
+
         for key in ssd:
             ssd[key] = sum([sd[key] * cw[i] for i, sd in enumerate(client_sd)])
-
         return ssd
 
         # for client_dict in self.clients_info:

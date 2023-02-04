@@ -32,13 +32,12 @@ class DenseNet121Trainer:
         self.n_local_epochs = n_local_epochs
         self.ldr = ldr
         self.batch_size = 8
-        self.lr = 0.005
+        self.lr = 0.01
         self.momentum = 0.9
         self.weight_decay = 5e-4
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
-
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
 
     def train(self, n_round):
@@ -70,6 +69,8 @@ class DenseNet121Trainer:
                 loss = self.criterion(outputs, targets)
 
                 loss.backward()
+                nn.utils.clip_grad_value_(self.model.parameters(), clip_value=5.0)
+
                 self.optimizer.step()
 
                 train_loss += loss.data  # [0]
