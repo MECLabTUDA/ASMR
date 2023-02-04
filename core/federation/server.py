@@ -114,16 +114,16 @@ class Server:
                 output = self.model(imgs)
 
                 # # loss = self.criterion(pred, target)
-                # _, predicted = torch.max(output, 1)
-                # test_correct = predicted.eq(labels).sum()
-                #
-                # correct += test_correct.item()
+                _, pred = torch.max(output, 1)
+                test_correct = pred.eq(labels).sum()
 
-                output = torch.squeeze(output)
-                pred = output.argmax(dim=1)
+                correct += test_correct.item()
+
+                # output = torch.squeeze(output)
+                # pred = output.argmax(dim=1)
 
                 # correct += pred.eq(labels.view_as(pred)).sum().item()
-                correct += pred.data.eq(labels.data).cpu().sum()
+                # correct += pred.data.eq(labels.data).cpu().sum()
 
                 batch_total += labels.size(0)
                 logger.info(f'label {labels}, pred:{pred}"')
