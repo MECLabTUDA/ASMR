@@ -117,7 +117,7 @@ class Server:
                 batch_total += labels.size(0)
 
         acc = 100. * correct / batch_total
-        logger.info("Server Test accuracy: " + str(acc))
+        logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct, last label {labels}, last pred:{pred}")
         return acc
 
     def get_agg_params(self, cfg):
