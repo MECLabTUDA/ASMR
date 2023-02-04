@@ -8,6 +8,7 @@ from torch.utils.tensorboard import SummaryWriter
 import copy
 import logging
 import sys
+import numpy as np
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -105,9 +106,11 @@ class Server:
 
         self.model.to(self.device)
         self.model.eval()
+        logger.info(np.unique(self.test_ldr.dataset._y_array,return_counts=True))
         with torch.no_grad():
             for (imgs, labels) in self.test_ldr:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
+
                 output = self.model(imgs)
                 output = torch.squeeze(output)
                 pred = output.argmax(dim=1)
@@ -115,9 +118,9 @@ class Server:
                 correct += pred.data.eq(labels.data).cpu().sum()
 
                 batch_total += labels.size(0)
-
+                logger.info(f'imgs{imgs[0]},label {labels}, pred:{pred}"')
         acc = 100. * correct / batch_total
-        logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct, last label {labels}, last pred:{pred}")
+        logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct")
         return acc
 
     def get_agg_params(self, cfg):
