@@ -112,13 +112,22 @@ class Server:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
 
                 output = self.model(imgs)
+
+                # # loss = self.criterion(pred, target)
+                # _, predicted = torch.max(output, 1)
+                # test_correct = predicted.eq(labels).sum()
+                #
+                # correct += test_correct.item()
+
                 output = torch.squeeze(output)
                 pred = output.argmax(dim=1)
+
                 # correct += pred.eq(labels.view_as(pred)).sum().item()
                 correct += pred.data.eq(labels.data).cpu().sum()
 
                 batch_total += labels.size(0)
-                logger.info(f'imgs{imgs[0]},label {labels}, pred:{pred}"')
+                logger.info(f'label {labels}, pred:{pred}"')
+
         acc = 100. * correct / batch_total
         logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct")
         return acc
