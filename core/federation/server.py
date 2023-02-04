@@ -35,7 +35,7 @@ class Server:
         self.test_batch_size = cfg['batch_size']
         self.root_dir = cfg['data_root']
         self.init_model_path = cfg['init_model_path']
-        self._init_model()
+        # self._init_model()
         self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
         self.device = torch.cuda.device_count() - 1
         self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
