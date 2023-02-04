@@ -29,26 +29,7 @@ clients_init, clients_info = retrieve_clients(client_cfg)
 server = Server(server_cfg, [])
 
 global_weight = copy.deepcopy(server.model.state_dict())
-global_weight_2 = server.model.state_dict()
 
-# server.evaluate(global_weight)
-zero_state_dict = OrderedDict()
-for key, value in global_weight.items():
-    zero_state_dict[key] = torch.randn_like(value.float()).float()
-
-logger.info('First evaluation Zeros')
-server.evaluate(zero_state_dict)
-
-ones_state_dict = OrderedDict()
-for key, value in global_weight.items():
-    ones_state_dict[key] = torch.randn_like(value.float()).float()
-
-logger.info('Second evaluation Ones')
-server.evaluate(ones_state_dict)
-
-
-logger.info('Third evaluation no deep')
-server.evaluate(global_weight_2)
 
 logger.info('fourth evaluation copy deep')
 server.evaluate(global_weight)
