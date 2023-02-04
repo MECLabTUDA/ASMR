@@ -126,7 +126,7 @@ class Server:
                 # correct += pred.data.eq(labels.data).cpu().sum()
 
                 batch_total += labels.size(0)
-                logger.info(f'label {labels}, img_nan?:{torch.isnan(imgs).any()}"')
+                logger.info(f'output nan? {torch.isnan(output).any()}, img_nan?:{torch.isnan(imgs).any()}"')
 
         acc = 100. * correct / batch_total
         logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct")
