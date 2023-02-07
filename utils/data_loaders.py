@@ -3,7 +3,7 @@ from datasets.camelyon17 import FedCamelyon17Dataset
 from datasets.camelyon17 import get_datasets
 
 
-def get_test_loader(root_dir, batch_size=4, **loader_kwargs):
+def get_test_loader(root_dir, batch_size, **loader_kwargs):
     return DataLoader(FedCamelyon17Dataset(root_dir),
                       shuffle=False,
                       sampler=None,
@@ -20,7 +20,7 @@ def get_train_loaders(root_dir, batch_size, clients, **loader_kwargs):
         client_id = client.id
         kwargs['client_id'] = client_id
         loaders[client.id] = DataLoader(FedCamelyon17Dataset(root_dir, kwargs),
-                                        shuffle=False,
+                                        shuffle=True,
                                         sampler=None,
                                         batch_size=batch_size,
                                         drop_last=True,
@@ -32,7 +32,7 @@ def get_train_loaders(root_dir, batch_size, clients, **loader_kwargs):
 def get_train_loader(root_dir, batch_size, n_clients, client_id, **loader_kwargs):
     kwargs = {'n_clients': n_clients, 'split': 'client', 'client_id': client_id}
     ldr = DataLoader(FedCamelyon17Dataset(root_dir, kwargs),
-                     shuffle=False,
+                     shuffle=True,
                      sampler=None,
                      batch_size=batch_size,
                      drop_last=True,

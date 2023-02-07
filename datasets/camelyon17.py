@@ -80,7 +80,6 @@ class FedCamelyon17Dataset:
         '''
         read labels from the metadata dataframe
         '''
-
         y_array = torch.LongTensor(self._metadata_df[self._metadata_df['split'] == self.annotation]['tumor'].values)
         return y_array
 
