@@ -9,6 +9,7 @@ from core.trainers.get_trainer import get_trainer
 from torch.multiprocessing import Queue
 import logging
 import sys
+import random
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -25,6 +26,7 @@ def retrieve_clients(cfg):
     root_dir = cfg['data_root']
     batch_size = cfg['batch_size']
     num_workers = cfg['num_workers']
+
     clients_info = []
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
@@ -58,6 +60,10 @@ class Client:
         """
         self.model = get_arch(cfg['arch'])
         self.id = client_id
+        if self.id in cfg['mal_clients']:
+            self.malicious = True
+        else:
+            self.malicious = False
         self.local_model_path = cfg['local_model_root'] + '/' + str(self.id)
         self.global_model_path = cfg['global_model_path']
         self.n_local_epochs = cfg['n_local_epochs']
@@ -67,9 +73,13 @@ class Client:
                                                    self.id % torch.cuda.device_count())
         self.dp_scale = cfg['dp_scale']
         self.fl_attack = cfg['fl_attack']
+        self.attack_freq = cfg['attack_prob']
         self.num_samples = len(self.ldr.dataset)
         if not os.path.exists(self.local_model_path):
             os.makedirs(self.local_model_path)
+
+    def attack(self, prob):
+        return random.random() < prob
 
     def train(self, recieved_info):
         '''
@@ -80,10 +90,13 @@ class Client:
         self._load_model(recieved_info['global_weight'])
 
         client_weight = self.trainer.train(recieved_info['n_round'])
-        # TODO add gausian noise here (before sending to server?
 
-        if self.fl_attack == 'DP':
-            client_weight = add_gaussian_noise(client_weight, self.dp_scale)
+        if self.attack(self.attack_freq):
+            if self.fl_attack == 'ana':
+                client_weight = add_gaussian_noise(client_weight, self.dp_scale)
+            elif self.fl_attack == '':
+                client_weight = None
+
 
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
