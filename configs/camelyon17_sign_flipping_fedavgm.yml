@@ -22,4 +22,4 @@ arch: "densenet"
 trainer: 'densenet121_basic'
 num_workers: 8
 
-root_path : "/gris/gris-f/homestud/melbatel/FedPath/store/"
+root_path : "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/"
