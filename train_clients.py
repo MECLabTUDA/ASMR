@@ -40,7 +40,7 @@ def init_process(q, Client, seed):
 
 def run_clients(recieved_info):
     try:
-        return client.train(recieved_info)
+        return client.train(recieved_info), client.id
     except KeyboardInterrupt:
         logger.info('exiting')
         return None
@@ -77,6 +77,8 @@ def train_clients(cfg):
 
         ##Training of the clients with recieved weights/info from the server
         client_outputs = pool.map(run_clients, recieved_info)
+
+        print(client_outputs)
 
         logger.info(f'*****************Round {n_round} finished**************')
 
