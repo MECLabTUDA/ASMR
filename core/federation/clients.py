@@ -96,18 +96,23 @@ class Client:
         '''
         Trains Clients model for one Episode
         '''
+        if not recieved_info['active']:
+            return {'weights': None,
+                    'num_samples': self.num_samples,
+                    'n_round': recieved_info['n_round']}
+        else:
+   
+            # update the model before training should be abstracted from the server side for multiprocessing?
+            self._load_model(recieved_info['global_weight'])
 
-        # update the model before training should be abstracted from the server side for multiprocessing?
-        self._load_model(recieved_info['global_weight'])
+            client_weight = self.trainer.train(recieved_info['n_round'])
 
-        client_weight = self.trainer.train(recieved_info['n_round'])
-
-        if self.attack(self.attack_freq):
-            logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
-            if self.fl_attack == 'ana':
-                client_weight = add_gaussian_noise(client_weight, self.dp_scale)
-            elif self.fl_attack == '':
-                client_weight = None
+            if self.attack(self.attack_freq):
+                logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
+                if self.fl_attack == 'ana':
+                    client_weight = add_gaussian_noise(client_weight, self.dp_scale)
+                elif self.fl_attack == '':
+                    client_weight = None
 
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
