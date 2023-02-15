@@ -77,6 +77,7 @@ def train_clients(cfg):
 
         ##Training of the clients with recieved weights/info from the server
         client_outputs = pool.map(run_clients, recieved_info)
+        recieved_info['active_clients'] = server.active_clients
 
         print(client_outputs)
 

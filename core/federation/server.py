@@ -66,10 +66,10 @@ class Server:
                 self.clients_info[new_client]['active'] = True
 
     def operate(self, clients_info, n_round):
-        self._active_clients(n_round)
-        self._system_status()
 
         self.clients_info = clients_info
+        self._system_status()
+        self._active_clients(n_round)
 
         aggregated_weights = self.aggregate()
 
