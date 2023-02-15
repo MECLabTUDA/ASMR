@@ -109,7 +109,7 @@ class Client:
 
             client_weight = self.trainer.train(recieved_info['n_round'])
 
-            if self.attack(self.attack_freq):
+            if self.attack(self.attack_freq) and self.malicious:
                 logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
                 if self.fl_attack == 'ana':
                     client_weight = add_gaussian_noise(client_weight, self.dp_scale)
