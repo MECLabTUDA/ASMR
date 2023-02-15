@@ -9,15 +9,16 @@ class FedAvg:
         self.global_model_path = global_model_path
         self.total_samples = 0
         for client_dict in self.clients_info:
-            self.total_samples += client_dict['num_samples']
+            if client_dict['active']:
+                self.total_samples += client_dict['num_samples']
 
     def get_info(self):
         print("this is a FedAvg")
 
     def _average_weights(self):
 
-        client_sd = [c['weights'] for c in self.clients_info]
-        cw = [c['num_samples'] / self.total_samples for c in self.clients_info]
+        client_sd = [c['weights'] for c in self.clients_info if c['active']]
+        cw = [c['num_samples'] / self.total_samples for c in self.clients_info if c['active']]
         ssd = copy.deepcopy(self.clients_info[0]['weights'])
 
         for key in ssd:

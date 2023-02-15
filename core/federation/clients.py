@@ -26,23 +26,34 @@ def retrieve_clients(cfg):
     root_dir = cfg['data_root']
     batch_size = cfg['batch_size']
     num_workers = cfg['num_workers']
+    active_clients = cfg['starting_clients']
+    malicious_clients = cfg['mal_clients']
 
     clients_info = []
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
         client_init.put((cfg, i, ldr))
 
-        logger.info(f'Client: {i} has {len(ldr.dataset)} samples ')
+        malicious = False
+        status = False
+        if i in active_clients:
+            status = True
+        if i in malicious_clients:
+            malicious = True
 
-        #clients info for first round
+        logger.info(f'Client: {i} has {len(ldr.dataset)} samples | Active: {status} | Malicious: {malicious}')
+
+        # clients info for first round
         clients_info.append({'weights': None,
                              'num_samples': len(ldr.dataset),
-                             'n_round': 0})
+                             'n_round': 0,
+                             'active': status,
+                             'malicious': malicious})
 
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
 
-    return client_init,clients_info
+    return client_init, clients_info
 
 
 def clean_clients(clients):
@@ -92,11 +103,11 @@ class Client:
         client_weight = self.trainer.train(recieved_info['n_round'])
 
         if self.attack(self.attack_freq):
+            logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
             if self.fl_attack == 'ana':
                 client_weight = add_gaussian_noise(client_weight, self.dp_scale)
             elif self.fl_attack == '':
                 client_weight = None
-
 
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
