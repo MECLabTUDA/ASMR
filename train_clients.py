@@ -37,6 +37,14 @@ def init_process(q, Client, seed):
     # cfg, i, ldr
     client = Client(ci[0], ci[1], ci[2])
 
+def list_to_dict(ls):
+    dct = {}
+    for elem in ls:
+        print("+++++++++++")
+        print(elem[1])
+        print("+++++++++++")
+        dct[elem[1]] = elem[0]
+    return dct
 
 def run_clients(recieved_info):
     try:
@@ -79,12 +87,14 @@ def train_clients(cfg):
         client_outputs = pool.map(run_clients, recieved_info)
         recieved_info['active_clients'] = server.active_clients
 
-        print(client_outputs)
+        client_outputs_dict = list_to_dict(client_outputs)
+        print(len(client_outputs)) 
+        print(len(client_outputs_dict))
 
         logger.info(f'*****************Round {n_round} finished**************')
 
         #server---aggregate---evaluate---send back weights
-        recieved_info = server.operate(client_outputs, n_round)
+        recieved_info = server.operate(client_outputs_dict, n_round)
 
         logger.info(f'*******************************************************')
 
