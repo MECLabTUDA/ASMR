@@ -63,6 +63,7 @@ class Server:
                 new_client = len(self.active_clients)
                 logger.info(f'Client: {new_client} is joining the training')
                 self.active_clients.append(new_client)
+                #TODO: nicht reihenfolge sondern ID nehmen
                 self.clients_info[new_client]['active'] = True
 
     def operate(self, clients_info, n_round):
