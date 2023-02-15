@@ -29,7 +29,7 @@ def retrieve_clients(cfg):
     active_clients = cfg['starting_clients']
     malicious_clients = cfg['mal_clients']
 
-    clients_info = []
+    clients_info = {}
     for i in range(n_clients):
         ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
         client_init.put((cfg, i, ldr))
@@ -44,11 +44,19 @@ def retrieve_clients(cfg):
         logger.info(f'Client: {i} has {len(ldr.dataset)} samples | Active: {status} | Malicious: {malicious}')
 
         # clients info for first round
+
+        clients_info[i] = {'weights': None,
+                             'num_samples': len(ldr.dataset),
+                             'n_round': 0,
+                             'active': status,
+                             'malicious': malicious}
+        '''
         clients_info.append({'weights': None,
                              'num_samples': len(ldr.dataset),
                              'n_round': 0,
                              'active': status,
                              'malicious': malicious})
+        '''
 
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
