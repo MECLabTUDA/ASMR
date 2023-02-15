@@ -15,12 +15,12 @@ dp_scale: 100
 
 n_rounds: 20
 trusted_rounds: 5
-n_local_epochs: 5
+n_local_epochs: 1
 
 momentum: 0.9
 agg_method: "FedAvgM"
 
-batch_size: 128
+batch_size: 32
 seed: 0
 arch: "densenet"
 trainer: 'densenet121_basic'
