@@ -14,7 +14,7 @@ attack_prob: 0.7
 dp_scale: 100
 
 n_rounds: 20
-trusted_rounds: 5
+trusted_rounds: 2
 n_local_epochs: 1
 
 momentum: 0.9
