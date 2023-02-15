@@ -96,10 +96,12 @@ class Client:
         '''
         Trains Clients model for one Episode
         '''
-        if not recieved_info['active']:
+        if self.id not in recieved_info['active_clients']:
             return {'weights': None,
                     'num_samples': self.num_samples,
-                    'n_round': recieved_info['n_round']}
+                    'n_round': recieved_info['n_round'],
+                    'active': False,
+                    'malicious': self.malicious}
         else:
    
             # update the model before training should be abstracted from the server side for multiprocessing?
@@ -116,7 +118,9 @@ class Client:
 
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
-                'n_round': recieved_info['n_round']}
+                'n_round': recieved_info['n_round'],
+                'active': True,
+                'malicious': self.malicious}
 
     def clean(self):
         try:

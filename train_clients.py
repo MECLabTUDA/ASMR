@@ -56,9 +56,10 @@ def train_clients(cfg):
     #get configs for clients/servers
     client_cfg, server_cfg, experiment_cfg = get_configs('configs/' + cfg)
     n_rounds = experiment_cfg['n_rounds']
-
+    active_clients = experiment_cfg['starting_clients']
     # Set up Server and Clients
     clients_init, clients_info = retrieve_clients(client_cfg)
+    
 
     #initalize server
     server = Server(server_cfg, clients_info)
@@ -70,7 +71,7 @@ def train_clients(cfg):
     global_weight = server.model.state_dict()
 
     # initally round 0
-    recieved_info = [{'global_weight': global_weight, 'n_round': 0} for x in range(client_cfg['n_clients'])]
+    recieved_info = [{'global_weight': global_weight, 'n_round': 0, 'active_clients': active_clients} for x in range(client_cfg['n_clients'])]
 
     for n_round in range(n_rounds):
 

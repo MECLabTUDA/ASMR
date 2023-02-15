@@ -34,7 +34,7 @@ def get_server_config(cfg):
 
 def get_experiment_config(cfg):
     experiment_cfg = {}
-    keys = ['n_rounds', 'seed']
+    keys = ['n_rounds', 'seed', 'starting_clients']
 
     if cfg['agg_method'] == 'FedAvgM':
         keys.append('momentum')

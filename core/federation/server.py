@@ -55,7 +55,7 @@ class Server:
 
     def _system_status(self):
         for i in range(len(self.clients_info)):
-            logger.info(f'Active: {self.clients_info["active"]} | Malicious: {self.clients_info["malicious"]}')
+            logger.info(f'Active: {self.clients_info[i]["active"]} | Malicious: {self.clients_info[i]["malicious"]}')
 
     def _active_clients(self, n_round):
         if n_round >= self.trusted_rounds:
@@ -77,7 +77,7 @@ class Server:
 
         self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
         # TODO deepcopy?
-        return [{'global_weight': copy.deepcopy(aggregated_weights), 'n_round': n_round} for x in
+        return [{'global_weight': copy.deepcopy(aggregated_weights), 'n_round': n_round, 'active_clients': self.active_clients} for x in
                 range(len(clients_info))]
 
     def _init_model(self):

@@ -16,11 +16,20 @@ class FedAvg:
         print("this is a FedAvg")
 
     def _average_weights(self):
+        
 
         client_sd = [c['weights'] for c in self.clients_info if c['active']]
         cw = [c['num_samples'] / self.total_samples for c in self.clients_info if c['active']]
-        ssd = copy.deepcopy(self.clients_info[0]['weights'])
-
+        #ssd = copy.deepcopy(self.clients_info[0]['weights'])
+        ssd = self._create_zero_state_dict(client_sd[0])
+        ''' 
+        for client in self.clients_info:
+            print(client['active'])
+            if client['weights'] == None:
+                print('empty')
+            else:
+                print('not empty')
+        '''
         for key in ssd:
             ssd[key] = sum([sd[key] * cw[i] for i, sd in enumerate(client_sd)])
         return ssd
