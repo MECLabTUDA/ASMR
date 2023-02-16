@@ -9,7 +9,7 @@ n_clients: 10
 starting_clients: [0,1,2]
 
 mal_clients: [4,6,8]
-fl_attack: "ana"
+fl_attack: "sfa"
 attack_prob: 0.7
 dp_scale: 150
 
