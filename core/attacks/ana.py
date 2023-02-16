@@ -9,8 +9,7 @@ from torch.autograd import Variable
 
 def add_gaussian_noise(w, scale):
     w_attacked = copy.deepcopy(w)
-    device = 'cuda:' + str(w[next(iter(w))].get_device())
     for k in w_attacked.keys():
-        noise = torch.randn(w[k].shape).to(device) * scale / 100.0 * w_attacked[k]
+        noise = torch.randn(w[k].shape) * scale / 100.0 * w_attacked[k]
         w_attacked[k] = noise + w_attacked[k].float()
     return w_attacked
