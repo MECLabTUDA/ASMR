@@ -41,12 +41,13 @@ class DenseNet121Trainer:
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
 
     #TODO: Load model and optimizer
-    def train(self, n_round, model, ldr):
+    def train(self, n_round, model, ldr, id):
         train_loss = 0
         total = 0
         correct = 0
         self.model = model
         self.ldr = ldr
+        self.id = id
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
 

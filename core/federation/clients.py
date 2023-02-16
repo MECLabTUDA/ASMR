@@ -125,7 +125,7 @@ class Client:
             # update the model before training should be abstracted from the server side for multiprocessing?
             self._load_model(recieved_info['global_weight'])
 
-            client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr)
+            client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id)
 
             if self.attack(self.attack_freq) and self.malicious:
                 logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
