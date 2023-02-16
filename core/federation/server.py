@@ -78,7 +78,7 @@ class Server:
         self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
         # TODO deepcopy?
         return [{'global_weight': copy.deepcopy(aggregated_weights), 'n_round': n_round,
-                 'active_clients': self.active_clients} for x in clients_info]
+                 'active_clients': self.active_clients, 'id': x, 'ldr': clients_info[x]['ldr']} for x in self.clients_info]
 
     def _init_model(self):
         try:

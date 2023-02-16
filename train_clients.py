@@ -77,7 +77,9 @@ def train_clients(cfg):
     global_weight = server.model.state_dict()
 
     # initally round 0
-    recieved_info = [{'global_weight': global_weight, 'n_round': 0, 'active_clients': active_clients} for x in
+    #TODO: Add id and dataloader to recieved_info
+    recieved_info = [{'global_weight': global_weight, 'n_round': 0, 'active_clients': active_clients,
+                      'id': x, 'ldr': clients_info[x]['ldr']} for x in
                      range(client_cfg['n_clients'])]
 
     for n_round in range(n_rounds):

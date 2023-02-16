@@ -49,14 +49,9 @@ def retrieve_clients(cfg):
                              'num_samples': len(ldr.dataset),
                              'n_round': 0,
                              'active': status,
-                             'malicious': malicious}
-        '''
-        clients_info.append({'weights': None,
-                             'num_samples': len(ldr.dataset),
-                             'n_round': 0,
-                             'active': status,
-                             'malicious': malicious})
-        '''
+                             'malicious': malicious,
+                             'ldr': ldr}
+
 
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
@@ -79,6 +74,7 @@ class Client:
         """
         self.model = get_arch(cfg['arch'])
         self.id = client_id
+        self.mal_clients = cfg['mal_clients']
         if self.id in cfg['mal_clients']:
             self.malicious = True
         else:
@@ -101,24 +97,35 @@ class Client:
         return random.random() < prob
 
     def _update_client(self, receive_info):
-        pass
+        self.ldr = receive_info['ldr']
+        self.id = receive_info['id']
+
+        if self.id in self.mal_clients:
+            self.malicious = True
+        else:
+            self.malicious = False
+
+        self.num_samples = len(self.ldr.dataset)
 
     def train(self, recieved_info):
         '''
         Trains Clients model for one Episode
         '''
+        self._update_client(recieved_info)
+
         if self.id not in recieved_info['active_clients']:
             return {'weights': None,
                     'num_samples': self.num_samples,
                     'n_round': recieved_info['n_round'],
                     'active': False,
-                    'malicious': self.malicious}
+                    'malicious': self.malicious,
+                    'ldr': self.ldr}
         else:
    
             # update the model before training should be abstracted from the server side for multiprocessing?
             self._load_model(recieved_info['global_weight'])
 
-            client_weight = self.trainer.train(recieved_info['n_round'])
+            client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr)
 
             if self.attack(self.attack_freq) and self.malicious:
                 logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
@@ -131,7 +138,8 @@ class Client:
                 'num_samples': self.num_samples,
                 'n_round': recieved_info['n_round'],
                 'active': True,
-                'malicious': self.malicious}
+                'malicious': self.malicious,
+                'ldr': self.ldr}
 
     def clean(self):
         try:
