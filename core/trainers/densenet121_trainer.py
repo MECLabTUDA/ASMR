@@ -41,13 +41,13 @@ class DenseNet121Trainer:
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
 
     #TODO: Load model and optimizer
-    def train(self, n_round, model, ldr, id):
+    def train(self, n_round, model, ldr, client_id):
         train_loss = 0
         total = 0
         correct = 0
         self.model = model
         self.ldr = ldr
-        self.id = id
+        self.id = client_id
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
 
@@ -106,10 +106,10 @@ class DenseNet121Trainer:
         return weights
 
     def save_local_model(self, n_round):
-        torch.save(self.model.state_dict(), self.local_model_path
+        torch.save(self.model.state_dict(), self.local_model_path + str(self.id)
                    + '/local_model_' + str(self.id) + '_round_' + str(n_round) + '.pt')
 
-        torch.save(self.model.state_dict(), self.local_model_path
+        torch.save(self.model.state_dict(), self.local_model_path + str(self.id)
                    + '/local_model_' + str(self.id) + '.pt')
 
         # logger.info("saved local model of Client: " + str(self.id))

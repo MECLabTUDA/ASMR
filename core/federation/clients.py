@@ -79,7 +79,7 @@ class Client:
             self.malicious = True
         else:
             self.malicious = False
-        self.local_model_path = cfg['local_model_root'] + '/' + str(self.id)
+        self.local_model_path = cfg['local_model_root'] + '/'
         self.global_model_path = cfg['global_model_path']
         self.n_local_epochs = cfg['n_local_epochs']
         self.ldr = ldr
@@ -149,7 +149,7 @@ class Client:
             logger.error('Unable to clean up client: ' + str(self.id))
 
     def _save_model(self):
-        self.model.save(self.local_model_path + '/local_model_' + str(self.id) + '.pt')
+        self.model.save(self.local_model_path + str(self.id) + '/local_model_' + str(self.id) + '.pt')
 
     def _load_model(self, model_weights=None):
         try:
