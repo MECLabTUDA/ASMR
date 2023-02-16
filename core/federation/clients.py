@@ -100,6 +100,9 @@ class Client:
     def attack(self, prob):
         return random.random() < prob
 
+    def _update_client(self, receive_info):
+        pass
+
     def train(self, recieved_info):
         '''
         Trains Clients model for one Episode
