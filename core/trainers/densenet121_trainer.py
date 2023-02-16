@@ -12,6 +12,9 @@ from torch.utils.tensorboard import SummaryWriter
 import logging
 import sys
 
+from core.attacks.ana import add_gaussian_noise
+from core.attacks.sfa import SFA
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
@@ -25,6 +28,7 @@ class DenseNet121Trainer:
         ldr: dataloader
         hp_cfg: configuration of hyperparameters
         '''
+
         self.id = client_id
         self.device = device
         self.model = model
@@ -41,7 +45,7 @@ class DenseNet121Trainer:
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
 
     #TODO: Load model and optimizer
-    def train(self, n_round, model, ldr, client_id):
+    def train(self, n_round, model, ldr, client_id, fl_attack=None, dp_scale=None):
         train_loss = 0
         total = 0
         correct = 0
@@ -54,7 +58,11 @@ class DenseNet121Trainer:
         self.model.train()
         self.model.to(self.device)
 
-        logger.info('********Training of Client: ' + str(self.id) + '*********')
+        if fl_attack is None:
+            logger.info('********Training of Client: ' + str(self.id) + '*********')
+        else:
+            logger.info(f'******** Malicious ({fl_attack}) Training of Client: ' + str(self.id) + '*********')
+
         epoch_loss = []
 
         for epoch in range(self.n_local_epochs):
@@ -68,6 +76,9 @@ class DenseNet121Trainer:
                 inputs, targets = inputs.to(self.device), targets.to(self.device)
 
                 self.optimizer.zero_grad()
+
+                if fl_attack == 'sfa':
+                    inputs, _ = SFA(inputs, targets, self.model, resize_factor=1., x_a=None, targeted=False, max_queries=1000, linf=0.031)
 
                 inputs, targets = Variable(inputs), Variable(targets)
                 outputs = self.model(inputs)
@@ -103,13 +114,15 @@ class DenseNet121Trainer:
         self.save_local_model(n_round)
         # self.tb.close()
         weights = self.model.cpu().state_dict()
+        if fl_attack == 'ana':
+            weights = add_gaussian_noise(weights, dp_scale)
         return weights
 
     def save_local_model(self, n_round):
-        torch.save(self.model.state_dict(), self.local_model_path + str(self.id)
+        torch.save(self.model.cpu().state_dict(), self.local_model_path + str(self.id)
                    + '/local_model_' + str(self.id) + '_round_' + str(n_round) + '.pt')
 
-        torch.save(self.model.state_dict(), self.local_model_path + str(self.id)
+        torch.save(self.model.cpu().state_dict(), self.local_model_path + str(self.id)
                    + '/local_model_' + str(self.id) + '.pt')
 
         # logger.info("saved local model of Client: " + str(self.id))
