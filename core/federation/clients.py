@@ -46,12 +46,11 @@ def retrieve_clients(cfg):
         # clients info for first round
 
         clients_info[i] = {'weights': None,
-                             'num_samples': len(ldr.dataset),
-                             'n_round': 0,
-                             'active': status,
-                             'malicious': malicious,
-                             'ldr': ldr}
-
+                           'num_samples': len(ldr.dataset),
+                           'n_round': 0,
+                           'active': status,
+                           'malicious': malicious,
+                           'ldr': ldr}
 
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
@@ -121,18 +120,21 @@ class Client:
                     'malicious': self.malicious,
                     'ldr': self.ldr}
         else:
-   
+
             # update the model before training should be abstracted from the server side for multiprocessing?
             self._load_model(recieved_info['global_weight'])
 
             client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id)
 
-            if self.attack(self.attack_freq) and self.malicious:
-                logger.info(f'Client: {self.id} is commiting a malicious update in round {recieved_info["n_round"]}')
+            if self.malicious and self.attack(self.attack_freq):
                 if self.fl_attack == 'ana':
-                    client_weight = add_gaussian_noise(client_weight, self.dp_scale)
-                elif self.fl_attack == '':
-                    client_weight = None
+                    client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
+                                                       self.fl_attack, self.dp_scale)
+                elif self.fl_attack == 'sfa':
+                    client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
+                                                       self.fl_attack)
+            else:
+                client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id)
 
         return {'weights': client_weight,
                 'num_samples': self.num_samples,
