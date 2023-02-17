@@ -54,22 +54,31 @@ class Server:
         return aggregated_weights
 
     def _system_status(self):
+
+        logger.info(f'****************Client Status:****************')
         for key in self.clients_info:
-            logger.info(f'Client: {key} | Active: {self.clients_info[key]["active"]} | Malicious: {self.clients_info[key]["malicious"]}')
+
+            if self.clients_info[key]["active"]:
+                logger.info(f'Client: {key} | Active: {self.clients_info[key]["active"]} | Malicious: {self.clients_info[key]["malicious"]}')
 
     def _active_clients(self, n_round):
         if n_round >= self.trusted_rounds:
             if len(self.active_clients) < len(self.clients_info):
                 new_client = len(self.active_clients)
-                logger.info(f'Client: {new_client} is joining the training')
+
+                logger.info(f'++++++++++++++++++++++++++++++++++++++++++++++')
+                logger.info(f'+++++Client: {new_client} is joining the training+++++++++')
+                logger.info(f'++++++++++++++++++++++++++++++++++++++')
                 self.active_clients.append(new_client)
                 self.clients_info[new_client]['active'] = True
 
     def operate(self, clients_info, n_round):
 
         self.clients_info = clients_info
-        self._system_status()
+
         self._active_clients(n_round)
+
+        self._system_status()
 
         aggregated_weights = self.aggregate()
 
