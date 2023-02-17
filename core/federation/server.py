@@ -55,7 +55,7 @@ class Server:
 
     def _system_status(self):
 
-        logger.info(f'****************Client Status:****************')
+        logger.info(f'*******************Client Status:**********************')
         for key in self.clients_info:
 
             if self.clients_info[key]["active"]:
@@ -66,9 +66,9 @@ class Server:
             if len(self.active_clients) < len(self.clients_info):
                 new_client = len(self.active_clients)
 
-                logger.info(f'++++++++++++++++++++++++++++++++++++++++++++++')
-                logger.info(f'+++++Client: {new_client} is joining the training+++++++++')
-                logger.info(f'++++++++++++++++++++++++++++++++++++++')
+                logger.info(f'++++++++++++++++++++++++++++++++++++++++')
+                logger.info(f'+++Client: {new_client} is joining the training++++')
+                logger.info(f'++++++++++++++++++++++++++++++++++++++++')
                 self.active_clients.append(new_client)
                 self.clients_info[new_client]['active'] = True
 

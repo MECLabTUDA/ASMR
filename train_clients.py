@@ -87,8 +87,6 @@ def train_clients(cfg):
         client_outputs = pool.map(run_clients, recieved_info)
 
         client_outputs_dict = list_to_dict(client_outputs)
-        print(len(client_outputs))
-        print(len(client_outputs_dict))
 
         logger.info(f'*****************Round {n_round} finished**************')
 
