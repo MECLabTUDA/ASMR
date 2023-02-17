@@ -120,10 +120,9 @@ class Client:
                     'malicious': self.malicious,
                     'ldr': self.ldr}
         else:
-
             # update the model before training should be abstracted from the server side for multiprocessing?
             self._load_model(recieved_info['global_weight'])
-
+            
             if self.malicious and self.attack(self.attack_freq):
                 if self.fl_attack == 'ana':
                     client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
