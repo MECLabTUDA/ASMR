@@ -89,8 +89,8 @@ class Client:
         self.fl_attack = cfg['fl_attack']
         self.attack_freq = cfg['attack_prob']
         self.num_samples = len(self.ldr.dataset)
-        if not os.path.exists(self.local_model_path):
-            os.makedirs(self.local_model_path)
+        if not os.path.exists(self.local_model_path + str(client_id)):
+            os.makedirs(self.local_model_path + str(client_id))
 
     def attack(self, prob):
         return random.random() < prob
