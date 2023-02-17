@@ -2,7 +2,7 @@
 import torch
 import torch.nn.functional as F
 
-def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=1000, linf=0.031):
+def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=1000, linf=0.031, device=0):
     '''
     Sign Flip Attack: linf decision-based adversarial attack
     :param x: original images, torch tensor of size (b,c,h,w)
@@ -19,31 +19,31 @@ def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=100
     # initialize
     if targeted:
         assert x_a is not None
-        check = is_adversarial(x_a, y, model, targeted)
+        check = is_adversarial(x_a, y, model, targeted, device)
         if check.sum() < y.size(0):
-            print('Some initial images do not belong to the target class!')
+            #print('Some initial images do not belong to the target class!')
             return x, torch.zeros(x.size(0))
-        check = is_adversarial(x, y, model, targeted)
+        check = is_adversarial(x, y, model, targeted, device)
         if check.sum() > 0:
-            print('Some original images already belong to the target class!')
+            #print('Some original images already belong to the target class!')
             return x, torch.zeros(x.size(0))
     else:
-        check = is_adversarial(x, y, model, True)
+        check = is_adversarial(x, y, model, True, device)
         if check.sum() < y.size(0):
-            print('Some original images do not belong to the original class!')
+            #print('Some original images do not belong to the original class!')
             return x, torch.zeros(x.size(0))
         x_a = torch.rand_like(x)
         iters = 0
-        check = is_adversarial(x_a, y, model, targeted)
+        check = is_adversarial(x_a, y, model, targeted, device)
         while check.sum() < y.size(0):
             x_a[check < 1] = torch.rand_like(x_a[check < 1])
-            check = is_adversarial(x_a, y, model, targeted)
+            check = is_adversarial(x_a, y, model, targeted, device)
             iters += 1
             if iters > 10000:
                 print('Initialization Failed!')
                 return x, torch.zeros(x.size(0))
     # linf binary search
-    x_a = binary_infinity(x_a, x, y, 10, model, targeted)
+    x_a = binary_infinity(x_a, x, y, 10, model, targeted, device)
     delta = x_a - x
     del x_a
 
@@ -83,7 +83,7 @@ def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=100
         delta_p = project_infinity(delta[unsuccessful_indices] + eta, torch.zeros_like(eta),
                                    l - alpha[unsuccessful_indices])
         check = is_adversarial((x[unsuccessful_indices] + delta_p).clamp(0, 1), y[unsuccessful_indices], model,
-                               targeted)
+                               targeted, device)
         delta[unsuccessful_indices.nonzero().squeeze(1)[check.nonzero().squeeze(1)]] = delta_p[
             check.nonzero().squeeze(1)]
         proj_success_rate[unsuccessful_indices] += check.float()
@@ -92,7 +92,7 @@ def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=100
         s = torch.bernoulli(prob[unsuccessful_indices]) * 2 - 1
         delta_s = delta[unsuccessful_indices] * resize(s, h, w).sign()
         check = is_adversarial((x[unsuccessful_indices] + delta_s).clamp(0, 1), y[unsuccessful_indices], model,
-                               targeted)
+                               targeted, device)
         prob[unsuccessful_indices.nonzero().squeeze(1)[check.nonzero().squeeze(1)]] -= s[check.nonzero().squeeze(
             1)] * 1e-4
         prob.clamp_(0.99, 0.9999)
@@ -123,13 +123,13 @@ def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=100
 
         # print attack information
         if q_num % 10000 == 0:
-            print(f"Queries: {q_num}/{max_queries} Successfully attacked images: {b - unsuccessful_indices.sum()}/{b}")
+            #print(f"Queries: {q_num}/{max_queries} Successfully attacked images: {b - unsuccessful_indices.sum()}/{b}")
 
         if unsuccessful_indices.sum() == 0:
             break
 
-    print('attack finished!')
-    print(f"Queries: {q_num}/{max_queries} Successfully attacked images: {b - unsuccessful_indices.sum()}/{b}")
+    #print('attack finished!')
+    #print(f"Queries: {q_num}/{max_queries} Successfully attacked images: {b - unsuccessful_indices.sum()}/{b}")
     return (x + delta).clamp(0, 1), Q
 
 
@@ -137,7 +137,7 @@ def resize(x, h, w):
     return F.interpolate(x, size=[h, w], mode='bilinear', align_corners=False)
 
 
-def binary_infinity(x_a, x, y, k, model, targeted):
+def binary_infinity(x_a, x, y, k, model, targeted, device):
     '''
     linf binary search
     :param k: the number of binary search iteration
@@ -148,7 +148,7 @@ def binary_infinity(x_a, x, y, k, model, targeted):
     for _ in range(k):
         mid = (l + u) / 2
         adv = project_infinity(x_a, x, mid).clamp(0, 1)
-        check = is_adversarial(adv, y, model, targeted)
+        check = is_adversarial(adv, y, model, targeted, device)
         u[check.nonzero().squeeze(1)] = mid[check.nonzero().squeeze(1)]
         check = check < 1
         l[check.nonzero().squeeze(1)] = mid[check.nonzero().squeeze(1)]
@@ -162,19 +162,19 @@ def project_infinity(x_a, x, l):
     return torch.max(x - l[:, None, None, None], torch.min(x_a, x + l[:, None, None, None]))
 
 
-def get_predict_label(x, model):
-    return model(normalize(x).cuda()).cpu().argmax(1)
+def get_predict_label(x, model,device):
+    return model(normalize(x).to(device)).cpu().argmax(1)
 
 
 def normalize(x, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
     return (x - torch.tensor(mean)[None, :, None, None]) / torch.tensor(std)[None, :, None, None]
 
 
-def is_adversarial(x, y, model, targeted=False):
+def is_adversarial(x, y, model, targeted=False, device=0):
     '''
     check whether the adversarial constrain holds for x
     '''
     if targeted:
-        return get_predict_label(x, model) == y
+        return get_predict_label(x, model, device) == y
     else:
-        return get_predict_label(x, model) != y
+        return get_predict_label(x, model,device) != y
