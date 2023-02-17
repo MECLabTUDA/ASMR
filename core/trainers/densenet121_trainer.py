@@ -118,6 +118,7 @@ class DenseNet121Trainer:
         weights = self.model.cpu().state_dict()
         if fl_attack == 'ana':
             weights = add_gaussian_noise(weights, dp_scale)
+        print(f'Weights of Client:{self.id} are on Device: {weights.get_device()}')
         return weights
 
     def save_local_model(self, n_round):
