@@ -13,5 +13,5 @@ if __name__ == '__main__':
 
     trainer = get_trainer('densenet121_basic')(model, 1, ldr, '/gris/gris-f/homestud/mikonsta/master-thesis/test/', 5, 1)
 
-    trainer.train(1, model, ldr, 1, 'ana', 150)
+    trainer.train(1, model, ldr, 1, 'sfa')
 

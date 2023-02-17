@@ -74,7 +74,7 @@ class DenseNet121Trainer:
                 # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
                 if fl_attack == 'sfa':
                     print('attack')
-                    inputs, _ = SFA(inputs, targets, self.model, resize_factor=1., x_a=None, targeted=False, max_queries=1000, linf=0.031, device=self.device)
+                    inputs, _ = SFA(inputs, targets, self.model, resize_factor=1., x_a=None, targeted=False, max_queries=300, linf=0.031, device=self.device)
 
 
                 inputs, targets = inputs.to(self.device), targets.to(self.device)

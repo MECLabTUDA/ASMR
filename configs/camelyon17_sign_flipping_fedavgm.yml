@@ -8,9 +8,9 @@ init_model_path: "store/init_models/densenet121.pt"
 n_clients: 10
 starting_clients: [0,1,2]
 
-mal_clients: [1,4,6,8]
+mal_clients: [3,5,7,8]
 fl_attack: "sfa"
-attack_prob: 0.0
+attack_prob: 8.0
 dp_scale: 150
 
 n_rounds: 20

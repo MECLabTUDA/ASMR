@@ -124,7 +124,7 @@ def SFA(x, y, model, resize_factor=1., x_a=None, targeted=False, max_queries=100
         # print attack information
         if q_num % 10000 == 0:
             #print(f"Queries: {q_num}/{max_queries} Successfully attacked images: {b - unsuccessful_indices.sum()}/{b}")
-
+            pass
         if unsuccessful_indices.sum() == 0:
             break
 
