@@ -60,6 +60,7 @@ class DenseNet121Trainer:
 
         if fl_attack is None:
             logger.info('********Training of Client: ' + str(self.id) + '*********')
+            logger.info('********Number of samples: ' + str(len(self.ldr)) + '*********')
         else:
             logger.info(f'******** Malicious ({fl_attack}) Training of Client: ' + str(self.id) + '*********')
 
