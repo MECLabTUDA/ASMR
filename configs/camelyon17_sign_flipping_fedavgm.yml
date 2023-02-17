@@ -10,7 +10,7 @@ starting_clients: [0,1,2]
 
 mal_clients: [1,4,6,8]
 fl_attack: "sfa"
-attack_prob: 0.9
+attack_prob: 0.0
 dp_scale: 150
 
 n_rounds: 20
