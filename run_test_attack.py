@@ -1,17 +1,19 @@
-from torch.utils.data import DataLoader
-from datasets.camelyon17 import FedCamelyon17Dataset
+from utils.data_loaders import get_train_loader
+from core.models.get_arch import get_arch
+from core.trainers.get_trainer import get_trainer
 
 
-kwargs = {'n_clients': 2, 'test_split': False, 'client_id': 1}
+if __name__ == '__main__':
+    root_dir = "/local/scratch/camelyon17/camelyon17_v1.0"
 
-root_dir = "/local/scratch/camelyon17/camelyon17_v1.0"
 
-loader_kw
+    ldr = get_train_loader(root_dir, 32, 2, 1, num_workers=8, pin_memory=True)
 
-ldr = DataLoader(FedCamelyon17Dataset(root_dir, kwargs),
-                                        shuffle=True,
-                                        sampler=None,
-                                        batch_size=batch_size,
-                                        drop_last=True,
-                                        **loader_kwargs
-                                        )
+    model = get_arch('densenet')
+
+    trainer = get_trainer('densenet121_basic')(model, 1, ldr, '/gris/gris-f/homestud/mikonsta/master-thesis/test/', 5, 1)
+
+    #self, n_round, model, ldr, client_id, fl_attack=None, dp_scale=None):
+
+    trainer.train(1, model, ldr, 1, 'sfa')
+
