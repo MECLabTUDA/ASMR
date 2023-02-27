@@ -23,4 +23,5 @@ class FedAvgM(FedAvg):
         torch.save(avg_weights, self.global_model_path)
 
         logging.debug("Saved global model after FedAvgM Update")
+        
         return avg_weights

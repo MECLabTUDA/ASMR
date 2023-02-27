@@ -78,9 +78,10 @@ class Server:
 
         aggregated_weights = self.aggregate()
 
-        acc = self.evaluate(aggregated_weights)
+        if n_round % 5 == 0:
+            acc = self.evaluate(aggregated_weights)
 
-        self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
+            self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
 
         self._active_clients(n_round)
 
