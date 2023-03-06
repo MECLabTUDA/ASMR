@@ -92,15 +92,23 @@ class Server:
                  'active_clients': self.active_clients, 'id': x, 'ldr': clients_info[x]['ldr']} for x in self.clients_info]
 
     def _init_model(self):
+        
         try:
             if self.arch == 'densenet':
                 source = '/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/init_models/densenet121.pt'
-                shutil.copy(self.init_model_path, self.global_model_path)
-
-                self.model.load_state_dict(torch.load(self.global_model_path))
+                #shutil.copy(self.init_model_path, self.global_model_path)
+                
+                self.model.load_state_dict(torch.load(self.init_model_path))
                 logger.debug("Densenet121 was successfully initialized with pretrained weights")
-        except:
+        except Exception as e:
+            
+            print(e)
+            logger.error(e)
+            
             logger.error('Unable to init model with pretrained weights')
+        
+
+
 
     def evaluate(self, aggregated_weights=None):
         '''
