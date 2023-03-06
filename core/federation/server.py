@@ -78,8 +78,10 @@ class Server:
 
         aggregated_weights = self.aggregate()
 
-        if n_round % 5 == 0:
+        if n_round % 2 == 0:
             acc = self.evaluate(aggregated_weights)
+            torch.save(aggregated_weights, os.path.join(self.global_model_path[:-3], f'_{n_round}.pt'))
+            print(f'Saved global model of round: {n_round}')
 
             self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
 
@@ -131,6 +133,8 @@ class Server:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
 
                 output = self.model(imgs)
+
+
 
                 # # loss = self.criterion(pred, target)
                 _, pred = torch.max(output, 1)
