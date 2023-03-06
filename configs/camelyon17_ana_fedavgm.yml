@@ -13,14 +13,14 @@ fl_attack: "ana"
 attack_prob: 0.7
 dp_scale: 150
 
-n_rounds: 21
+n_rounds: 51
 trusted_rounds: 5
 n_local_epochs: 5
 
 momentum: 0.7
 agg_method: "FedAvg"
 
-batch_size: 32
+batch_size: 64
 seed: 0
 arch: "densenet"
 trainer: 'densenet121_basic'
