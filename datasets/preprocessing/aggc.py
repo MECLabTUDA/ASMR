@@ -4,6 +4,8 @@ import tifffile as tiff
 import zarr
 from PIL import TiffImagePlugin
 from PIL.Image import Image
+import pandas as pd
+from tqdm import tqdm
 
 
 def generate_new_compressed_tiff(source, target):
@@ -26,6 +28,70 @@ def generate_new_compressed_tiff(source, target):
 
                     im.save(os.path.join(target, scanner, image, mask), compression=compression, save_all=True)
                     print(os.path.join(target_file, mask))
+
+
+def get_tile(image, size, overlap):
+    '''
+    gets the tiles from one image
+    image: str path to image
+    size: tuple of dimensions
+    overlap: float
+    '''
+    img_tiff = tiff.imread(image, aszarr=True)
+    img_zarr = zarr.open(img_tiff, mode='r')
+
+    if isinstance(img_zarr, zarr.hierarchy.Group):
+        img_zarr = img_zarr['0']
+
+    img_size = img_zarr.shape
+
+    # stepsize
+    stepsize_y = size[0] - int(size[0] * overlap)
+    stepsize_x = size[1] - int(size[1] * overlap)
+
+    tiles = []
+
+    # Sliding parameters
+    y = size[0]
+    x = size[1]
+
+    while y <= img_size[0]:
+        x = size[1]
+        while x < img_size[1]:
+            tiles.append([x - size[1], x, y - size[0], y])
+
+            x += stepsize_x
+        y += stepsize_y
+
+    return tiles
+
+
+def parse_data(data, tile_file):
+    tiles = pd.DataFrame(columns=['image', 'scanner', 'tiles'])
+
+    for image in tqdm(data):
+        for tile in data[image]['tiles']:
+            tiles.loc[len(tiles)] = [image, data[image]['scanner'], tile]
+
+    tiles.to_pickle(tile_file)
+    return tiles
+
+
+def get_tiles(metadata, tile_file, image_path):
+    data = {}
+    overlap = 0.2
+    size = 800
+    if os.path.isfile(tile_file):
+        tiles = pd.read_pickle(tile_file)
+        return tiles
+
+    for index, row in metadata.iterrows():
+        image = os.path.join(image_path, row['scanner'], row['image'])
+        image_tile = get_tile(image=image, overlap=overlap, size=size)
+
+        data[row['image']] = {'tiles': image_tile, 'scanner': row['scanner']}
+
+    return parse_data(data)
 
 
 def generate_masks(root_dir):
