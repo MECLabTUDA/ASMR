@@ -80,7 +80,7 @@ class Server:
 
         if n_round % 2 == 0:
             acc = self.evaluate(aggregated_weights)
-            torch.save(aggregated_weights, os.path.join(self.global_model_path[:-3], f'_{n_round}.pt'))
+            torch.save(aggregated_weights, f'/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/global/global_model_{n_round}.pt')
             print(f'Saved global model of round: {n_round}')
 
             self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
