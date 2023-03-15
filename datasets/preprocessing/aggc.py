@@ -3,6 +3,7 @@ import os
 import tifffile as tiff
 import zarr
 from PIL import TiffImagePlugin
+from PIL.Image import Image
 
 
 def generate_new_compressed_tiff(source, target):
@@ -96,3 +97,17 @@ def filter_tiles(root_path, tiles):
     valid_tiles.to_pickle('/local/scratch/AGGC/AGGC2022_test/Subset3_Test_tiles/valid_tiles.pkl')
 
     return valid_tiles
+
+
+def get_cmplt_images(root_path):
+    res = []
+    others = []
+    scanners = os.listdir(root_path)
+    for scanner in scanners:
+        images = os.listdir(os.path.join(root_path, scanner))
+        for image in images:
+            if len(os.listdir(os.path.join(root_path, scanner, image))) == 6:
+                res.append(image)
+            else:
+                others.append(image)
+    return res, others
