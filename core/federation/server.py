@@ -36,7 +36,6 @@ class Server:
         self.root_dir = cfg['data_root']
         self.init_model_path = cfg['init_model_path']
 
-
         self.active_clients = cfg['starting_clients']
         self.trusted_rounds = cfg['trusted_rounds']
 
@@ -59,7 +58,8 @@ class Server:
         for key in self.clients_info:
 
             if self.clients_info[key]["active"]:
-                logger.info(f'Client: {key} | Active: {self.clients_info[key]["active"]} | Malicious: {self.clients_info[key]["malicious"]}')
+                logger.info(
+                    f'Client: {key} | Active: {self.clients_info[key]["active"]} | Malicious: {self.clients_info[key]["malicious"]}')
 
     def _active_clients(self, n_round):
         if n_round >= self.trusted_rounds:
@@ -80,7 +80,8 @@ class Server:
 
         if n_round % 2 == 0:
             acc = self.evaluate(aggregated_weights)
-            torch.save(aggregated_weights, f'/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/global/global_model_{n_round}.pt')
+            torch.save(aggregated_weights,
+                       f'/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/global/global_model_{n_round}.pt')
             print(f'Saved global model of round: {n_round}')
 
             self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
@@ -91,26 +92,28 @@ class Server:
 
         # TODO deepcopy?
         return [{'global_weight': copy.deepcopy(aggregated_weights), 'n_round': n_round,
-                 'active_clients': self.active_clients, 'id': x, 'ldr': clients_info[x]['ldr']} for x in self.clients_info]
+                 'active_clients': self.active_clients, 'id': x, 'ldr': clients_info[x]['ldr']} for x in
+                self.clients_info]
 
     def _init_model(self):
-        
+
         try:
             if self.arch == 'densenet':
                 source = '/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/init_models/densenet121.pt'
-                #shutil.copy(self.init_model_path, self.global_model_path)
-                
+                # shutil.copy(self.init_model_path, self.global_model_path)
+
                 self.model.load_state_dict(torch.load(self.init_model_path))
                 logger.debug("Densenet121 was successfully initialized with pretrained weights")
+            elif self.arch == 'fcn8':
+                self.model.load_state_dict(torch.load(self.init_model_path))
+                logger.debug("Fcn8 was successfully initialized with pretrained weights")
+
         except Exception as e:
-            
+
             print(e)
             logger.error(e)
-            
+
             logger.error('Unable to init model with pretrained weights')
-        
-
-
 
     def evaluate(self, aggregated_weights=None):
         '''
@@ -133,8 +136,6 @@ class Server:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
 
                 output = self.model(imgs)
-
-
 
                 # # loss = self.criterion(pred, target)
                 _, pred = torch.max(output, 1)
