@@ -7,6 +7,5 @@ logs
 *.pyc
 
 store/global/*
-store/init_models/fcn8.pt
 
 store/D_*
