@@ -10,7 +10,7 @@ import numpy as np
 
 class FCN8s(nn.Module):
 
-    def __init__(self, n_class=5):
+    def __init__(self, n_class=6):
 
         super().__init__()
 
