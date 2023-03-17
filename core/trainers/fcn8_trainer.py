@@ -31,7 +31,7 @@ class Fcn8Trainer:
         model.to(self.device)
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 
-        for epoch in self.n_local_epochs:
+        for epoch in range(self.n_local_epochs):
             running_loss = 0.0
             for i, (data, labels) in enumerate(self.ldr):
                 inputs, labels = data.permute(0, 3, 1, 2).type(torch.FloatTensor).to(self.device), labels.to(self.device)
