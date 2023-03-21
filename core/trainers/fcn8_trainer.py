@@ -20,7 +20,7 @@ class Fcn8Trainer:
         self.lr = 0.01
         self.momentum = 0.9
         self.weight_decay = 5e-4
-        self.criterion = nn.CrossEntropyLoss()
+        self.criterion = nn.CrossEntropyLoss(ignore_index=0)
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-5)
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
@@ -31,10 +31,10 @@ class Fcn8Trainer:
         model.to(self.device)
         optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 
-        for epoch in self.n_local_epochs:
+        for epoch in range(self.n_local_epochs):
             running_loss = 0.0
             for i, (data, labels) in enumerate(self.ldr):
-                inputs, labels = data.to(self.device), labels.to(self.device)
+                inputs, labels = data.permute(0, 3, 1, 2).type(torch.FloatTensor).to(self.device), labels.to(self.device)
 
                 optimizer.zero_grad()
 
