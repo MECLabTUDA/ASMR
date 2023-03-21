@@ -36,7 +36,7 @@ class DenseNet121Trainer:
         self.n_local_epochs = n_local_epochs
         self.ldr = ldr
         self.batch_size = 8
-        self.lr = 0.01
+        self.lr = 0.001
         self.momentum = 0.9
         self.weight_decay = 5e-4
         self.criterion = nn.CrossEntropyLoss()

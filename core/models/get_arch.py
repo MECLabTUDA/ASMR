@@ -1,3 +1,4 @@
+import torch
 import torchvision.models as torch_classifiers
 
 from core.models.fcn8 import FCN8s

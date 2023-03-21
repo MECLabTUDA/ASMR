@@ -6,6 +6,10 @@ notebooks
 logs
 *.pyc
 
+.nfs*
+
+preprocessing/*
+prepocessing/
 store/global/*
 store/init_models/fcn8*
 store/D_*
