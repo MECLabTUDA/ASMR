@@ -78,7 +78,7 @@ class Server:
 
         aggregated_weights = self.aggregate()
 
-        if n_round % 2 == 0:
+        if n_round % 1 == 0:
             acc = self.evaluate(aggregated_weights)
             torch.save(aggregated_weights,
                        f'/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/global/global_model_{n_round}.pt')
