@@ -13,7 +13,7 @@ import logging
 import sys
 
 from core.attacks.ana import add_gaussian_noise
-from core.attacks.sfa import flig_signs
+from core.attacks.sfa import flip_signs
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -114,7 +114,7 @@ class DenseNet121Trainer:
         if fl_attack == 'ana':
             weights = add_gaussian_noise(weights, dp_scale)
         elif fl_attack == 'sfa':
-            weights = flig_signs(weights, dp_scale)
+            weights = flip_signs(weights, dp_scale)
 
         self._save_local_model(n_round, weights)
         return weights
