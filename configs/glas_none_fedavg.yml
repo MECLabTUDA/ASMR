@@ -1,26 +1,26 @@
 name: "train_clients"
 
-dataset: "camelyon17"
-data_root: "/local/scratch/camelyon17/camelyon17_v1.0"
+dataset: "glas"
+data_root: "/local/scratch/glas"
 init_model_path: "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/densenet121.pt"
 
 
 n_clients: 10
 starting_clients: [0,1,2,3,4,5,6,7,8,9]
 
-mal_clients: [1,2,3,5,8,4,7]
-fl_attack: "sfa"
+mal_clients: []
+fl_attack: "ana"
 attack_prob: 0.7
-dp_scale: -1
+dp_scale: 150
 
 n_rounds: 20
-trusted_rounds: 5
+trusted_rounds: 3
 n_local_epochs: 5
 
 momentum: 0.7
 agg_method: "FedAvg"
 
-batch_size: 64
+batch_size: 1
 seed: 0
 arch: "densenet"
 trainer: 'densenet121_basic'
