@@ -5,7 +5,7 @@ from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 
 from core.attacks.ana import add_gaussian_noise
-from core.attacks.sfa import flig_signs
+from core.attacks.sfa import flip_signs
 
 
 class Fcn8Trainer:
