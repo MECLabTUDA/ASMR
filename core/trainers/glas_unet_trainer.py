@@ -126,16 +126,15 @@ class GlasUnetTrainer:
 
     def step(self):
         #TODO: New Dataloader
-        num_batches = math.ceil(len(ds_dict['train_ds']['img_npy']) / self.batch_size)
+        #num_batches = math.ceil(len(ds_dict['train_ds']['img_npy']) / self.batch_size)
         self.model.train()
         batch_xent_l = []
         batch_dice_l = []
         batch_loss = []
 
-        for i in tqdm(range(num_batches)):
-            train_batch = next(self.train_gen)
-            imgs = train_batch['data']
-            segs = train_batch['seg']
+        #for i in tqdm(range(num_batches)):
+        for imgs, segs in tqdm(self.train_gen):
+
             # normalization
             imgs = self.min_max_norm(imgs)
             # binarisation
@@ -176,7 +175,7 @@ class GlasUnetTrainer:
 
         self.optimizer = Adam(model.parameters(), lr=self.lr)
 
-        self.scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, patience=20, factor=0.1)
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, patience=20, factor=0.1)
 
         self.model.train()
         self.model.to(self.device)
@@ -191,6 +190,7 @@ class GlasUnetTrainer:
         for epoch in range(self.n_local_epochs):
             train_output = self.step()
             #test_output = test(model)
+            scheduler.step(train_output['loss'])
             '''
             self.scheduler.step(test_output['loss'])
 
