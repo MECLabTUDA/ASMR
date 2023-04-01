@@ -14,8 +14,9 @@ Blanchard, Peva, Rachid Guerraoui, and Julien Stainer. "Machine learning with ad
 '''
 
 
-def krum_detection(clients, k):
-    clients = [{'id': i, 'weights': net2vec(clients[i].state_dict())} for i in range(len(clients))]
+def krum_detection(clients_info, k):
+    clients = [{'id': client['id'], 'weights': net2vec(client['weights'].state_dict())} for client in clients_info]
+
     clients = sorted(clients, key=lambda client: client['id'])
 
     vecs = [c['weights'] for c in clients]
@@ -26,17 +27,20 @@ def krum_detection(clients, k):
     cdist = torch.cdist(x, x, p=2)
 
     nbhDist, nbh = torch.topk(cdist, k, largest=False)
-
+    # Closest Vector to all others
     i_star = torch.argmin(nbhDist.sum(2))
 
     valid_clients = nbh[:, i_star, :]
 
     print(valid_clients)
 
-    for i in range(len(clients)):
-        clients[i]['dist'] = cdist[:, i, :]
-        clients[i]['valid'] = (clients[i]['id'] in valid_clients)
+    malicious_clients = []
+    benign_clients = []
+    for client in clients_info:
 
-    detected_clients = [client['id'] for client in clients if not client['valid']]
+        if client['id'] in valid_clients:
+            benign_clients.append(client)
+        else:
+            malicious_clients.append(client['id'])
 
-    return clients, detected_clients
+    return benign_clients, malicious_clients

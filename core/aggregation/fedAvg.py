@@ -8,6 +8,7 @@ class FedAvg:
         self.clients_info = clients_info
         self.global_model_path = global_model_path
         self.total_samples = 0
+
         for client_id in self.clients_info:
             if self.clients_info[client_id]['active']:
                 self.total_samples += self.clients_info[client_id]['num_samples']
