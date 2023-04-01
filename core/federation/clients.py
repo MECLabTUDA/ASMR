@@ -28,10 +28,11 @@ def retrieve_clients(cfg):
     num_workers = cfg['num_workers']
     active_clients = cfg['starting_clients']
     malicious_clients = cfg['mal_clients']
+    dataset = cfg['dataset']
 
     clients_info = {}
     for i in range(n_clients):
-        ldr = get_train_loader(root_dir, batch_size, n_clients, i, num_workers=num_workers, pin_memory=True)
+        ldr = get_train_loader(root_dir, batch_size, n_clients, i, dataset, num_workers=num_workers, pin_memory=True)
         client_init.put((cfg, i, ldr))
 
         malicious = False

@@ -42,7 +42,7 @@ class Server:
         self._init_model()
         self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
         self.device = torch.cuda.device_count() - 1
-        self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, num_workers=8, pin_memory=True)
+        self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, dataset=cfg['dataset'], num_workers=8, pin_memory=True)
 
     def aggregate(self):
         '''
