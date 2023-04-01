@@ -113,7 +113,8 @@ class Client:
         self._update_client(recieved_info)
 
         if self.id not in recieved_info['active_clients']:
-            return {'weights': None,
+            return {'id': self.id,
+                    'weights': None,
                     'num_samples': self.num_samples,
                     'n_round': recieved_info['n_round'],
                     'active': False,
@@ -134,7 +135,8 @@ class Client:
             else:
                 client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id)
 
-        return {'weights': client_weight,
+        return {'id': self.id,
+                'weights': client_weight,
                 'num_samples': self.num_samples,
                 'n_round': recieved_info['n_round'],
                 'active': True,
