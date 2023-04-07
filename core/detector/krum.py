@@ -55,7 +55,9 @@ class Krum:
         for client in self.clients_info:
 
             if self.clients_info[client]['id'] in benign_clients:
-                ben_clients.append(self.clients_info[client])
+                #ben_clients.append(self.clients_info[client])
+                client_id = self.clients_info[client]['id']
+                ben_clients[client_id] = self.clients_info[client]
             else:
                 mal_clients.append(self.clients_info[client]['id'])
 
