@@ -60,8 +60,8 @@ def stackStateDicts(deltas):
 def getFloatSubModules(Delta) -> list:
     param_float = []
     for param in Delta:
-        if not "FloatTensor" in Delta[param].type():
-            continue
+        #if not "FloatTensor" in Delta[param].type():
+        #    continue
         param_float.append(param)
     return param_float
 
