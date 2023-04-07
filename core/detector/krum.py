@@ -15,17 +15,14 @@ Blanchard, Peva, Rachid Guerraoui, and Julien Stainer. "Machine learning with ad
 
 
 class Krum:
-    def __init__(self, clients_info, device='cuda:0'):
+    def __init__(self, device='cuda:0'):
         self.device = device
         self.k = 3
-        self.clients_info = clients_info
+        self.clients_info = None
         self.client_states = None
-        self._init(clients_info)
 
-    def _init(self, clients_info):
-        self.update(clients_info)
-
-    def update(self, clients_info):
+    def fit(self, clients_info):
+        self.clients_info = clients_info
         clients = [
             {'id': clients_info[client]['id'], 'weights': net2vec(clients_info[client]['weights']).to(self.device)} for
             client in clients_info]
@@ -55,12 +52,10 @@ class Krum:
         for client in self.clients_info:
 
             if self.clients_info[client]['id'] in benign_clients:
-                #ben_clients.append(self.clients_info[client])
+                # ben_clients.append(self.clients_info[client])
                 client_id = self.clients_info[client]['id']
                 ben_clients[client_id] = self.clients_info[client]
             else:
                 mal_clients.append(self.clients_info[client]['id'])
 
         return ben_clients, mal_clients
-
-

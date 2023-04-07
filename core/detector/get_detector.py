@@ -11,3 +11,5 @@ def get_detector(detector):
             return MudHog
         case 'spectral':
             return SpectralAnomaly
+        case _:
+            return None

@@ -1,6 +1,8 @@
 import shutil
 import torch
 import os
+
+from ..detector.get_detector import get_detector
 from ..models.get_arch import get_arch
 from ..aggregation.aggregations import get_aggregation
 from utils.data_loaders import get_test_loader
@@ -29,9 +31,12 @@ class Server:
         self.clients_info = clients_info
         self.arch = cfg['arch']
         self.model = get_arch(self.arch)
+
         self.global_model_path = cfg['global_model_path']
         self.agg_params = self.get_agg_params(cfg)
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
+        self.detector = get_detector(cfg['detector'])
+
         self.test_batch_size = cfg['batch_size']
         self.root_dir = cfg['data_root']
         self.init_model_path = cfg['init_model_path']
@@ -42,14 +47,22 @@ class Server:
         self._init_model()
         self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
         self.device = torch.cuda.device_count() - 1
-        self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, dataset=cfg['dataset'], num_workers=8, pin_memory=True)
+        self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, dataset=cfg['dataset'],
+                                        num_workers=8, pin_memory=True)
 
     def aggregate(self):
         '''
         aggregate the local models to a global model
         '''
-        aggregated_weights = self.aggregation.aggregate(self.clients_info)
-        logger.info("aggregated weights to new global model")
+        if self.detector is None:
+            aggregated_weights = self.aggregation.aggregate(self.clients_info)
+            logger.info("aggregated weights to new global model")
+        else:
+            self.detector.fit(self.clients_info)
+            ben_clients, mal_clients = self.detector.detect()
+            logger.info(f'Clients detected as malicious: {mal_clients}')
+            aggregated_weights = self.aggregation.aggregate(ben_clients)
+            logger.info("aggregated weights to new global model")
         return aggregated_weights
 
     def _system_status(self):

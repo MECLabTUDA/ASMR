@@ -20,7 +20,7 @@ def get_client_config(cfg):
 
 def get_server_config(cfg):
     server_cfg = {}
-    keys = ['arch', 'global_model_path', 'data_root', 'batch_size', 'agg_method', 'dataset',
+    keys = ['arch', 'global_model_path', 'data_root', 'batch_size', 'agg_method', 'dataset', 'detector',
             'init_model_path', 'exp_path', 'n_clients', 'trusted_rounds', 'mal_clients', 'starting_clients']
 
     if cfg['agg_method'] == 'FedAvgM':
@@ -53,6 +53,7 @@ def get_configs(path):
                                    f'E_{cfg["n_local_epochs"]}_'
                                    f'R_{cfg["n_rounds"]}_'
                                    f'Atk_{cfg["fl_attack"]}_'
+                                   f'Det_{cfg["detector"]}_'
                                    f'N_{cfg["arch"]}_'
                                    f'_{cfg["agg_method"]}')
     if cfg['fl_attack'] == 'dp':

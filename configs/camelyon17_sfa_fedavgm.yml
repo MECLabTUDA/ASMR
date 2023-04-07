@@ -18,7 +18,7 @@ trusted_rounds: 5
 n_local_epochs: 5
 
 momentum: 0.7
-agg_method: "FedAvg"
+agg_method: "FedAvgM"
 
 batch_size: 64
 seed: 0
