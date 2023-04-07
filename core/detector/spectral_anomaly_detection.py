@@ -8,19 +8,20 @@ class SpectralVAE(nn.Module):
     def __init__(self, in_channels, latent_dim, hidden_dims):
         super(SpectralVAE, self).__init__()
 
-        #Build encoder
+        # Build encoder
         modules = []
         modules.append(nn.Linear())
         modules.append(nn.Linear())
 
         self.encoder = nn.Sequential(*modules)
 
-        #Build decoder
+        # Build decoder
         modules = []
         modules.append(nn.Linear())
         modules.append(nn.Linear())
 
-class SpectralDetector:
+
+class SpectralAnomaly:
     def __init__(self):
         pass
 

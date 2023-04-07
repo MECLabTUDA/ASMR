@@ -14,33 +14,51 @@ Blanchard, Peva, Rachid Guerraoui, and Julien Stainer. "Machine learning with ad
 '''
 
 
-def krum_detection(clients_info, k):
-    clients = [{'id': client['id'], 'weights': net2vec(client['weights'].state_dict())} for client in clients_info]
+class Krum:
+    def __init__(self, clients_info, device='cuda:0'):
+        self.device = device
+        self.k = 3
+        self.clients_info = clients_info
+        self.client_states = None
+        self._init(clients_info)
 
-    clients = sorted(clients, key=lambda client: client['id'])
+    def _init(self, clients_info):
+        self.update(clients_info)
 
-    vecs = [c['weights'] for c in clients]
+    def update(self, clients_info):
+        clients = [
+            {'id': clients_info[client]['id'], 'weights': net2vec(clients_info[client]['weights']).to(self.device)} for
+            client in clients_info]
+        clients = sorted(clients, key=lambda client: client['id'])
+        self.client_states = clients
 
-    stackedVecs = torch.stack(vecs, 1).unsqueeze(0)
+    def detect(self):
+        vecs = [c['weights'] for c in self.client_states]
+        stackedVecs = torch.stack(vecs, 1).unsqueeze(0)
 
-    x = stackedVecs.permute(0, 2, 1)
-    cdist = torch.cdist(x, x, p=2)
+        x = stackedVecs.permute(0, 2, 1)
+        cdist = torch.cdist(x, x, p=2)
 
-    nbhDist, nbh = torch.topk(cdist, k, largest=False)
-    # Closest Vector to all others
-    i_star = torch.argmin(nbhDist.sum(2))
+        # Get the top k neighbors with the smallest distance
+        nbhDist, nbh = torch.topk(cdist, self.k, largest=False)
 
-    valid_clients = nbh[:, i_star, :]
+        # Closest Vector to all others
+        i_star = torch.argmin(nbhDist.sum(2))
 
-    print(valid_clients)
+        # Get the IDs of the benign clients
+        benign_clients = nbh[:, i_star, :]
 
-    malicious_clients = []
-    benign_clients = []
-    for client in clients_info:
+        # Assign clients to
+        mal_clients = []
+        ben_clients = []
 
-        if client['id'] in valid_clients:
-            benign_clients.append(client)
-        else:
-            malicious_clients.append(client['id'])
+        for client in self.clients_info:
 
-    return benign_clients, malicious_clients
+            if self.clients_info[client]['id'] in benign_clients:
+                ben_clients.append(self.clients_info[client])
+            else:
+                mal_clients.append(self.clients_info[client]['id'])
+
+        return ben_clients, mal_clients
+
+
