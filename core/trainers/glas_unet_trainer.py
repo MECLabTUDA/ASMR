@@ -41,11 +41,11 @@ class GlasUnetTrainer:
         self.batch_size = 1
         self.lr = 1e-3
 
-        tr_transforms = self.get_train_transform()
+        #tr_transforms = self.get_train_transform()
 
-        self.train_gen = MultiThreadedAugmenter(self.ldr, tr_transforms, num_processes=4,
-                                           num_cached_per_queue=2,
-                                           seeds=None, pin_memory=False)
+        #self.train_gen = MultiThreadedAugmenter(self.ldr, tr_transforms, num_processes=4,
+        #                                   num_cached_per_queue=2,
+        #                                   seeds=None, pin_memory=False)
 
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = Adam(model.parameters(), lr=self.lr)
@@ -133,7 +133,7 @@ class GlasUnetTrainer:
         batch_loss = []
 
         #for i in tqdm(range(num_batches)):
-        for imgs, segs in tqdm(self.train_gen):
+        for imgs, segs in tqdm(self.ldr):
 
             # normalization
             imgs = self.min_max_norm(imgs)

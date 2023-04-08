@@ -6,6 +6,7 @@ from PIL.Image import Image
 from torchvision.transforms import transforms
 import numpy as np
 
+
 def get_datasets(n_clients, root_dir):
     '''
     get a set of datasets
@@ -23,6 +24,18 @@ def get_datasets(n_clients, root_dir):
         datasets[i] = client_dataset
 
     return datasets
+
+
+class AddGaussianNoise(object):
+    def __init__(self, mean=0., std=1.):
+        self.std = std
+        self.mean = mean
+
+    def __call__(self, tensor):
+        return tensor + torch.randn(tensor.size()) * self.std + self.mean
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(mean={0}, std={1})'.format(self.mean, self.std)
 
 
 class FedGlasDataset:
@@ -50,6 +63,19 @@ class FedGlasDataset:
         self.samples = self.get_data()
         # TODO: Transform in __getitem__
 
+        self.transform = self.get_transform()
+        self.prob = 0.5
+
+    def get_transform(self):
+        transform = transforms.Compose([
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.ColorJitter(brightness=0.5),
+            AddGaussianNoise(mean=0, std=0.5),
+            transforms.GaussianBlur(kernel_size=5, sigma=(0.5, 2.0)),
+            transforms.ToTensor()
+        ])
+        return transform
+
     def get_data(self):
         '''
         get the images from the dataframe
@@ -67,8 +93,8 @@ class FedGlasDataset:
         Returns x for a given idx.
         """
         (img_filename, anno_filename) = self.samples[idx]
-        #x = Image.open(os.path.join(self._data_dir, img_filename)).convert('RGB')
-        #y = Image.open(os.path.join(self._data_dir, anno_filename))
+        # x = Image.open(os.path.join(self._data_dir, img_filename)).convert('RGB')
+        # y = Image.open(os.path.join(self._data_dir, anno_filename))
 
         x = np.load(os.path.join(self._data_dir, img_filename))
         y = np.load(os.path.join(self._data_dir, anno_filename))
@@ -80,7 +106,9 @@ class FedGlasDataset:
     def __getitem__(self, idx):
         # Any transformations are handled by the WILDSSubset
         # since different subsets (e.g., train vs test) might have different transforms
-        x, y = self.get_input(idx)
+
+        transform = transforms.RandomApply([self.transform], p=self.prob)
+        x, y = transform(self.get_input(idx))
         '''
         trans = transforms.ToTensor()
         x = trans(x)
