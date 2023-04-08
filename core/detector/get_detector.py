@@ -4,12 +4,12 @@ from core.detector.spectral_anomaly_detection import SpectralAnomaly
 
 
 def get_detector(detector):
-    match detector:
-        case 'krum':
-            return Krum
-        case 'mud-hog':
-            return MudHog
-        case 'spectral':
-            return SpectralAnomaly
-        case _:
-            return None
+    if detector == 'krum':
+        return Krum
+    elif detector == 'mud-hog':
+        return MudHog
+    elif detector == 'spectral':
+        return SpectralAnomaly
+    else:
+        return None
+

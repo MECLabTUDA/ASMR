@@ -13,7 +13,6 @@ class FedAvg:
         for client_id in self.clients_info:
             if self.clients_info[client_id]['active']:
                 self.total_samples += self.clients_info[client_id]['num_samples']
-                self.clients_info[client_id]['weights'] = {k: v.to(self.device) for k, v in self.clients_info[client_id]['weights'].items()}
 
     def get_info(self):
         print("this is a FedAvg")
@@ -47,8 +46,13 @@ class FedAvg:
     def _save_agg_model(self, agg_state_dict):
         torch.save(agg_state_dict, self.global_model_path)
 
+    def clients_to_gpu(self):
+        for client_id in self.clients_info:
+            self.clients_info[client_id]['weights'] = {k: v.to(self.device) for k, v in self.clients_info[client_id]['weights'].items()}
+
     def aggregate(self, clients_info):
         self.clients_info = clients_info
+        self.clients_to_gpu()
         agg_state_dict = self._average_weights()
         agg_state_dict = {k: v.cpu() for k, v in agg_state_dict.items()}
         self._save_agg_model(agg_state_dict)

@@ -35,7 +35,11 @@ class Server:
         self.global_model_path = cfg['global_model_path']
         self.agg_params = self.get_agg_params(cfg)
         self.aggregation = get_aggregation(cfg['agg_method'])(**self.agg_params)
-        self.detector = get_detector(cfg['detector'])
+        
+        if get_detector(cfg['detector']) is not None:
+            self.detector = get_detector(cfg['detector'])()
+        else:
+            self.detector = None
 
         self.test_batch_size = cfg['batch_size']
         self.root_dir = cfg['data_root']

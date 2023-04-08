@@ -3,7 +3,7 @@ import os
 
 import numpy as np
 import torch
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 from torch import nn, optim
 from torch.optim import Adam
 from tqdm import tqdm

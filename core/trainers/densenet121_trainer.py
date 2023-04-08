@@ -114,7 +114,7 @@ class DenseNet121Trainer:
         if fl_attack == 'ana':
             weights = add_gaussian_noise(weights, dp_scale)
         elif fl_attack == 'sfa':
-            weights = flip_signs(weights, dp_scale)
+            weights = flip_signs(weights)
 
         self._save_local_model(n_round, weights)
         return weights

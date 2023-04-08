@@ -17,7 +17,7 @@ Blanchard, Peva, Rachid Guerraoui, and Julien Stainer. "Machine learning with ad
 class Krum:
     def __init__(self, device='cuda:0'):
         self.device = device
-        self.k = 3
+        self.k = 7
         self.clients_info = None
         self.client_states = None
 
@@ -47,7 +47,7 @@ class Krum:
 
         # Assign clients to
         mal_clients = []
-        ben_clients = []
+        ben_clients = {}
 
         for client in self.clients_info:
 

@@ -12,6 +12,7 @@ mal_clients: [1,2,3,5,8,4,7]
 fl_attack: "sfa"
 attack_prob: 0.7
 dp_scale: -1
+detector: None
 
 n_rounds: 20
 trusted_rounds: 5
