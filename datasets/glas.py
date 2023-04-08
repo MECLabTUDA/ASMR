@@ -1,10 +1,12 @@
 import os
+import random
 
 import pandas as pd
 import torch
 from PIL.Image import Image
 from torchvision.transforms import transforms
 import numpy as np
+import torchvision.transforms.functional as TF
 
 
 def get_datasets(n_clients, root_dir):
@@ -26,16 +28,49 @@ def get_datasets(n_clients, root_dir):
     return datasets
 
 
-class AddGaussianNoise(object):
-    def __init__(self, mean=0., std=1.):
-        self.std = std
-        self.mean = mean
+def transform_samples(image, mask):
+    # Resize
+    resize = transforms.Resize(size=(520, 520))
+    image = resize(image)
+    mask = resize(mask)
 
-    def __call__(self, tensor):
-        return tensor + torch.randn(tensor.size()) * self.std + self.mean
+    # Random crop
+    i, j, h, w = transforms.RandomCrop.get_params(image, output_size=(512, 512))
 
-    def __repr__(self):
-        return self.__class__.__name__ + '(mean={0}, std={1})'.format(self.mean, self.std)
+    image = TF.crop(image, i, j, h, w)
+    mask = TF.crop(mask, i, j, h, w)
+
+    # Random horizontal flipping
+    if random.random() > 0.5:
+        image = TF.hflip(image)
+        mask = TF.hflip(mask)
+
+    # Random vertical flipping
+    if random.random() > 0.5:
+        image = TF.vflip(image)
+        mask = TF.vflip(mask)
+
+    # Random gaussian blur
+    if random.random() > 0.5:
+        image = TF.gaussian_blur(image, kernel_size=5, sigma=(0.5, 2.0))
+
+    # Add random noise
+    # if random.random() > 0.5:
+    #    image = image + torch.randn(image.size()) * 0.5
+
+    if random.random() > 0.5:
+        image = TF.adjust_contrast(image, contrast_factor=0.25)
+
+    if random.random() > 0.5:
+        image = TF.adjust_brightness(image, brightness_factor=0.5)
+
+    # if random.random() > 0.5:
+    #    image = TF.affine(image, angle=30, translate=(50, 50), scale=1.2, shear=0)
+
+    # Transform to tensor
+    image = TF.to_tensor(image)
+    mask = TF.to_tensor(mask)
+    return image, mask
 
 
 class FedGlasDataset:
@@ -107,11 +142,7 @@ class FedGlasDataset:
         # Any transformations are handled by the WILDSSubset
         # since different subsets (e.g., train vs test) might have different transforms
 
-        transform = transforms.RandomApply([self.transform], p=self.prob)
-        x, y = transform(self.get_input(idx))
-        '''
-        trans = transforms.ToTensor()
-        x = trans(x)
-        y = trans(y)
-        '''
+        x, y = self.get_input(idx)
+        x, y = transform_samples(x, y)
+
         return x, y

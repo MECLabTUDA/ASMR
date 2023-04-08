@@ -1,11 +1,13 @@
 import math
 import os
+from random import random
 
 import numpy as np
 import torch
 from torch.utils.tensorboard import SummaryWriter
 from torch import nn, optim
 from torch.optim import Adam
+from torchvision.transforms import transforms
 from tqdm import tqdm
 
 from core.attacks.ana import add_gaussian_noise
@@ -23,11 +25,13 @@ from batchgenerators.transforms.spatial_transforms import MirrorTransform, Spati
 from batchgenerators.transforms.color_transforms import BrightnessMultiplicativeTransform, ContrastAugmentationTransform
 from batchgenerators.transforms.noise_transforms import GaussianNoiseTransform, GaussianBlurTransform
 
+import torchvision.transforms.functional as TF
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 logger.setLevel(logging.INFO)
+
 
 
 class GlasUnetTrainer:
