@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 from PIL.Image import Image
 from torchvision.transforms import transforms
-
+import numpy as np
 
 def get_datasets(n_clients, root_dir):
     '''
@@ -67,8 +67,11 @@ class FedGlasDataset:
         Returns x for a given idx.
         """
         (img_filename, anno_filename) = self.samples[idx]
-        x = Image.open(os.path.join(self._data_dir, img_filename)).convert('RGB')
-        y = Image.open(os.path.join(self._data_dir, anno_filename))
+        #x = Image.open(os.path.join(self._data_dir, img_filename)).convert('RGB')
+        #y = Image.open(os.path.join(self._data_dir, anno_filename))
+
+        x = np.load(os.path.join(self._data_dir, img_filename))
+        y = np.load(os.path.join(self._data_dir, anno_filename))
         return x, y
 
     def __len__(self):
