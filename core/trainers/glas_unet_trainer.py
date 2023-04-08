@@ -58,7 +58,7 @@ class GlasUnetTrainer:
         self.dice_loss = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
         self.xent = smp.losses.SoftBCEWithLogitsLoss(smooth_factor=0.1)
 
-    def min_max_norm(self, img, axis=(1, 2)):
+    def min_max_norm(img):
         """
         Channel-wise Min max normalization for
         images with input [batch size, slices, width, channel]
@@ -66,8 +66,10 @@ class GlasUnetTrainer:
         @return: Min max norm of the image per channel
         """
         inp_shape = img.shape
-        img_min = np.broadcast_to(img.min(axis=axis, keepdims=True), inp_shape)
-        img_max = np.broadcast_to(img.max(axis=axis, keepdims=True), inp_shape)
+        # img_min = torch.broadcast_to(img.min(axis=axis, keepdims=True), inp_shape)
+        img_min = torch.broadcast_to(torch.min(img, dim=3, keepdim=True).values, inp_shape)
+        # img_max = torch.broadcast_to(img.max(axis=axis, keepdims=True), inp_shape)
+        img_max = torch.broadcast_to(torch.max(img, dim=3, keepdim=True).values, inp_shape)
         x = (img - img_min) / (img_max - img_min + float(1e-18))
         return x
 
