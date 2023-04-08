@@ -144,7 +144,7 @@ class GlasUnetTrainer:
             # binarisation
             segs = np.where(segs > 0., 1.0, 0.).astype('float32')
             segs = np.expand_dims(segs[:, 0, :, :], 1)
-            imgs, segs = torch.from_numpy(imgs).to(self.device), torch.from_numpy(segs).to(self.device)
+            imgs, segs = imgs.to(self.device), torch.from_numpy(segs).to(self.device)
             # Compute loss
             pred = self.model(imgs)
             loss, xent_l, dice_l = self.custom_loss(pred, segs)
