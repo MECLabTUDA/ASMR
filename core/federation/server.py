@@ -147,7 +147,7 @@ class Server:
 
         self.model.to(self.device)
         self.model.eval()
-        logger.info(np.unique(self.test_ldr.dataset._y_array, return_counts=True))
+        #logger.info(np.unique(self.test_ldr.dataset._y_array, return_counts=True))
         with torch.no_grad():
             for (imgs, labels) in self.test_ldr:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
