@@ -16,4 +16,4 @@
 
 
 ## Glas 
-python3 main.py --exp_path=glas_none_fedavg.yml --logfile=glas_none_avg.log --gpu=0
+python3 main.py --exp_path=glas_none_fedavg.yml --logfile=glas_none_avg.log --gpu=0,1
