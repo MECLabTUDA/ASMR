@@ -37,14 +37,14 @@ class FedGlasDataset:
         self._data_dir = root_dir
 
         self._metadata_df = pd.read_csv(
-            os.path.join(self._data_dir, 'meta.csv'),
+            os.path.join(self._data_dir, 'fedmeta.csv'),
             index_col=0,
             dtype={'patient': 'str'})
 
         if kwargs['split'] == 'test':
             self.annotation = 'test'
         else:
-            self.annotation = kwargs['client_id']
+            self.annotation = str(kwargs['client_id'])
 
         # get the split of the data
         self.samples = self.get_data()
@@ -54,7 +54,7 @@ class FedGlasDataset:
         '''
         get the images from the dataframe
         '''
-        x_metadata = self._metadata_df[self._metadata_df['client_id'] == self.annotation]
+        x_metadata = self._metadata_df[self._metadata_df['client_id'] == str(self.annotation)]
         data = [
             (img, anno)
             for img, anno, x, y in

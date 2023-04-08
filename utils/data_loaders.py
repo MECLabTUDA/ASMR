@@ -10,6 +10,7 @@ def get_dataset(dataset):
     elif dataset == 'glas':
         return FedGlasDataset
 
+
 def get_test_loader(root_dir, batch_size, dataset, **loader_kwargs):
     FedDataset = get_dataset(dataset)
     return DataLoader(FedDataset(root_dir),
