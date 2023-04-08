@@ -98,18 +98,6 @@ class FedGlasDataset:
         self.samples = self.get_data()
         # TODO: Transform in __getitem__
 
-        self.transform = self.get_transform()
-        self.prob = 0.5
-
-    def get_transform(self):
-        transform = transforms.Compose([
-            transforms.RandomHorizontalFlip(p=0.5),
-            transforms.ColorJitter(brightness=0.5),
-            AddGaussianNoise(mean=0, std=0.5),
-            transforms.GaussianBlur(kernel_size=5, sigma=(0.5, 2.0)),
-            transforms.ToTensor()
-        ])
-        return transform
 
     def get_data(self):
         '''
