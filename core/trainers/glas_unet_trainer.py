@@ -19,7 +19,6 @@ import sys
 import segmentation_models_pytorch as smp
 from batchgenerators.dataloading.multi_threaded_augmenter import MultiThreadedAugmenter
 
-
 from batchgenerators.transforms.abstract_transforms import Compose
 from batchgenerators.transforms.spatial_transforms import MirrorTransform, SpatialTransform
 from batchgenerators.transforms.color_transforms import BrightnessMultiplicativeTransform, ContrastAugmentationTransform
@@ -33,6 +32,50 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.INFO)
 
 
+def transform_samples(image, mask):
+    # Resize
+    resize = transforms.Resize(size=(520, 520))
+    image = resize(image)
+    mask = resize(mask)
+
+    # Random crop
+    i, j, h, w = transforms.RandomCrop.get_params(image, output_size=(512, 512))
+
+    image = TF.crop(image, i, j, h, w)
+    mask = TF.crop(mask, i, j, h, w)
+
+    # Random horizontal flipping
+    if random.random() > 0.5:
+        image = TF.hflip(image)
+        mask = TF.hflip(mask)
+
+    # Random vertical flipping
+    if random.random() > 0.5:
+        image = TF.vflip(image)
+        mask = TF.vflip(mask)
+
+    # Random gaussian blur
+    if random.random() > 0.5:
+        image = TF.gaussian_blur(image, kernel_size=5, sigma=(0.5, 2.0))
+
+    # Add random noise
+    # if random.random() > 0.5:
+    #    image = image + torch.randn(image.size()) * 0.5
+
+    if random.random() > 0.5:
+        image = TF.adjust_contrast(image, contrast_factor=0.25)
+
+    if random.random() > 0.5:
+        image = TF.adjust_brightness(image, brightness_factor=0.5)
+
+    # if random.random() > 0.5:
+    #    image = TF.affine(image, angle=30, translate=(50, 50), scale=1.2, shear=0)
+
+    # Transform to tensor
+    image = TF.to_tensor(image)
+    mask = TF.to_tensor(mask)
+    return image, mask
+
 
 class GlasUnetTrainer:
     def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs, device=0):
@@ -45,9 +88,9 @@ class GlasUnetTrainer:
         self.batch_size = 1
         self.lr = 1e-3
 
-        #tr_transforms = self.get_train_transform()
+        # tr_transforms = self.get_train_transform()
 
-        #self.train_gen = MultiThreadedAugmenter(self.ldr, tr_transforms, num_processes=4,
+        # self.train_gen = MultiThreadedAugmenter(self.ldr, tr_transforms, num_processes=4,
         #                                   num_cached_per_queue=2,
         #                                   seeds=None, pin_memory=False)
 
@@ -79,7 +122,7 @@ class GlasUnetTrainer:
         loss = xent_l + dice_l
         return loss, xent_l, dice_l
 
-    def get_train_transform(self, patch_size=(512,512), prob=0.5):
+    def get_train_transform(self, patch_size=(512, 512), prob=0.5):
         # We now create a list of transforms.
         # These are not necessarily the best transforms to use for BraTS, this is just
         # to showcase some things
@@ -131,22 +174,23 @@ class GlasUnetTrainer:
         return tr_transforms
 
     def step(self):
-        #TODO: New Dataloader
-        #num_batches = math.ceil(len(ds_dict['train_ds']['img_npy']) / self.batch_size)
+        # TODO: New Dataloader
+        # num_batches = math.ceil(len(ds_dict['train_ds']['img_npy']) / self.batch_size)
         self.model.train()
         batch_xent_l = []
         batch_dice_l = []
         batch_loss = []
 
-        #for i in tqdm(range(num_batches)):
+        # for i in tqdm(range(num_batches)):
         for imgs, segs in tqdm(self.ldr):
-
+            imgs, segs = imgs.to(self.device), torch.from_numpy(segs).to(self.device)
+            imgs, segs = transform_samples(imgs, segs)
             # normalization
             imgs = self.min_max_norm(imgs)
             # binarisation
             segs = np.where(segs > 0., 1.0, 0.).astype('float32')
             segs = np.expand_dims(segs[:, 0, :, :], 1)
-            imgs, segs = imgs.to(self.device), torch.from_numpy(segs).to(self.device)
+            # imgs, segs = imgs.to(self.device), torch.from_numpy(segs).to(self.device)
             # Compute loss
             pred = self.model(imgs)
             loss, xent_l, dice_l = self.custom_loss(pred, segs)
@@ -195,7 +239,7 @@ class GlasUnetTrainer:
 
         for epoch in range(self.n_local_epochs):
             train_output = self.step()
-            #test_output = test(model)
+            # test_output = test(model)
             scheduler.step(train_output['loss'])
             '''
             self.scheduler.step(test_output['loss'])
@@ -214,7 +258,7 @@ class GlasUnetTrainer:
         if fl_attack == 'ana':
             weights = add_gaussian_noise(weights, dp_scale)
         elif fl_attack == 'sfa':
-            weights = flip_signs(weights, dp_scale)
+            weights = flip_signs(weights)
 
         self._save_local_model(n_round, weights)
         return weights

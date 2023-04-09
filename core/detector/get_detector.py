@@ -1,5 +1,6 @@
 from core.detector.hog import MudHog
 from core.detector.krum import Krum
+from core.detector.mirko_detector import MirkoDetector
 from core.detector.spectral_anomaly_detection import SpectralAnomaly
 
 
@@ -10,6 +11,8 @@ def get_detector(detector):
         return MudHog
     elif detector == 'spectral':
         return SpectralAnomaly
+    elif detector == 'mirko':
+        return MirkoDetector
     else:
         return None
 
