@@ -28,11 +28,13 @@ def get_datasets(n_clients, root_dir):
     return datasets
 
 
-def transform_samples(image, mask):
+def transform_samples(image, mask, device):
     # Resize
     resize = transforms.Resize(size=(520, 520))
     image = resize(image)
     mask = resize(mask)
+
+
 
     # Random crop
     i, j, h, w = transforms.RandomCrop.get_params(image, output_size=(512, 512))
@@ -98,7 +100,6 @@ class FedGlasDataset:
         self.samples = self.get_data()
         # TODO: Transform in __getitem__
 
-
     def get_data(self):
         '''
         get the images from the dataframe
@@ -134,6 +135,6 @@ class FedGlasDataset:
         # since different subsets (e.g., train vs test) might have different transforms
 
         x, y = self.get_input(idx)
-        x, y = transform_samples(x, y)
+        #x, y = transform_samples(x, y)
 
         return x, y
