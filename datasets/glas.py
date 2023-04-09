@@ -123,8 +123,11 @@ class FedGlasDataset:
         x = np.load(os.path.join(self._data_dir, img_filename))
         y = np.load(os.path.join(self._data_dir, anno_filename))
 
-        x = Image.fromarray(x.astype('uint8'))
-        y = Image.fromarray(y.astype('uint8'))
+        x = torch.tensor(x)
+        y = torch.tensor(y)
+
+        #x = Image.fromarray(x.astype('uint8'))
+        #y = Image.fromarray(y.astype('uint8'))
         return x, y
 
     def __len__(self):
