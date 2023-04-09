@@ -13,6 +13,12 @@ def net2vec(net) -> (torch.Tensor):
     return vec
 
 
+def net2cuda(net, device='cuda:0'):
+    for key, tensor in net.items():
+        net[key] = tensor.to(device)
+    return net
+
+
 def vec2net(vec: torch.Tensor, net) -> None:
     '''
     convert a 1 dimension Tensor to state dict
@@ -60,7 +66,7 @@ def stackStateDicts(deltas):
 def getFloatSubModules(Delta) -> list:
     param_float = []
     for param in Delta:
-        #if not "FloatTensor" in Delta[param].type():
+        # if not "FloatTensor" in Delta[param].type():
         #    continue
         param_float.append(param)
     return param_float
