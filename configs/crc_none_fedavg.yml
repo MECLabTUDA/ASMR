@@ -19,7 +19,7 @@ fl_attack: "ana"
 attack_prob: 0.7
 dp_scale: 50
 
-# Possible values: [krum, mud-hog, spectral]
+# Possible values: [krum, mud-hog, spectral, mirko]
 detector: None
 
 n_rounds: 20
