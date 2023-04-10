@@ -1,6 +1,6 @@
 name: "train_clients"
 
-# Possible values: [camelyon17, glas, aggc]
+# Possible values: [camelyon17, glas, aggc, crc]
 dataset: "camelyon17"
 
 data_root: "/local/scratch/camelyon17/camelyon17_v1.0"
@@ -30,7 +30,7 @@ n_local_epochs: 5
 agg_method: "FedAvg"
 momentum: 0.7
 
-# possible values: [densenet, ...]
+# possible values: [densenet, resnet50, ...]
 arch: "densenet"
 trainer: 'densenet121_basic'
 

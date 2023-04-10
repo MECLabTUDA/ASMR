@@ -1,6 +1,7 @@
 from torch.utils.data import DataLoader
 from datasets.camelyon17 import FedCamelyon17Dataset
 from datasets.camelyon17 import get_datasets
+from datasets.crc import FedCrcDataset
 from datasets.glas import FedGlasDataset
 
 
@@ -9,6 +10,8 @@ def get_dataset(dataset):
         return FedCamelyon17Dataset
     elif dataset == 'glas':
         return FedGlasDataset
+    elif dataset == 'crc':
+        return FedCrcDataset
 
 
 def get_test_loader(root_dir, batch_size, dataset, **loader_kwargs):

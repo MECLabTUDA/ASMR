@@ -1,3 +1,4 @@
+from core.trainers.crc_resnet_trainer import ResnetTrainer
 from core.trainers.densenet121_trainer import DenseNet121Trainer
 from core.trainers.fcn8_trainer import Fcn8Trainer
 from core.trainers.glas_unet_trainer import GlasUnetTrainer
@@ -10,4 +11,6 @@ def get_trainer(trainer):
         return Fcn8Trainer
     elif trainer == 'glas_unet':
         return GlasUnetTrainer
+    elif trainer == 'crc_resnet':
+        return ResnetTrainer
     pass
