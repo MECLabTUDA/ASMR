@@ -17,7 +17,7 @@ class MirkoDetector:
                                        'weights': net2vec(net2cuda(clients_info[cid]['weights'])).unsqueeze(0).to(
                                            'cuda:0')}
 
-        self.get_k_nn(len(self.client_states) // 2)
+        self.get_k_nn(len(self.client_states) - 2)
         self.local_reachability_density()
         self.local_outlier_factor()
 
@@ -25,8 +25,8 @@ class MirkoDetector:
         ordered_list = [(client_id, self.client_states[client_id]['lof']) for client_id in self.client_states]
         ordered_list = sorted(ordered_list, key=lambda x: x[1])
         sp = self.find_seperation_point(ordered_list)
-        benign_clients = [elem[0] for elem in ordered_list[:sp]]
-        malicious_clients = [elem[0] for elem in ordered_list[sp:]]
+        benign_clients = [elem[0] for elem in ordered_list[sp:]]
+        malicious_clients = [elem[0] for elem in ordered_list[:sp]]
 
         ben_clients = {}
         for client_id in benign_clients:
