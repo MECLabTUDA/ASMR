@@ -8,6 +8,8 @@ from core.detector.helpers import net2vec, net2cuda
 from typing import List, Union
 
 
+# <https://ieeexplore.ieee.org/abstract/document/9054676>`_.
+
 class ClusteringDetector:
     def __init__(self, device='cuda:0'):
         self.clients_info = {}
