@@ -66,8 +66,11 @@ class Server:
             ben_clients, mal_clients = self.detector.detect()
             logger.info(f'Clients detected as malicious: {mal_clients}')
             #filtered_clients = dict((k, v) for k,v in self.clients_info.items() if k not in mal_clients)
-            for client in mal_clients:
-                del self.clients_info[client]
+            print('***************')
+            print('***************')
+            print(self.clients_info[0].keys())
+            print('***************')
+            print('***************')
             aggregated_weights = self.aggregation.aggregate(self.clients_info)
             #aggregated_weights = self.aggregation.aggregate(ben_clients)
             logger.info("aggregated weights to new global model")
