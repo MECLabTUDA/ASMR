@@ -51,7 +51,8 @@ def retrieve_clients(cfg):
                            'n_round': 0,
                            'active': status,
                            'malicious': malicious,
-                           'ldr': ldr}
+                           'ldr': ldr,
+                           'detected': False}
 
         # client = Client(cfg, i, ldr)
         logger.debug('created client: ' + str(i))
@@ -120,7 +121,8 @@ class Client:
                     'n_round': recieved_info['n_round'],
                     'active': False,
                     'malicious': self.malicious,
-                    'ldr': self.ldr}
+                    'ldr': self.ldr,
+                    'detected': False}
         else:
             # update the model before training should be abstracted from the server side for multiprocessing?
             self._load_model(recieved_info['global_weight'])
@@ -142,7 +144,8 @@ class Client:
                 'n_round': recieved_info['n_round'],
                 'active': True,
                 'malicious': self.malicious,
-                'ldr': self.ldr}
+                'ldr': self.ldr,
+                'detected': False}
 
     def clean(self):
         try:
