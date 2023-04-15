@@ -17,6 +17,12 @@ class FedAvg:
     def get_info(self):
         print("this is a FedAvg")
 
+    def _update_total_samples(self):
+        self.total_samples = 0
+        for client_id in self.clients_info:
+            if self.clients_info[client_id]['active'] and not self.clients_info[client_id]['detected']:
+                self.total_samples += self.clients_info[client_id]['num_samples']
+
     def _average_weights(self):
 
         client_sd = [self.clients_info[c]['weights'] for c in self.clients_info if
@@ -61,6 +67,7 @@ class FedAvg:
 
     def aggregate(self, clients_info):
         self.clients_info = clients_info
+        self._update_total_samples()
         self.clients_to_gpu()
         agg_state_dict = self._average_weights()
         agg_state_dict = {k: v.cpu() for k, v in agg_state_dict.items()}
