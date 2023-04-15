@@ -26,6 +26,12 @@ class FedAvg:
 
         cw = [self.clients_info[c]['num_samples'] / self.total_samples for c in self.clients_info if
               self.clients_info[c]['active'] and not self.clients_info[c]['detected']]
+
+        print('########################')
+        print(f'Anzahl der berücksichtigten Clients: {len(client_sd)}')
+        print(f'Anzahl der gewichte: {len(cw)}')
+        print('########################')
+
         # ssd = copy.deepcopy(self.clients_info[0]['weights'])
         ssd = self._create_zero_state_dict(client_sd[0])
         ''' 
