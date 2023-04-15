@@ -3,6 +3,8 @@ from typing import List, Union
 import numpy as np
 import torch
 
+from core.detector.helpers import net2vec, net2cuda
+
 
 class Dnc:
     r"""A robust aggregator from paper `Manipulating the Byzantine: Optimizing
