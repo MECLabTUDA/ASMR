@@ -128,7 +128,7 @@ class Client:
             self._load_model(recieved_info['global_weight'])
             p = self.attack(self.attack_freq)
             if self.malicious and self.attack(self.attack_freq):
-                logger.debug(f'Client: {self.id} is comitting a malicious udpate')
+                logger.info(f'Client: {self.id} is comitting a malicious udpate')
                 if self.fl_attack == 'ana':
                     client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
                                                        self.fl_attack, self.dp_scale)
