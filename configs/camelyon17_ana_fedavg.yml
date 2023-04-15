@@ -13,6 +13,8 @@ fl_attack: "ana"
 attack_prob: 0.7
 dp_scale: 50
 
+detector: None
+
 n_rounds: 20
 trusted_rounds: 5
 n_local_epochs: 5

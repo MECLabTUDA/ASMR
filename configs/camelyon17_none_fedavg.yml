@@ -17,6 +17,8 @@ n_rounds: 20
 trusted_rounds: 3
 n_local_epochs: 5
 
+detector: None
+
 momentum: 0.7
 agg_method: "FedAvg"
 

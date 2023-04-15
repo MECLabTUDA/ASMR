@@ -15,6 +15,7 @@ from core.attacks.sfa import flip_signs
 
 import logging
 import sys
+import random
 
 import segmentation_models_pytorch as smp
 from batchgenerators.dataloading.multi_threaded_augmenter import MultiThreadedAugmenter
@@ -74,7 +75,7 @@ def transform_samples(image, mask):
     # Transform to tensor
     image = TF.to_tensor(image)
     mask = TF.to_tensor(mask)
-    return image, mask
+    return image.permute(0, 3, 1, 2), mask.permute(0, 3, 1, 2)
 
 
 class GlasUnetTrainer:
@@ -183,7 +184,7 @@ class GlasUnetTrainer:
 
         # for i in tqdm(range(num_batches)):
         for imgs, segs in tqdm(self.ldr):
-            imgs, segs = imgs.to(self.device), torch.from_numpy(segs).to(self.device)
+            imgs, segs = imgs.to(self.device), segs.to(self.device)
             imgs, segs = transform_samples(imgs, segs)
             # normalization
             imgs = self.min_max_norm(imgs)
