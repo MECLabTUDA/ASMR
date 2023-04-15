@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import torch
 from torch import optim, nn
 from torch.autograd import Variable
@@ -9,7 +11,7 @@ from utils.data_loaders import get_test_loader
 
 if __name__ == '__main__':
 
-    ldr = get_test_loader("/local/scratch/camelyon17/camelyon17_v1.0", 8, 'camelyon17')
+    ldr = get_test_loader("/local/scratch/camelyon17/camelyon17_v1.0", 64, 'camelyon17')
 
     model = get_arch('densenet')
 

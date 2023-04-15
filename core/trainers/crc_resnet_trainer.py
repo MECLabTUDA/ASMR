@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 
+import torch.nn as nn
 import torch
 from torch import optim
 import torch.nn.functional as F
@@ -59,7 +60,7 @@ class ResnetTrainer:
                 loss = F.cross_entropy(pred, label)
 
                 loss.backward()
-
+                nn.utils.clip_grad_value_(self.model.parameters(), clip_value=5.0)
                 optimizer.step()
 
                 train_loss += loss.data

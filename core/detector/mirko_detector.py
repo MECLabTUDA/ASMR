@@ -17,7 +17,7 @@ class MirkoDetector:
                                        'weights': net2vec(net2cuda(clients_info[cid]['weights'])).unsqueeze(0).to(
                                            'cuda:0')}
 
-        self.get_k_nn(len(self.client_states) - 2)
+        self.get_k_nn(len(self.client_states) - 3)
         self.local_reachability_density()
         self.local_outlier_factor()
 
