@@ -112,8 +112,10 @@ class DenseNet121Trainer:
         # self.tb.close()
         weights = self.model.cpu().state_dict()
         if fl_attack == 'ana':
+            logger.info(f'Client: {self.id} is comitting a malicious udpate')
             weights = add_gaussian_noise(weights, dp_scale)
         elif fl_attack == 'sfa':
+            logger.info(f'Client: {self.id} is comitting a malicious udpate')
             weights = flip_signs(weights)
 
         self._save_local_model(n_round, weights)
