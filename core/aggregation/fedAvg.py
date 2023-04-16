@@ -34,8 +34,7 @@ class FedAvg:
               self.clients_info[c]['active'] and not self.clients_info[c]['detected']]
 
         print('########################')
-        print(f'Anzahl der berücksichtigten Clients: {len(client_sd)}')
-        print(f'Anzahl der gewichte: {len(cw)}')
+        print(f'Benign Clients: {len(client_sd)}')
         print('########################')
 
         # ssd = copy.deepcopy(self.clients_info[0]['weights'])
