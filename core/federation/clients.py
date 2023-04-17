@@ -74,6 +74,10 @@ class Client:
         -
         """
 
+        logging.basicConfig(filename='logs/LOGGING_EXAMPLE.log', filemode='w',
+                            format='%(asctime) - s%(levelname)s - %(message)s',
+                            level=logging.DEBUG)
+
         self.logger = logging.getLogger(__name__)
         self.logger.addHandler(logging.StreamHandler(sys.stdout))
 
