@@ -1,6 +1,14 @@
+import logging
+import sys
+
 import torch
 from collections import OrderedDict
 import copy
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler(sys.stdout))
+
+logger.setLevel(logging.INFO)
 
 
 class FedAvg:
@@ -13,6 +21,11 @@ class FedAvg:
         for client_id in self.clients_info:
             if self.clients_info[client_id]['active']:
                 self.total_samples += self.clients_info[client_id]['num_samples']
+
+    def show_malicious_clients(self):
+        mal_clients = [self.clients_info[client]['id'] for client in self.clients_info if
+                       self.clients_info[client]['attack']]
+        logger.info(f'Malicious Clients this round: {mal_clients}')
 
     def get_info(self):
         print("this is a FedAvg")
@@ -62,11 +75,13 @@ class FedAvg:
 
     def clients_to_gpu(self):
         for client_id in self.clients_info:
-            self.clients_info[client_id]['weights'] = {k: v.to(self.device) for k, v in self.clients_info[client_id]['weights'].items()}
+            self.clients_info[client_id]['weights'] = {k: v.to(self.device) for k, v in
+                                                       self.clients_info[client_id]['weights'].items()}
 
     def aggregate(self, clients_info):
         self.clients_info = clients_info
         self._update_total_samples()
+        self.show_malicious_clients()
         self.clients_to_gpu()
         agg_state_dict = self._average_weights()
         agg_state_dict = {k: v.cpu() for k, v in agg_state_dict.items()}

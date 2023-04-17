@@ -74,15 +74,6 @@ class Client:
         -
         """
 
-        logging.basicConfig(filename='logs/LOGGING_EXAMPLE.log', filemode='w',
-                            format='%(asctime) - s%(levelname)s - %(message)s',
-                            level=logging.DEBUG)
-
-        self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(logging.StreamHandler(sys.stdout))
-
-        self.logger.setLevel(logging.INFO)
-
         self.model = get_arch(cfg['arch'])
         self.id = client_id
         self.mal_clients = cfg['mal_clients']
@@ -123,6 +114,7 @@ class Client:
         Trains Clients model for one Episode
         '''
         self._update_client(recieved_info)
+        attack = False
 
         if self.id not in recieved_info['active_clients']:
             return {'id': self.id,
@@ -132,13 +124,15 @@ class Client:
                     'active': False,
                     'malicious': self.malicious,
                     'ldr': self.ldr,
-                    'detected': False}
+                    'detected': False,
+                    'attack': attack}
         else:
             # update the model before training should be abstracted from the server side for multiprocessing?
             self._load_model(recieved_info['global_weight'])
             p = self.attack(self.attack_freq)
             if self.malicious and self.attack(self.attack_freq):
-                self.logger.info(f'Client: {self.id} is comitting a malicious udpate')
+                logger.info(f'Client: {self.id} is comitting a malicious udpate')
+                attack = True
                 if self.fl_attack == 'ana':
                     client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
                                                        self.fl_attack, self.dp_scale)
@@ -155,7 +149,8 @@ class Client:
                 'active': True,
                 'malicious': self.malicious,
                 'ldr': self.ldr,
-                'detected': False}
+                'detected': False,
+                'attack': attack}
 
     def clean(self):
         try:
