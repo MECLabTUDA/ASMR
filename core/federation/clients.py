@@ -73,6 +73,12 @@ class Client:
         - creates and load global model
         -
         """
+
+        self.logger = logging.getLogger(__name__)
+        self.logger.addHandler(logging.StreamHandler(sys.stdout))
+
+        self.logger.setLevel(logging.INFO)
+
         self.model = get_arch(cfg['arch'])
         self.id = client_id
         self.mal_clients = cfg['mal_clients']
