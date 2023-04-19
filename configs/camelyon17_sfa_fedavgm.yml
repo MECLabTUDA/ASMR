@@ -10,13 +10,13 @@ starting_clients: [0,1,2,3,4,5,6,7,8,9]
 
 mal_clients: [2,5,8]
 fl_attack: "sfa"
-attack_prob: 0.7
+attack_prob: 1.0
 dp_scale: -1
 detector: None
 
 n_rounds: 20
 trusted_rounds: 5
-n_local_epochs: 5
+n_local_epochs: 1
 
 momentum: 0.7
 agg_method: "FedAvgM"
