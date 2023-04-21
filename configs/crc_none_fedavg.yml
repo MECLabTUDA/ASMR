@@ -3,7 +3,7 @@ name: "train_clients"
 # Possible values: [camelyon17, glas, aggc, crc]
 dataset: "crc"
 
-data_root: "/local/scratch/NCT-CRC-HE/NCT-CRC-HE-100K"
+data_root: "/gris/scratch-gris-filesrv/NCT-CRC-HE/NCT-CRC-HE-100K"
 
 init_model_path: "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/resnet50.pt"
 

@@ -23,7 +23,7 @@
 
 ##Train with mirko defense
 #python3 main.py --exp_path=camelyon17_ana_mirko_fedavgm.yml --logfile=camelyon_ana_mirko_avgm_le1.log --gpu=0,1
-python3 main.py --exp_path=camelyon17_sfa_mirko_fedavgm.yml --logfile=camelyon_sfa_mirko_avgm_le1_dyn_long.log --gpu=0,1
+#python3 main.py --exp_path=camelyon17_sfa_mirko_fedavgm.yml --logfile=camelyon_sfa_mirko_avgm_le1_dyn_long.log --gpu=0,1
 
 #Train with clustering defense
 #python3 main.py --exp_path=camelyon17_ana_clustering_fedavgm.yml --logfile=camelyon_ana_clustering_avgm_le1.log --gpu=0,1
@@ -35,5 +35,7 @@ python3 main.py --exp_path=camelyon17_sfa_mirko_fedavgm.yml --logfile=camelyon_s
 
 #python3 main.py --exp_path=camelyon17_ana_clustering_fedavg.yml --logfile=camelyon_ana_clustering_avgm_new.log --gpu=0,1
 #python3 main.py --exp_path=camelyon17_ana_krum_fedavgm.yml --logfile=camelyon_ana_krum_avgm_new.log --gpu=0,1
+
+python3 main.py --exp_path=crc_none_fedavg.yml --logfile=test_crc.log --gpu=0,1,2,3
 
 #python3 main.py --exp_path=camelyon17_ana_dnc_fedavg.yml --logfile=camelyon_ana_dnc_avgm_new.log --gpu=0,1

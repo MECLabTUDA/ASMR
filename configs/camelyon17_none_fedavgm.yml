@@ -6,7 +6,7 @@ init_model_path: "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/ini
 
 
 n_clients: 10
-starting_clients: [0,1,2,3,4,5,6,7,8,9]
+starting_clients: [0,1,3,4,6,7,9]
 
 mal_clients: []
 fl_attack: "ana"
@@ -14,7 +14,7 @@ attack_prob: 0.7
 dp_scale: 150
 
 n_rounds: 20
-trusted_rounds: 3
+trusted_rounds: 20
 n_local_epochs: 1
 
 detector: None
