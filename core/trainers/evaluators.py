@@ -5,7 +5,7 @@ import torch
 def get_evaluator(arch):
     if arch == 'densenet':
         return eval_camelyon
-    elif arch == 'resnet':
+    elif arch == 'resnet50':
         return eval_crc
 
 
