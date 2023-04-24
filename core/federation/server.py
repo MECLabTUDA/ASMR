@@ -12,6 +12,8 @@ import logging
 import sys
 import numpy as np
 
+from ..trainers.evaluators import get_evaluator
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
@@ -101,12 +103,15 @@ class Server:
         aggregated_weights = self.aggregate()
 
         if n_round % 1 == 0:
+            '''
             acc = self.evaluate(aggregated_weights)
             torch.save(aggregated_weights,
                        f'/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/global/global_model_{n_round}.pt')
             print(f'Saved global model of round: {n_round}')
 
             self.tb.add_scalar('Server Test Acc.', acc, global_step=n_round)
+            '''
+            self.evaluate(aggregated_weights)
 
         self._active_clients(n_round)
 
@@ -152,7 +157,15 @@ class Server:
 
         self.model.to(self.device)
         self.model.eval()
+
+        evaluator = get_evaluator(self.arch)
+
+        eval_info = evaluator(self.model, self.test_ldr, self.device)
+
+        logger.info(eval_info)
         #logger.info(np.unique(self.test_ldr.dataset._y_array, return_counts=True))
+
+        '''
         with torch.no_grad():
             for (imgs, labels) in self.test_ldr:
                 imgs, labels = imgs.to(self.device), labels.to(self.device)
@@ -170,6 +183,7 @@ class Server:
         acc = 100. * correct / batch_total
         logger.info(f"Server Test accuracy:{acc}, {correct}/{batch_total} correct")
         return acc
+        '''
 
     def get_agg_params(self, cfg):
         agg_params = {'clients_info': self.clients_info, 'global_model_path': self.global_model_path}
