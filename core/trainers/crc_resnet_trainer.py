@@ -35,8 +35,8 @@ class ResnetTrainer:
         self.id = client_id
         optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum)
 
-        self.model.train()
-        self.model.to(self.device)
+        #self.model.train()
+        #self.model.to(self.device)
 
         model.train()
         model.to(self.device)
@@ -52,7 +52,7 @@ class ResnetTrainer:
         for epoch in range(self.n_local_epochs):
             batch_loss = []
             for img, label in ldr:
-                img, label = img.permute(0, 3, 1, 2).type(torch.FloatTensor).to(self.device), label.to(self.device)
+                img, label = img.type(torch.FloatTensor).to(self.device).permute(0, 3, 1, 2), label.to(self.device)
                 optimizer.zero_grad()
 
                 pred = model(img)
