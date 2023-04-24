@@ -15,7 +15,7 @@ dp_scale: 150
 
 n_rounds: 20
 trusted_rounds: 3
-n_local_epochs: 5
+n_local_epochs: 1
 
 detector: None
 
