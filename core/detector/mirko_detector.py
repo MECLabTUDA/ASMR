@@ -13,9 +13,10 @@ class MirkoDetector:
         self.clients_info = clients_info
 
         for cid in clients_info:
+            vec = net2vec(net2cuda(clients_info[cid]['weights'])).unsqueeze(0).to('cuda:0')
+            magn = torch.norm(vec)
             self.client_states[cid] = {'id': cid,
-                                       'weights': net2vec(net2cuda(clients_info[cid]['weights'])).unsqueeze(0).to(
-                                           'cuda:0')}
+                                       'weights': vec / magn}
 
         self.get_k_nn(len(self.client_states) - 5)
         self.local_reachability_density()
