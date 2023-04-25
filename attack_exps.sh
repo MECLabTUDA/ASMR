@@ -15,7 +15,7 @@
 
 ##Train with sfa attack without defense
 #python3 main.py --exp_path=camelyon17_sfa_fedavg.yml --logfile=camelyon_sfa_avg.log --gpu=0,1
-#python3 main.py --exp_path=camelyon17_sfa_fedavgm.yml --logfile=camelyon_sfa_avgm_le1.log --gpu=0,1
+#python3 main.py --exp_path=camelyon17_fedavgm_seed1.yml --logfile=camelyon_sfa_avgm_le1.log --gpu=0,1
 
 ##Train with Krum defense
 #/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/logs/final/experiment1_seeds
