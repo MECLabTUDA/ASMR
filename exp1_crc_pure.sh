@@ -36,14 +36,14 @@ python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_sfa_feda
 python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_sfa_fedavgm_seed10.yml --logfile=final/exp1/pure/crc/no_attack/crc_sfa_fedavgm_seed10.log
 
 ### CRC - ANA - No Defense
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed1.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed1.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed2.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed2.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed3.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed3.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed4.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed4.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed5.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed5.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed6.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed6.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed7.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed7.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed8.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed8.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed9.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed9.log
-python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed10.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed10.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed1.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed1.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed2.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed2.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed3.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed3.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed4.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed4.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed5.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed5.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed6.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed6.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed7.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed7.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed8.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed8.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed9.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed9.log
+#python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_defense/crc_ana_fedavgm_seed10.yml --logfile=final/exp1/pure/crc/no_attack/crc_ana_fedavgm_seed10.log
 
