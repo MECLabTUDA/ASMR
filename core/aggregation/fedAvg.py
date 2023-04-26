@@ -75,8 +75,9 @@ class FedAvg:
 
     def clients_to_gpu(self):
         for client_id in self.clients_info:
-            self.clients_info[client_id]['weights'] = {k: v.to(self.device) for k, v in
-                                                       self.clients_info[client_id]['weights'].items()}
+            if self.clients_info[client_id]['weights'] is not None:
+                self.clients_info[client_id]['weights'] = {k: v.to(self.device) for k, v in
+                                                           self.clients_info[client_id]['weights'].items()}
 
     def aggregate(self, clients_info):
         self.clients_info = clients_info
