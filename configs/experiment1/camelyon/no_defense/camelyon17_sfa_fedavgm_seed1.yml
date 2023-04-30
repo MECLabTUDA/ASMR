@@ -20,7 +20,7 @@ attack_prob: 1.0
 dp_scale: 75
 
 # Possible values: [krum, mud-hog, spectral]
-detector: "clustering"
+detector: None
 
 n_rounds: 20
 trusted_rounds: 5
