@@ -6,7 +6,7 @@
 #SBATCH -c 8
 #SBATCH --mem-per-cpu=4000
 #SBATCH --gres=gpu:4
-#SBATCH -t 20:00:10
+#SBATCH -t 40:00:10
 
 #SBATCH -o /gris/gris-f/homestud/mikonsta/master-thesis/FedPath/errlog/%m_%M.log
 #SBATCH -e /gris/gris-f/homestud/mikonsta/master-thesis/FedPath/errlog/%j_%J.err

@@ -1,15 +1,15 @@
 #!/bin/bash -l
 
 #SBATCH --mail-user=mirko.konstantin@gris.informatik.tu-darmstadt.de
-#SBATCH -J CRC_pure
+#SBATCH -J CRC_pure2
 #SBATCH -n 20
 #SBATCH -c 8
 #SBATCH --mem-per-cpu=4000
 #SBATCH --gres=gpu:4
-#SBATCH -t 60:00:10
+#SBATCH -t 20:00:10
 
-#SBATCH -o /gris/gris-f/homestud/mikonsta/master-thesis/FedPath/errlog/%m_%M.log
-#SBATCH -e /gris/gris-f/homestud/mikonsta/master-thesis/FedPath/errlog/%j_%J.err
+#SBATCH -o /gris/gris-f/homestud/mikonsta/master-thesis/FedPath/errlog/t_%m_%M.log
+#SBATCH -e /gris/gris-f/homestud/mikonsta/master-thesis/FedPath/errlog/t_%j_%J.err
 
 ### No Attack
 python3 main.py --gpu=0,1,2,3 --exp_path=experiment1/crc/no_attack/crc_ana_fedavgm_seed1.yml --logfile=final/exp1/pure/crc/no_attack/crc_fedavgm_seed1.log
