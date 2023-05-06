@@ -36,7 +36,7 @@ class MirkoDetector:
         return ben_clients, malicious_clients
 
     def find_seperation_point(self, ls):
-        gap = (0, (0, 0))
+        gap = (0, 0)
         for i in range(len(ls) - 1):
             diff = ls[i + 1][1] - ls[i][1]
             if diff > gap[0]:
