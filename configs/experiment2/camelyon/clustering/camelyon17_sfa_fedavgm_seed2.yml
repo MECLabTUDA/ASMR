@@ -16,7 +16,7 @@ mal_clients: [1,4,7,8]
 
 # Possible values: [ana, sfa]
 fl_attack: "sfa"
-attack_prob: 1.0
+attack_prob: 0.75
 dp_scale: 75
 
 # Possible values: [krum, mud-hog, spectral]

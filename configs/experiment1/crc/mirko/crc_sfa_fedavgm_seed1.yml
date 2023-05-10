@@ -24,7 +24,7 @@ detector: "mirko"
 
 n_rounds: 12
 trusted_rounds: 5
-n_local_epochs: 1
+n_local_epochs: 5
 
 # Possible values: [FedAvg, FedAvgM]
 agg_method: "FedAvgM"

@@ -15,12 +15,12 @@ starting_clients: [0,1,2,3,4,5,6,7,8,9]
 mal_clients: [1,4,7,8]
 
 # Possible values: [ana, sfa]
-fl_attack: "sfa"
+fl_attack: "ana"
 attack_prob: 0.75
 dp_scale: 75
 
 # Possible values: [krum, mud-hog, spectral]
-detector: "dnc"
+detector: None
 
 n_rounds: 20
 trusted_rounds: 5

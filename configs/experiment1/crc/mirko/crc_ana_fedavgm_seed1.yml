@@ -17,14 +17,14 @@ mal_clients: [2,5,8]
 # Possible values: [ana, sfa]
 fl_attack: "ana"
 attack_prob: 1.0
-dp_scale: 75
+dp_scale: 120
 
 # Possible values: [krum, mud-hog, spectral, mirko]
 detector: 'mirko'
 
 n_rounds: 12
 trusted_rounds: 5
-n_local_epochs: 1
+n_local_epochs: 5
 
 # Possible values: [FedAvg, FedAvgM]
 agg_method: "FedAvgM"
