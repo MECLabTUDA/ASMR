@@ -1,0 +1,42 @@
+name: "train_clients"
+
+# Possible values: [camelyon17, glas, aggc]
+dataset: "camelyon17"
+
+data_root: "/local/scratch/camelyon17/camelyon17_v1.0"
+
+init_model_path: "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/densenet121.pt"
+
+# The number of clients
+n_clients: 10
+starting_clients: [0,1,2,3,4,5,6,7,8,9]
+
+# If no malicious clients leaf this empty -> []
+mal_clients: [6,7,8,9]
+
+# Possible values: [ana, sfa]
+fl_attack: "ana"
+attack_prob: 1.0
+dp_scale: 75
+
+# Possible values: [krum, mud-hog, spectral]
+detector: "mirko"
+
+n_rounds: 20
+trusted_rounds: 5
+n_local_epochs: 1
+
+# Possible values: [FedAvg, FedAvgM]
+agg_method: "FedAvgM"
+momentum: 0.7
+
+# possible values: [densenet, ...]
+arch: "densenet"
+trainer: 'densenet121_basic'
+
+batch_size: 64
+seed: 5
+num_workers: 8
+
+# Root path to data storage of models
+root_path : "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/"
