@@ -29,11 +29,11 @@
 #python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/krum/camelyon17_sfa_fedavgm_seed5.yml --logfile=final/exp2/krum/camelyon/sfa/camelyon_fedavgm_seed5.log
 
 ### DnC - ANA
-#python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed1.yml --logfile=final/exp2/pure/camelyon/no_defense/ana/camelyon_fedavgm_seed1.log
-#python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed2.yml --logfile=final/exp2/pure/camelyon/no_defense/ana/camelyon_fedavgm_seed2.log
-#python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed3.yml --logfile=final/exp2/pure/camelyon/no_defense/ana/camelyon_fedavgm_seed3.log
-#python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed4.yml --logfile=final/exp2/pure/camelyon/no_defense/ana/camelyon_fedavgm_seed4.log
-python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed5.yml --logfile=final/exp2/pure/camelyon/no_defense/ana/camelyon_fedavgm_seed6.log
+python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed1.yml --logfile=final/exp2/pure/camelyon/no_attack/camelyon_fedavgm_seed1.log
+python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed2.yml --logfile=final/exp2/pure/camelyon/no_attack/camelyon_fedavgm_seed2.log
+python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed3.yml --logfile=final/exp2/pure/camelyon/no_attack//camelyon_fedavgm_seed3.log
+python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed4.yml --logfile=final/exp2/pure/camelyon/no_attack/camelyon_fedavgm_seed4.log
+python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/dnc/camelyon17_sfa_fedavgm_seed5.yml --logfile=final/exp2/pure/camelyon/no_attack/camelyon_fedavgm_seed6.log
 
 ### DnC - SFA
 #python3 main.py --gpu=0,1 --exp_path=experiment2/camelyon/krum/camelyon17_sfa_fedavgm_seed1.yml --logfile=final/exp2/krum/camelyon/sfa/camelyon_fedavgm_seed1.log

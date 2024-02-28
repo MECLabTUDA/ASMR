@@ -89,7 +89,15 @@ class Client:
                                                    self.local_model_path, self.n_local_epochs,
                                                    self.id % torch.cuda.device_count())
         self.dp_scale = cfg['dp_scale']
-        self.fl_attack = cfg['fl_attack']
+        
+        self.fl_attacks = cfg['fl_attack']
+
+        if len(self.fl_attacks) > 0:
+            self.fl_attack = random.choice(cfg['fl_attack'])
+        else:
+            self.fl_attack = None
+
+
         self.attack_freq = cfg['attack_prob']
         self.num_samples = len(self.ldr.dataset)
         if not os.path.exists(self.local_model_path + str(client_id)):
@@ -108,12 +116,23 @@ class Client:
             self.malicious = False
 
         self.num_samples = len(self.ldr.dataset)
+        
+
+        if len(self.fl_attacks) > 0:
+            self.fl_attack = random.choice(self.fl_attacks)
+        else:
+            self.fl_attack = None
+            
 
     def train(self, recieved_info):
         '''
         Trains Clients model for one Episode
         '''
+
+
         self._update_client(recieved_info)
+        
+
         attack = False
 
         if self.id not in recieved_info['active_clients']:
@@ -128,17 +147,31 @@ class Client:
                     'attack': attack}
         else:
             # update the model before training should be abstracted from the server side for multiprocessing?
+            
+
             self._load_model(recieved_info['global_weight'])
+            
+            
+            
+
+
             p = self.attack(self.attack_freq)
             if self.malicious and self.attack(self.attack_freq):
                 logger.info(f'Client: {self.id} is comitting a malicious udpate')
                 attack = True
+                
+                
                 if self.fl_attack == 'ana':
                     client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
                                                        self.fl_attack, self.dp_scale)
                 elif self.fl_attack == 'sfa':
                     client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
                                                        self.fl_attack)
+
+                elif self.fl_attack == 'artifacts':
+                    client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id,
+                                                       self.fl_attack)
+                
             else:
                 client_weight = self.trainer.train(recieved_info['n_round'], self.model, self.ldr, self.id)
 
@@ -163,9 +196,16 @@ class Client:
         self.model.save(self.local_model_path + str(self.id) + '/local_model_' + str(self.id) + '.pt')
 
     def _load_model(self, model_weights=None):
+        
         try:
             # to avoid input/output overhead
             if model_weights:
+                
+
+                model_state_dict_keys = set(self.model.state_dict().keys())
+                loaded_state_dict_keys = set(model_weights.keys())
+
+                # Check if the keys match
                 self.model.load_state_dict(model_weights)
             else:
                 self.model.load_state_dict(torch.load(self.global_model_path))

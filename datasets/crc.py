@@ -1,9 +1,12 @@
 import os
 import cv2
+import random
 
 from torch.utils.data import Dataset
 
 from sklearn.model_selection import train_test_split
+from froodo import *
+
 
 
 class FedCrcDataset(Dataset):
@@ -20,6 +23,31 @@ class FedCrcDataset(Dataset):
             self.annotation = 'test'
 
         self.X, self.y = self._read_img_names(root_dir)
+
+        self.artifacts_list = self._artifact_list()
+
+        self.artifacts = False
+
+    def _artifact_list(self):
+        
+        darkspots = DarkSpotsAugmentation(sample_intervals=[(3, 5)],scale=2,keep_ignorred=True)
+        fatspots  = FatAugmentation(sample_intervals=[(1., 5)],scale=2, keep_ignorred=True)
+        squamous  = SquamousAugmentation(sample_intervals=[(2, 3)],scale=2, keep_ignorred=True)
+        thread    = ThreadAugmentation(sample_intervals=[(2, 4)],scale=2, keep_ignorred=True)
+        blood     = BloodCellAugmentation(sample_intervals=[(1, 25)],scale=3,scale_sample_intervals=[(1.0, 1.02)])
+        blood.scale = 0.1
+        bubble    = BubbleAugmentation(base_augmentation=transforms.GaussianBlur(kernel_size=(9, 9),sigma=10))
+        bubble.overlay_h = 700
+        bubble.overlay_w = 700
+
+        artifact_list = [darkspots, fatspots, squamous, thread, blood, bubble]
+
+        return artifact_list
+
+    
+    def set_artifacts(self, artifacts):
+        self.artifacts = artifacts
+
 
     def _read_img_names(self, root_dir):
         imgs = []
@@ -51,8 +79,15 @@ class FedCrcDataset(Dataset):
         return lbl_map[lbl]
 
     def __getitem__(self, idx):
+        
+        img = torch.from_numpy(cv2.imread(self.X[idx]))
+        
+        if self.artifacts:
+            art = random.choice(self.artifacts_list)
+            img = Sample((img / 255.).permute(2,0,1))
+            img = art(img)
+            img = img.image.permute(1,2,0)
 
-        img = cv2.imread(self.X[idx])
         lbl = self._get_label(self.y[idx])
 
         return img, lbl

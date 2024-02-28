@@ -21,7 +21,7 @@ attack_prob: 0.75
 dp_scale: 75
 
 # Possible values: [krum, mud-hog, spectral, mirko]
-detector: "mirko"
+detector: "optimal"
 
 n_rounds: 12
 trusted_rounds: 5

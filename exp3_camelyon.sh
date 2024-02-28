@@ -1,14 +1,21 @@
 #!/bin/bash
 
 ### Study - Experiment3 - ANA
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_ana_fedavgm_seed1.yml --logfile=final/exp3/k2/camelyon_ana_fedavgm_seed1.log
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_ana_fedavgm_seed2.yml --logfile=final/exp3/k2/camelyon_ana_fedavgm_seed2.log
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_ana_fedavgm_seed3.yml --logfile=final/exp3/k2/camelyon_ana_fedavgm_seed3.log
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_ana_fedavgm_seed4.yml --logfile=final/exp3/k2/camelyon_ana_fedavgm_seed4.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_mirko5.yml --logfile=final/exp3/camelyon_sfa_mirko5.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_mirko7.yml --logfile=final/exp3/camelyon_sfa_mirko7.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_krum5.yml --logfile=final/exp3/camelyon_sfa_krum5.log
+python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_krum7.yml --logfile=final/exp3/camelyon_sfa_krum7.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_cfl5.yml --logfile=final/exp3/camelyon_sfa_cfl5.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_cfl7.yml --logfile=final/exp3/camelyon_sfa_cfl7.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_dnc5.yml --logfile=final/exp3/camelyon_sfa_dnc5.log
+python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_sfa_dnc7.yml --logfile=final/exp3/camelyon_sfa_dnc7.log
 
-### Study - Experiment3 - SFA
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_sfa_fedavgm_seed1.yml --logfile=final/exp3/k2/camelyon_sfa_fedavgm_seed1.log
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_sfa_fedavgm_seed2.yml --logfile=final/exp3/k2/camelyon_sfa_fedavgm_seed2.log
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_sfa_fedavgm_seed3.yml --logfile=final/exp3/k2/camelyon_sfa_fedavgm_seed3.log
-python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon17_sfa_fedavgm_seed4.yml --logfile=final/exp3/k2/camelyon_sfa_fedavgm_seed4.log
 
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_mirko5.yml --logfile=final/exp3/camelyon_ana_mirko5.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_mirko7.yml --logfile=final/exp3/camelyon_ana_mirko7.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_krum5.yml --logfile=final/exp3/camelyon_ana_krum5.log
+python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_krum7.yml --logfile=final/exp3/camelyon_ana_krum7.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_cfl5.yml --logfile=final/exp3/camelyon_ana_cfl5.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_cfl7.yml --logfile=final/exp3/camelyon_ana_cfl7.log
+#python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_dnc5.yml --logfile=final/exp3/camelyon_ana_dnc5.log
+python3 main.py --gpu=0,1 --exp_path=experiment3/camelyon_ana_dnc7.yml --logfile=final/exp3/camelyon_ana_dnc7.log

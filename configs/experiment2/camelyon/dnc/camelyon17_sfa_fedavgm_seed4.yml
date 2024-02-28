@@ -21,7 +21,7 @@ attack_prob: 0.75
 dp_scale: 75
 
 # Possible values: [krum, mud-hog, spectral]
-detector: None
+detector: 'optimal'
 
 n_rounds: 20
 trusted_rounds: 5

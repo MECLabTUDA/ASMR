@@ -43,9 +43,12 @@ class DenseNet121Trainer:
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
+        
 
     # TODO: Load model and optimizer
     def train(self, n_round, model, ldr, client_id, fl_attack=None, dp_scale=None):
+        
+
         train_loss = 0
         total = 0
         correct = 0
@@ -57,6 +60,15 @@ class DenseNet121Trainer:
 
         self.model.train()
         self.model.to(self.device)
+        
+
+
+        if fl_attack == 'artifacts':
+            self.ldr.dataset.set_artifacts(True)
+        else:
+            self.ldr.dataset.set_artifacts(False)
+        
+
 
         if fl_attack is None:
             logger.info('********Training of Client: ' + str(self.id) + '*********')
@@ -64,13 +76,16 @@ class DenseNet121Trainer:
             logger.info(f'******** Malicious ({fl_attack}) Training of Client: ' + str(self.id) + '*********')
 
         epoch_loss = []
+        
+
 
         for epoch in range(self.n_local_epochs):
             batch_loss = []
+            
 
             for batch_index, (inputs, targets) in enumerate(self.ldr, 0):
                 # inputs.cuda()
-
+                
                 # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
                 inputs, targets = inputs.to(self.device), targets.to(self.device)

@@ -3,7 +3,7 @@ from datasets.camelyon17 import FedCamelyon17Dataset
 from datasets.camelyon17 import get_datasets
 from datasets.crc import FedCrcDataset
 from datasets.glas import FedGlasDataset
-
+from datasets.celeba import FedCelebaDataset
 
 def get_dataset(dataset):
     if dataset == 'camelyon17':
@@ -12,6 +12,8 @@ def get_dataset(dataset):
         return FedGlasDataset
     elif dataset == 'crc':
         return FedCrcDataset
+    elif dataset == 'celeba':
+        return FedCelebaDataset 
 
 
 def get_test_loader(root_dir, batch_size, dataset, **loader_kwargs):

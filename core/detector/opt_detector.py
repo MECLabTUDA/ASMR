@@ -13,8 +13,8 @@ class Optimal_detector:
         benign_clients = []
 
         for client in self.clients_info:
-            if client['attack']:
-                benign_clients.append(client['id'])
+            if not self.clients_info[client]['attack']:
+                benign_clients.append(client)
 
         # Assign clients to
         mal_clients = []

@@ -7,6 +7,8 @@ def get_evaluator(arch):
         return eval_camelyon
     elif arch == 'resnet50':
         return eval_crc
+    elif arch == 'resnet101':
+        return eval_camelyon
 
 
 def eval_camelyon(model, ldr, device):

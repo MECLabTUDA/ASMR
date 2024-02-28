@@ -18,7 +18,7 @@ class MirkoDetector:
             self.client_states[cid] = {'id': cid,
                                        'weights': vec / magn}
 
-        self.get_k_nn(2)
+        self.get_k_nn(9)
         self.local_reachability_density()
         self.local_outlier_factor()
 

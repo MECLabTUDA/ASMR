@@ -17,6 +17,7 @@ Blanchard, Peva, Rachid Guerraoui, and Julien Stainer. "Machine learning with ad
 class Krum:
     def __init__(self, device='cuda:0'):
         self.device = device
+        ## Number of benign clients
         self.k = 7
         self.clients_info = None
         self.client_states = None

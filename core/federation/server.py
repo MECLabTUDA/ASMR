@@ -12,6 +12,10 @@ import logging
 import sys
 import numpy as np
 
+import torch.nn as nn
+
+import torchvision.models as models
+
 from ..trainers.evaluators import get_evaluator
 
 logger = logging.getLogger(__name__)
@@ -32,7 +36,9 @@ class Server:
         """
         self.clients_info = clients_info
         self.arch = cfg['arch']
-        self.model = get_arch(self.arch)
+        #self.model = get_arch(self.arch)
+
+        self.model = self._init_model()
 
         self.global_model_path = cfg['global_model_path']
         self.agg_params = self.get_agg_params(cfg)
@@ -50,7 +56,7 @@ class Server:
         self.active_clients = cfg['starting_clients']
         self.trusted_rounds = cfg['trusted_rounds']
 
-        self._init_model()
+        #self._init_model()
         self.tb = SummaryWriter(os.path.join(cfg['exp_path'], 'log_server'))
         self.device = torch.cuda.device_count() - 1
         self.test_ldr = get_test_loader(self.root_dir, batch_size=self.test_batch_size, dataset=cfg['dataset'],
@@ -126,14 +132,27 @@ class Server:
 
         try:
             if self.arch == 'densenet':
-                source = '/gris/gris-f/homelv/mkonstan/master_thesis/fedpath/store/init_models/densenet121.pt'
-                # shutil.copy(self.init_model_path, self.global_model_path)
+                path = '/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/densenet.pth'
+                #shutil.copy(self.init_model_path, self.global_model_path)
+                
 
-                self.model.load_state_dict(torch.load(self.init_model_path))
+
+                # Check if the keys match
+                
+                densenet = models.densenet121(pretrained=False)
+
+                # Modify the final fully connected layer for two classes
+                num_features = densenet.classifier.in_features
+                densenet.classifier = nn.Linear(num_features, 2)
+                #densenet.load_state_dict(torch.load(path))
                 logger.debug("Densenet121 was successfully initialized with pretrained weights")
-            elif self.arch == 'fcn8':
-                self.model.load_state_dict(torch.load(self.init_model_path))
-                logger.debug("Fcn8 was successfully initialized with pretrained weights")
+                
+                return densenet
+
+            elif self.arch == 'resnet50':
+                resnet = models.resnet50()
+                resnet.fc = nn.Linear(2048, 9) 
+                return resnet 
 
         except Exception as e:
 

@@ -46,11 +46,13 @@ def list_to_dict(ls):
 
 
 def run_clients(recieved_info):
-    try:
-        return client.train(recieved_info), client.id
-    except KeyboardInterrupt:
-        logger.info('exiting')
-        return None
+    #try:
+    #    return client.train(recieved_info), client.id
+    #except KeyboardInterrupt:
+    #    logger.info('exiting')
+    #    return None
+    
+    return client.train(recieved_info), client.id
 
 
 # Get the configs
@@ -65,6 +67,7 @@ def train_clients(cfg):
     n_rounds = experiment_cfg['n_rounds']
     active_clients = experiment_cfg['starting_clients']
     # Set up Server and Clients
+
     clients_init, clients_info = retrieve_clients(client_cfg)
 
     # initalize server
@@ -73,18 +76,28 @@ def train_clients(cfg):
     pool = cm.MyPool(processes=client_cfg['n_clients'], initializer=init_process,
                      initargs=(clients_init, Client, experiment_cfg['seed']))
 
+
+
     # global model = the inital weights = init_model = densenet
     global_weight = server.model.state_dict()
+    
+    #global_weight = torch.load('/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/densenet.pth')
 
     # initally round 0
     #TODO: Add id and dataloader to recieved_info
+
+    
+
     recieved_info = [{'global_weight': global_weight, 'n_round': 0, 'active_clients': active_clients,
                       'id': x, 'ldr': clients_info[x]['ldr']} for x in
                      range(client_cfg['n_clients'])]
 
     for n_round in range(n_rounds):
+        
+
         ##Training of the clients with recieved weights/info from the server
         client_outputs = pool.map(run_clients, recieved_info)
+        
 
         client_outputs_dict = list_to_dict(client_outputs)
 

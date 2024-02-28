@@ -17,9 +17,9 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.INFO)
 
 
-class ResnetTrainer:
+class Resnet101Trainer:
     def __init__(self, model, client_id, ldr, local_model_path, n_local_epochs, device=0):
-        self.lr = 0.0003
+        self.lr = 0.0001
         self.momentum = 0.9
         self.model = model
         self.ldr = ldr
@@ -33,18 +33,15 @@ class ResnetTrainer:
         self.model = model
         self.ldr = ldr
         self.id = client_id
-        optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum)
+        #optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum)
+
+        optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
 
         #self.model.train()
         #self.model.to(self.device)
 
         model.train()
         model.to(self.device)
-        
-        if fl_attack == 'artifacts':
-            ldr.dataset.set_artifacts(True)
-        else:
-            ldr.dataset.set_artifacts(False)
 
         # Prepare
 
@@ -57,7 +54,7 @@ class ResnetTrainer:
         for epoch in range(self.n_local_epochs):
             batch_loss = []
             for img, label in ldr:
-                img, label = img.type(torch.FloatTensor).to(self.device).permute(0, 3, 1, 2), label.to(self.device)
+                img, label = img.to(self.device), label.to(self.device)
                 optimizer.zero_grad()
 
                 pred = model(img)
@@ -95,7 +92,6 @@ class ResnetTrainer:
                 weights = flip_signs(weights)
 
             self._save_local_model(n_round, weights)
-            #if fl_attack == 'artifacts':
             return weights
 
     def _save_local_model(self, n_round, state_dict):
