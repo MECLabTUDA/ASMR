@@ -12,6 +12,9 @@ from torch.utils.tensorboard import SummaryWriter
 import logging
 import sys
 
+from core.attacks.ana import add_gaussian_noise
+from core.attacks.sfa import flip_signs
+
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
@@ -25,6 +28,7 @@ class DenseNet121Trainer:
         ldr: dataloader
         hp_cfg: configuration of hyperparameters
         '''
+
         self.id = client_id
         self.device = device
         self.model = model
@@ -32,31 +36,56 @@ class DenseNet121Trainer:
         self.n_local_epochs = n_local_epochs
         self.ldr = ldr
         self.batch_size = 8
-        self.lr = 0.01
+        self.lr = 0.001
         self.momentum = 0.9
         self.weight_decay = 5e-4
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
                                    weight_decay=self.weight_decay)
         self.tb = SummaryWriter(os.path.join(self.local_model_path, 'log'))
+        
 
-    def train(self, n_round):
+    # TODO: Load model and optimizer
+    def train(self, n_round, model, ldr, client_id, fl_attack=None, dp_scale=None):
+        
+
         train_loss = 0
         total = 0
         correct = 0
+        self.model = model
+        self.ldr = ldr
+        self.id = client_id
+        self.optimizer = optim.SGD(self.model.parameters(), lr=self.lr, momentum=self.momentum,
+                                   weight_decay=self.weight_decay)
 
         self.model.train()
         self.model.to(self.device)
+        
 
-        logger.info('********Training of Client: ' + str(self.id) + '*********')
+
+        if fl_attack == 'artifacts':
+            self.ldr.dataset.set_artifacts(True)
+        else:
+            self.ldr.dataset.set_artifacts(False)
+        
+
+
+        if fl_attack is None:
+            logger.info('********Training of Client: ' + str(self.id) + '*********')
+        else:
+            logger.info(f'******** Malicious ({fl_attack}) Training of Client: ' + str(self.id) + '*********')
+
         epoch_loss = []
+        
+
 
         for epoch in range(self.n_local_epochs):
             batch_loss = []
+            
 
             for batch_index, (inputs, targets) in enumerate(self.ldr, 0):
                 # inputs.cuda()
-
+                
                 # targets = torch.FloatTensor(np.array(targets).astype(float)).cuda()
 
                 inputs, targets = inputs.to(self.device), targets.to(self.device)
@@ -94,16 +123,23 @@ class DenseNet121Trainer:
         self.tb.add_scalar("Client:" + str(self.id) + "/Correct", correct, n_round)
 
         # print(f"Finished training for Client:{self.id}, loss:{loss}, " + str(self.id))
-        self.save_local_model(n_round)
+
         # self.tb.close()
         weights = self.model.cpu().state_dict()
+        if fl_attack == 'ana':
+            logger.info(f'Client: {self.id} is comitting a malicious udpate')
+            weights = add_gaussian_noise(weights, dp_scale)
+        elif fl_attack == 'sfa':
+            logger.info(f'Client: {self.id} is comitting a malicious udpate')
+            weights = flip_signs(weights)
+
+        self._save_local_model(n_round, weights)
         return weights
 
-    def save_local_model(self, n_round):
-        torch.save(self.model.state_dict(), self.local_model_path
+    def _save_local_model(self, n_round, state_dict):
+        torch.save(state_dict, self.local_model_path + str(self.id)
                    + '/local_model_' + str(self.id) + '_round_' + str(n_round) + '.pt')
 
-        torch.save(self.model.state_dict(), self.local_model_path
+        torch.save(state_dict, self.local_model_path + str(self.id)
                    + '/local_model_' + str(self.id) + '.pt')
 
-        # logger.info("saved local model of Client: " + str(self.id))

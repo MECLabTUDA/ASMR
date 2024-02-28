@@ -38,12 +38,21 @@ def init_process(q, Client, seed):
     client = Client(ci[0], ci[1], ci[2])
 
 
+def list_to_dict(ls):
+    dct = {}
+    for elem in ls:
+        dct[elem[1]] = elem[0]
+    return dct
+
+
 def run_clients(recieved_info):
-    try:
-        return client.train(recieved_info)
-    except KeyboardInterrupt:
-        logger.info('exiting')
-        return None
+    #try:
+    #    return client.train(recieved_info), client.id
+    #except KeyboardInterrupt:
+    #    logger.info('exiting')
+    #    return None
+    
+    return client.train(recieved_info), client.id
 
 
 # Get the configs
@@ -53,34 +62,49 @@ def train_clients(cfg):
     except RuntimeError:
         pass
 
-    #get configs for clients/servers
+    # get configs for clients/servers
     client_cfg, server_cfg, experiment_cfg = get_configs('configs/' + cfg)
     n_rounds = experiment_cfg['n_rounds']
-
+    active_clients = experiment_cfg['starting_clients']
     # Set up Server and Clients
+
     clients_init, clients_info = retrieve_clients(client_cfg)
 
-    #initalize server
+    # initalize server
     server = Server(server_cfg, clients_info)
 
     pool = cm.MyPool(processes=client_cfg['n_clients'], initializer=init_process,
                      initargs=(clients_init, Client, experiment_cfg['seed']))
 
+
+
     # global model = the inital weights = init_model = densenet
     global_weight = server.model.state_dict()
+    
+    #global_weight = torch.load('/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/densenet.pth')
 
     # initally round 0
-    recieved_info = [{'global_weight': global_weight, 'n_round': 0} for x in range(client_cfg['n_clients'])]
+    #TODO: Add id and dataloader to recieved_info
+
+    
+
+    recieved_info = [{'global_weight': global_weight, 'n_round': 0, 'active_clients': active_clients,
+                      'id': x, 'ldr': clients_info[x]['ldr']} for x in
+                     range(client_cfg['n_clients'])]
 
     for n_round in range(n_rounds):
+        
 
         ##Training of the clients with recieved weights/info from the server
         client_outputs = pool.map(run_clients, recieved_info)
+        
+
+        client_outputs_dict = list_to_dict(client_outputs)
 
         logger.info(f'*****************Round {n_round} finished**************')
 
-        #server---aggregate---evaluate---send back weights
-        recieved_info = server.operate(client_outputs, n_round)
+        # server---aggregate---evaluate---send back weights
+        recieved_info = server.operate(client_outputs_dict, n_round)
 
         logger.info(f'*******************************************************')
 

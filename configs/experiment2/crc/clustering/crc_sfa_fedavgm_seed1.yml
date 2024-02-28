@@ -1,0 +1,44 @@
+name: "train_clients"
+
+# Possible values: [camelyon17, glas, aggc, crc]
+dataset: "crc"
+
+data_root: "/gris/scratch-gris-filesrv/NCT-CRC-HE/NCT-CRC-HE-100K"
+
+init_model_path: "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/resnet50.pt"
+
+# The number of clients
+n_clients: 10
+starting_clients: [0,1,2,3,4,5,6,7,8,9]
+
+# If no malicious clients leaf this empty -> []
+mal_clients: [2,3,5,8]
+
+
+# Possible values: [ana, sfa]
+fl_attack: "sfa"
+attack_prob: 0.75
+dp_scale: 75
+
+# Possible values: [krum, mud-hog, spectral, mirko]
+detector: "clustering"
+
+n_rounds: 12
+trusted_rounds: 5
+n_local_epochs: 1
+
+# Possible values: [FedAvg, FedAvgM]
+agg_method: "FedAvgM"
+momentum: 0.7
+
+# possible values: [densenet, resnet50, ...]
+arch: "resnet50"
+# possible values: [densenet121_basic, crc_resnet]
+trainer: 'crc_resnet'
+
+batch_size: 10
+seed: 0
+num_workers: 8
+
+# Root path to data storage of models
+root_path : "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/"

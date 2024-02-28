@@ -5,6 +5,9 @@ import pandas as pd
 import torch
 from PIL import Image
 from torchvision import transforms
+from froodo import *
+import random
+from torch.utils.data import Dataset
 
 
 def get_datasets(n_clients, root_dir):
@@ -26,7 +29,7 @@ def get_datasets(n_clients, root_dir):
     return datasets
 
 
-class FedCamelyon17Dataset:
+class FedCamelyon17Dataset(Dataset):
 
     def __init__(self, root_dir='data', kwargs={'split': 'test'}):
         '''
@@ -36,7 +39,6 @@ class FedCamelyon17Dataset:
         '''
 
         self._data_dir = root_dir
-
         self._metadata_df = pd.read_csv(
             os.path.join(self._data_dir, 'metadata.csv'),
             index_col=0,
@@ -60,6 +62,32 @@ class FedCamelyon17Dataset:
         self._x_array = self.get_x()
         self._y_array = self.get_y()
         # TODO: Transform in __getitem__
+        
+        self.artifacts_list = self._artifact_list()
+        self.artifacts = False
+
+    def set_artifacts(self, artifacts):
+        self.artifacts = artifacts
+
+    def _artifact_list(self):
+
+        darkspots = DarkSpotsAugmentation(sample_intervals=[(3, 5)],scale=2,keep_ignorred=True)
+        fatspots  = FatAugmentation(sample_intervals=[(1., 5)],scale=0.8, keep_ignorred=True)
+        squamous  = SquamousAugmentation(sample_intervals=[(2, 3)],scale=0.5, keep_ignorred=True)
+        thread    = ThreadAugmentation(sample_intervals=[(2, 4)],scale=2, keep_ignorred=True)
+        blood     = BloodCellAugmentation(sample_intervals=[(1, 25)],scale=1,scale_sample_intervals=[(1.0, 1.02)])
+        blood.scale = 1
+        bubble    = BubbleAugmentation(base_augmentation=transforms.GaussianBlur(kernel_size=(9, 9),sigma=10))
+        bubble.overlay_h = 800
+        bubble.overlay_w = 800
+        
+        brightness = BrightnessAugmentation(brightness=8.5)
+        contrast = ContrastAugmentation(contrast=3.5)
+
+        artifact_list = [darkspots, fatspots, squamous, thread, blood, bubble]
+        artifact_list = [brightness]
+        
+        return artifact_list
 
     def print_information(self):
         print('client_id: ' + str(self.client_id))
@@ -133,9 +161,18 @@ class FedCamelyon17Dataset:
     def __getitem__(self, idx):
         # Any transformations are handled by the WILDSSubset
         # since different subsets (e.g., train vs test) might have different transforms
-        x = self.get_input(idx)
+        img = self.get_input(idx)
         trans = transforms.ToTensor()
-        x = trans(x)
+        img = trans(img)
+        #img = img[:,:,3]
+        if self.artifacts:
+            
+            art = random.choice(self.artifacts_list)
+            
+            img = Sample(img)
+            img = art(img)
+            img = img.image
+           
         y = self._y_array[idx]
         # metadata = self.metadata_array[idx]
-        return x, y  # , metadata
+        return img, y  # , metadata

@@ -1,0 +1,14 @@
+batchgenerators==0.25
+numpy==1.24.2
+opencv_python==4.7.0.72
+pandas==1.5.3
+Pillow==9.5.0
+PyYAML==6.0
+scikit_learn==1.2.2
+segmentation_models_pytorch==0.3.2
+tifffile==2023.2.3
+torch==1.13.1+cu116
+torchsummary==1.5.1
+torchvision==0.15.1
+tqdm==4.64.1
+zarr==2.14.1

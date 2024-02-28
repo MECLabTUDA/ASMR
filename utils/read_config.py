@@ -9,7 +9,8 @@ def read_config(path):
 def get_client_config(cfg):
     client_cfg = {}
     keys = ['arch', 'local_model_root', 'global_model_path', 'trainer', 'n_clients',
-            'data_root', 'batch_size', 'n_local_epochs', 'exp_path', 'fl_attack', 'dp_scale', 'num_workers']
+            'data_root', 'batch_size', 'n_local_epochs', 'exp_path', 'fl_attack',
+            'dp_scale', 'num_workers', 'attack_prob', 'mal_clients', 'starting_clients', 'dataset']
 
     for key in keys:
         client_cfg[key] = cfg[key]
@@ -19,8 +20,8 @@ def get_client_config(cfg):
 
 def get_server_config(cfg):
     server_cfg = {}
-    keys = ['arch', 'global_model_path', 'data_root', 'batch_size', 'agg_method', 'init_model_path', 'exp_path',
-            'n_clients']
+    keys = ['arch', 'global_model_path', 'data_root', 'batch_size', 'agg_method', 'dataset', 'detector',
+            'init_model_path', 'exp_path', 'n_clients', 'trusted_rounds', 'mal_clients', 'starting_clients']
 
     if cfg['agg_method'] == 'FedAvgM':
         keys.append('momentum')
@@ -33,7 +34,7 @@ def get_server_config(cfg):
 
 def get_experiment_config(cfg):
     experiment_cfg = {}
-    keys = ['n_rounds', 'seed']
+    keys = ['n_rounds', 'seed', 'starting_clients']
 
     if cfg['agg_method'] == 'FedAvgM':
         keys.append('momentum')
@@ -52,6 +53,7 @@ def get_configs(path):
                                    f'E_{cfg["n_local_epochs"]}_'
                                    f'R_{cfg["n_rounds"]}_'
                                    f'Atk_{cfg["fl_attack"]}_'
+                                   f'Det_{cfg["detector"]}_'
                                    f'N_{cfg["arch"]}_'
                                    f'_{cfg["agg_method"]}')
     if cfg['fl_attack'] == 'dp':
