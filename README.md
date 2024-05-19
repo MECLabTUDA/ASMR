@@ -17,7 +17,7 @@
 
 # MedFed
 
-This is the official implementation of our paper ***ASMR: Angular Client Support for Malfunctioning Client Resilience in Federated Learning*** published at MIDL 2024.
+This is the official implementation of our paper ***ASMR: Angular Client Support for Malfunctioning Client Resilience in Federated Learning*** accepted at MIDL 2024.
 
 ## Overview
 This framework 
