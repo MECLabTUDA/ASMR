@@ -34,7 +34,6 @@ def init_process(q, Client, seed):
     set_random_seed(seed)
     global client
     ci = q.get()
-    # cfg, i, ldr
     client = Client(ci[0], ci[1], ci[2])
 
 
@@ -46,12 +45,6 @@ def list_to_dict(ls):
 
 
 def run_clients(recieved_info):
-    #try:
-    #    return client.train(recieved_info), client.id
-    #except KeyboardInterrupt:
-    #    logger.info('exiting')
-    #    return None
-    
     return client.train(recieved_info), client.id
 
 
@@ -78,16 +71,11 @@ def train_clients(cfg):
 
 
 
-    # global model = the inital weights = init_model = densenet
     global_weight = server.model.state_dict()
     
-    #global_weight = torch.load('/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/init_models/densenet.pth')
 
     # initally round 0
-    #TODO: Add id and dataloader to recieved_info
-
     
-
     recieved_info = [{'global_weight': global_weight, 'n_round': 0, 'active_clients': active_clients,
                       'id': x, 'ldr': clients_info[x]['ldr']} for x in
                      range(client_cfg['n_clients'])]
@@ -95,7 +83,6 @@ def train_clients(cfg):
     for n_round in range(n_rounds):
         
 
-        ##Training of the clients with recieved weights/info from the server
         client_outputs = pool.map(run_clients, recieved_info)
         
 
@@ -103,15 +90,7 @@ def train_clients(cfg):
 
         logger.info(f'*****************Round {n_round} finished**************')
 
-        # server---aggregate---evaluate---send back weights
         recieved_info = server.operate(client_outputs_dict, n_round)
 
         logger.info(f'*******************************************************')
 
-    # server.aggregate()
-    ##Launching SIA Attack
-    # List of state dicts
-    # Create net arch
-    # Looping through the state dicts of the clients to evaluate the SIA attacks
-
-    # clean_clients(clients)
