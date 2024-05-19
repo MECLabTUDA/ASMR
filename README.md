@@ -20,10 +20,20 @@
 This is the official implementation of our paper ***ASMR: Angular Client Support for Malfunctioning Client Resilience in Federated Learning*** accepted at MIDL 2024.
 
 ## Overview
-This framework 
+This repository provides a framework for simulating federated learning, specifically designed to study the impact of malfunctioning clients in this context. The framework focuses on medical images, particularly in digital pathology. It considers malfunctioning clients as either malicious or unreliable. Malicious clients deliberately launch untargeted attacks to degrade the global model's performance, while unreliable clients train on suboptimal data containing artifacts. For further information, please refer to our paper.
+
+***Important:*** This framework trains all clients in parallel using multi-threading. Please make sure you have enough resources available.
+
+The following datasets are supported:
+
+| Dataset | Task | Link |
+| ------- | ---- | ---- |
+| Colectoral Cancer | Classification | https://zenodo.org/records/1214456 |
+| Camelyon17 Wilds | Classification | https://wilds.stanford.edu/datasets/#camelyon17 |
+| Celeba | Classification | https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html |
 
 
-Datasets
+
 Malfunctioning Clients
 Detection Methods
 
