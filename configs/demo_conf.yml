@@ -1,0 +1,56 @@
+name: "train_clients"
+
+# Possible values: [crc, camelyon17, celeba]
+dataset: "crc"
+
+data_root: "/path/to/dataset/NCT-CRC-HE/NCT-CRC-HE-100K"
+
+init_model_path: "/path/to/MedFed/store/init_models/resnet50.pt"
+
+# The number of clients
+n_clients: 10
+
+# List of client id's
+starting_clients: [0,1,2,3,4,5,6,7,8,9]
+
+# id's of malfunctioning clients
+# If no malfunctioning clients leave this empty -> []
+mal_clients: [0,1,8]
+
+# List of Malfunctions
+# For a single malfunction e.g. ["artifacts"]
+fl_attack: ["artifacts", "ana", "sfa"]
+# Attack probability
+attack_prob: 1.0
+# Scale for Additive-Noise-Attack 
+dp_scale: 75
+
+# Possible values: [krum, clustering, dnc, asmr, optimal]
+# For no detector set this to None 
+detector: 'asmr'
+
+# Number of Training rounds
+n_rounds: 12
+
+# If this number is set > 0 all clients send benign updates for the first n rounds, regardless if they are malfunctioning or not
+trusted_rounds: 0
+
+# The number of local epochs 
+n_local_epochs: 1
+
+# Possible values: [FedAvg, FedAvgM]
+agg_method: "FedAvgM"
+# Momentum for FedAvgM, no effect of agg_method is not set to FedAvgM
+momentum: 0.7
+
+# possible values: [densenet, resnet50, resnet101]
+arch: "resnet50"
+# possible values: [densenet121_basic, crc_resnet, celeba_resnet]
+trainer: 'crc_resnet'
+
+batch_size: 10
+seed: 1
+num_workers: 8
+
+# Root path to data storage of models
+root_path : "/gris/gris-f/homestud/mikonsta/master-thesis/FedPath/store/"

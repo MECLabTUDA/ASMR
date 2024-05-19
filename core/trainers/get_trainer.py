@@ -7,10 +7,6 @@ from core.trainers.celeba_resnet101_trainer import Resnet101Trainer
 def get_trainer(trainer):
     if trainer == 'densenet121_basic':
         return DenseNet121Trainer
-    elif trainer == 'fcn8':
-        return Fcn8Trainer
-    elif trainer == 'glas_unet':
-        return GlasUnetTrainer
     elif trainer == 'crc_resnet':
         return ResnetTrainer
     elif trainer == 'celeba_resnet':
