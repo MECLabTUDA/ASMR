@@ -1,4 +1,3 @@
-from experiment import experiment
 from train_clients import train_clients
 import logging
 import os
