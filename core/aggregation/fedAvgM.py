@@ -17,7 +17,6 @@ class FedAvgM(FedAvg):
 
     def aggregate(self, clients_info):
         self.clients_info = clients_info
-        self._update_total_samples()
         self.show_malicious_clients()
         self.clients_to_gpu()
         avg_weights = self._average_weights()

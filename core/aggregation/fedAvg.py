@@ -18,9 +18,6 @@ class FedAvg:
         self.global_model_path = global_model_path
         self.total_samples = 0
 
-        for client_id in self.clients_info:
-            if self.clients_info[client_id]['active']:
-                self.total_samples += self.clients_info[client_id]['num_samples']
 
     def show_malicious_clients(self):
         mal_clients = [self.clients_info[client]['id'] for client in self.clients_info if
@@ -30,12 +27,6 @@ class FedAvg:
     def get_info(self):
         print("this is a FedAvg")
 
-    def _update_total_samples(self):
-        self.total_samples = 0
-        for client_id in self.clients_info:
-            if self.clients_info[client_id]['active'] and not self.clients_info[client_id]['detected']:
-                self.total_samples += self.clients_info[client_id]['num_samples']
-
     def _average_weights(self):
 
         client_sd = [self.clients_info[c]['weights'] for c in self.clients_info if
@@ -43,25 +34,15 @@ class FedAvg:
                      self.clients_info[c]['detected'] and
                      self.clients_info[c]['weights'] is not None]
 
-        cw = [self.clients_info[c]['num_samples'] / self.total_samples for c in self.clients_info if
-              self.clients_info[c]['active'] and not self.clients_info[c]['detected']]
+        cw = len([self.clients_info[c] for c in self.clients_info if
+              self.clients_info[c]['active'] and not self.clients_info[c]['detected']])
 
-        print('########################')
-        print(f'Benign Clients: {len(client_sd)}')
-        print('########################')
-
-        # ssd = copy.deepcopy(self.clients_info[0]['weights'])
+        cw = 1 / cw
+        
         ssd = self._create_zero_state_dict(client_sd[0])
-        ''' 
-        for client in self.clients_info:
-            print(client['active'])
-            if client['weights'] == None:
-                print('empty')
-            else:
-                print('not empty')
-        '''
+        
         for key in ssd:
-            ssd[key] = sum([sd[key] * cw[i] for i, sd in enumerate(client_sd)])
+            ssd[key] = sum([sd[key] * cw for i, sd in enumerate(client_sd)])
         return ssd
 
     def _create_zero_state_dict(self, state_dict):
@@ -81,7 +62,6 @@ class FedAvg:
 
     def aggregate(self, clients_info):
         self.clients_info = clients_info
-        self._update_total_samples()
         self.show_malicious_clients()
         self.clients_to_gpu()
         agg_state_dict = self._average_weights()
