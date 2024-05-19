@@ -32,10 +32,25 @@ The following datasets are supported:
 | Camelyon17 Wilds | Classification | https://wilds.stanford.edu/datasets/#camelyon17 |
 | Celeba | Classification | https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html |
 
+The following malfunctions are supported:
 
+| Malfunction | Class | Description |
+| ----------- | ----- | ----------- |
+| Additive-Noise-Attack (ANA) | Malicious | Adds specified amount of noise to the update |
+| Sign-Flipping-Attack (SFA) | Malicious | Changes the direction of the vectors of an update |
+| Artifacts | Unreliable | Adds pathology-specific artifacts to training data |
 
-Malfunctioning Clients
-Detection Methods
+To add the artifacts to the training data we used the [FrOoDo](https://github.com/MECLabTUDA/FrOoDo) framework. 
+
+The following protection methods are supported:
+
+| Method | Paper |
+| ------ | ----- |
+| Multi-Krum | https://proceedings.neurips.cc/paper_files/paper/2017/file/f4b9ec30ad9f68f89b29639786cb62ef-Paper.pdf |
+| DnC | https://par.nsf.gov/servlets/purl/10286354 |
+| Clustered FL | https://iphome.hhi.de/samek/pdf/SatICASSP20.pdf |
+| ASMR | https://openreview.net/pdf?id=nqM0lZMevc |
+
 
 ## Getting Started
 
