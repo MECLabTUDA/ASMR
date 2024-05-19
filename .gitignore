@@ -5,9 +5,14 @@ data
 notebooks
 logs
 *.pyc
-
+*.sh
+*.swp
 .nfs*
 
+errlog
+configs/*
+store/init_models/*
+core/detector/mirko_detector.py
 preprocessing/*
 prepocessing/
 store/global/*
