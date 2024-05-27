@@ -15,7 +15,7 @@
    </div>
 
 
-# MedFed
+# ASMR
 
 This is the official implementation of our paper ***ASMR: Angular Client Support for Malfunctioning Client Resilience in Federated Learning*** accepted at MIDL 2024.
 
@@ -54,26 +54,14 @@ The following protection methods are supported:
 
 ## Getting Started
 
-To run a federated training a config file needs to be created. For the documentation, we added a [demo config](https://github.com/mirko-code/MedFed/blob/main/configs/demo_conf.yml) to this repository. 
+To run federated training, you need to create a configuration file. For reference, we have included a [demo config](https://github.com/mirko-code/MedFed/blob/main/configs/demo_conf.yml) in this repository's documentation.
 
-The training can then be executed by the following command:
+You can execute the training using the following command:
 
 ```
 python3 main.py --gpu=0,1,2,3 --exp_path=demo_config.yml --logfile=logfile.txt
 ```
-Note that the the config file must be located inside the config directory and the logfile inside
+Ensure that the configuration file is placed inside the `config` directory and the logfile is placed inside the `logs` directory.
 
-## Demo
-
-1. Download Data
-2. Create Config File
-3. How to run
-
-## Key Components 
-
-## How to extend
- ### Adding a new aggregation method
- ### Adding new Datasets
- ### Adding a new detection method
 
  
