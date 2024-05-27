@@ -54,6 +54,14 @@ The following protection methods are supported:
 
 ## Getting Started
 
+To run a federated training a config file needs to be created. For the documentation, we added a [demo config](https://github.com/mirko-code/MedFed/blob/main/configs/demo_conf.yml) to this repository. 
+
+The training can then be executed by the following command:
+
+```
+main.py
+```
+
 Installation 
 Link to the demos
 It is a simulation that uses multi threading
