@@ -3,13 +3,13 @@
    <a href="https://openreview.net/pdf?id=nqM0lZMevc">
        <img alt="Tests Status" src="https://img.shields.io/badge/OpenReview%20-%20MIDL2024%20-%20green"/>
    </a>
-   <a href="https://github.com/mirko-code/MedFed/">
+   <a href="https://github.com/MECLabTUDA/ASMR/">
        <img alt="Build Status" src="https://img.shields.io/github/last-commit/mirko-code/MedFed/master?logo=Github"/>
    </a>
    <a href="https://discuss.pytorch.org/t/how-to-install-specific-version-of-torch-2-0-0/177812">
        <img alt="Docs" src="https://img.shields.io/badge/Pytorch-2.0.0+cu117-brightgreen?logo=pytorch&logoColor=red"/>
    </a>
-   <a href="https://github.com/mirko-code/MedFed/blob/master/LICENSE">
+   <a href="https://github.com/MECLabTUDA/ASMR/blob/master/LICENSE">
        <img alt="License" src="https://img.shields.io/github/license/mirko-code/MedFed"/>
    </a>
    </div>
