@@ -59,12 +59,9 @@ To run a federated training a config file needs to be created. For the documenta
 The training can then be executed by the following command:
 
 ```
-main.py
+python3 main.py --gpu=0,1,2,3 --exp_path=demo_config.yml --logfile=logfile.txt
 ```
-
-Installation 
-Link to the demos
-It is a simulation that uses multi threading
+Note that the the config file must be located inside the config directory and the logfile inside
 
 ## Demo
 
