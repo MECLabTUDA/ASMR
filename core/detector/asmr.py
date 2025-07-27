@@ -1,5 +1,5 @@
 import torch
-
+import torch.nn.functional as F
 from core.detector.helpers import net2vec, net2cuda
 
 
@@ -73,7 +73,7 @@ class ASMR:
         for cid in self.client_states:
             if cid != client_id:
 
-                dist = (cid, torch.cdist(client_v, self.client_states[cid]['weights']))
+                dist = (cid, 1 - F.cosine_similarity(client_v, self.client_states[cid]['weights'], dim=0))
                 neighbors.append(dist)
         
         return neighbors
